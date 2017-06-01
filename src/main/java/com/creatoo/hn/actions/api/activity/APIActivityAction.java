@@ -26,79 +26,79 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/activity")
 public class APIActivityAction {
-    /**
-     * 日志控制器
-     */
-    Logger log = Logger.getLogger(this.getClass().getName());
-    
-    /**
+	/**
+	 * 日志控制器
+	 */
+	Logger log = Logger.getLogger(this.getClass().getName());
+
+	/**
 	 * 公用服务类
 	 */
 	@Autowired
 	public CommService commservice;
-	
+
 	/**
 	 * 短信公开服务类
 	 */
 	@Autowired
 	private SMSService smsService;
-    
-    @Autowired
-    private WhhdService  whhdService;
-    
-    
-    
-    /**
-     * 检查能否报名
-     * 访问路径 /api/act/check/{actId}/{userId}
-     * @param actId  活动Id
-     * @param userId 用户Id
-     * @return JSON: {
-     * "success" : "1"             //1表示可以报名，其它失败
-     * "errormsg" : "100|104"     //100-培训已失效;  104-未实名认证
-     * }
-     */
-    @CrossOrigin
-    @RequestMapping("/check/{actId}/{userId}")
-    public RetMobileEntity check(@PathVariable("actId")String actId, @PathVariable("userId")String userId){
-    	RetMobileEntity res = new RetMobileEntity();
-        try{
-            String validCode = this.whhdService.checkApplyAct(actId, userId);
-            if(!"0".equals(validCode)){
-            	res.setCode(101);
-        		res.setMsg("培训已失效");
-            }
-        } catch (Exception e){
-            log.error(e.getMessage(), e);
-            res.setCode(105);
-    		res.setMsg("报名失败");
-        }
-        return res;
-    }
-    
-    
-    /**
-     * 活动预定验证
-     * @param request
-     * @param actId
-     * @param seatStr
-     * @param eventid
-     * @param seats
-     * @param session
-     * @return
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/checkActPublish", method = RequestMethod.POST)
-    public RetMobileEntity checkActPublish(HttpServletRequest request,String actId,String seatStr,String eventid,int seats,HttpSession session){
-    	RetMobileEntity res = new RetMobileEntity();
-    	WhUser user = (WhUser) session.getAttribute(WhConstance.SESS_USER_KEY);
-    	try {
+
+	@Autowired
+	private WhhdService  whhdService;
+
+
+
+	/**
+	 * 检查能否报名
+	 * 访问路径 /api/act/check/{actId}/{userId}
+	 * @param actId  活动Id
+	 * @param userId 用户Id
+	 * @return JSON: {
+	 * "success" : "1"             //1表示可以报名，其它失败
+	 * "errormsg" : "100|104"     //100-培训已失效;  104-未实名认证
+	 * }
+	 */
+	@CrossOrigin
+	@RequestMapping("/check/{actId}/{userId}")
+	public RetMobileEntity check(@PathVariable("actId")String actId, @PathVariable("userId")String userId){
+		RetMobileEntity res = new RetMobileEntity();
+		try{
+			String validCode = this.whhdService.checkApplyAct(actId, userId);
+			if(!"0".equals(validCode)){
+				res.setCode(101);
+				res.setMsg("培训已失效");
+			}
+		} catch (Exception e){
+			log.error(e.getMessage(), e);
+			res.setCode(105);
+			res.setMsg("报名失败");
+		}
+		return res;
+	}
+
+
+	/**
+	 * 活动预定验证
+	 * @param request
+	 * @param actId
+	 * @param seatStr
+	 * @param eventid
+	 * @param seats
+	 * @param session
+	 * @return
+	 */
+	@CrossOrigin
+	@RequestMapping(value = "/checkActPublish", method = RequestMethod.POST)
+	public RetMobileEntity checkActPublish(HttpServletRequest request,String actId,String seatStr,String eventid,int seats,HttpSession session){
+		RetMobileEntity res = new RetMobileEntity();
+		WhUser user = (WhUser) session.getAttribute(WhConstance.SESS_USER_KEY);
+		try {
 			WhgActActivity whgAct = whhdService.getActDetail(actId);
 			if(whgAct.getState() != 6){
 				res.setCode(101);
 				res.setMsg("该活动已下架！");
 			}
-			if(seatStr != null && seatStr != ""){
+			if(seatStr != null && "".equals(seatStr) ){
 				String selectSeat[] = seatStr.split(",");
 				WhgActSeat whgActSeat =whhdService.getWhgActTicket4ActId(actId, selectSeat[0]);
 				if(whgActSeat.getSeatstatus() != 1){
@@ -124,8 +124,8 @@ public class APIActivityAction {
 					res.setMsg("该活动已无可预订座位！");
 				}
 			}
-			
-			
+
+
 			/*//查询当前活动下，该用户取消次数
 			List<WhgActOrder> actOrderList = whhdService.findOrderList4Id(actId, user.getId());
 			//查询该用户取消的所有活动次数
@@ -152,175 +152,67 @@ public class APIActivityAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	if(res.getCode() == null){
-    		res.setCode(0);
-    	}
-    	return res;
-    	
-    }
-    
-    /**
-     * 预定活动
-     * 访问路径 /api/act/bookingsave
-     * @param actId  活动Id
-     * @param eventId  订单信息 可参考whg_act_order(场次、预定人姓名、预定人手机号码)，POST的数据为此表的字段小写
-     * @param userId  用户Id 
-     * @param seatStr  在线选座 座位编号：座位1,座位2
-     * @param seats  自由选座 座位数
-     * @return JSON : {
-     * "success" : "1"        //1表示报名成功，其它失败
-     * "errormsg" : "105"     //101-活动Id不允许为空;102-活动场次Id不允许为空;103-用户Id不允许为空;104-座位数必须大于0;105-报名失败
-     * }
-     */
-    
-    @SuppressWarnings("unused")
+		if(res.getCode() == null){
+			res.setCode(0);
+		}
+		return res;
+
+	}
+
+	/**
+	 * 预定活动
+	 * 访问路径 /api/act/bookingsave
+	 * @param actId  活动Id
+	 * @param eventId  订单信息 可参考whg_act_order(场次、预定人姓名、预定人手机号码)，POST的数据为此表的字段小写
+	 * @param userId  用户Id
+	 * @param seatStr  在线选座 座位编号：座位1,座位2
+	 * @param seats  自由选座 座位数
+	 * @return JSON : {
+	 * "success" : "1"        //1表示报名成功，其它失败
+	 * "errormsg" : "105"     //101-活动Id不允许为空;102-活动场次Id不允许为空;103-用户Id不允许为空;104-座位数必须大于0;105-报名失败
+	 * }
+	 */
+
+	@SuppressWarnings("unused")
 	@CrossOrigin
-    @RequestMapping(value = "/bookingsave", method = RequestMethod.POST)
-    public RetMobileEntity bookingsave(String actId,String eventId, String userId,String orderPhoneNo,String seatStr,int seats,String name ){
-    	RetMobileEntity res = new RetMobileEntity();
-    	WhgActActivity whgActActivity = whhdService.getActDetail(actId);
-    	boolean flag = true;
-        try{
-        	if(actId ==null || actId ==""){
-        		res.setCode(101);
-        		res.setMsg("活动Id不允许为空");
-        		flag = false;
-        	}
-        	else if(eventId == null || eventId ==""){
-        		res.setCode(102);
-        		res.setMsg("活动场次Id不允许为空");
-        		flag = false;
-        	}else if(userId == null || userId == ""){
-        		res.setCode(103);
-        		res.setMsg("用户Id不允许为空");
-        		flag = false;
-        	}else if(seatStr == null || seatStr == "" && seats <1){
-        		res.setCode(104);
-        		res.setMsg("座位数必须大于0");
-        		flag = false;
-        	}else if(whgActActivity.getState() != 6){
-				res.setCode(105);
-				res.setMsg("该活动已下架！");
-				flag = false;
-			}else if(seatStr != null && seatStr != ""){
-				String selectSeat[] = seatStr.split(",");
-				WhgActSeat whgActSeat =whhdService.getWhgActTicket4ActId(actId, selectSeat[0]);
-				Map map = whhdService.getTicketList4SeatId(whgActSeat.getId(),eventId);
-				if(map !=null){
-					res.setCode(106);
-					res.setMsg("该座位已被预定！");
-					flag = false;
-				}
-				//WhgActSeat whgActSeat =whhdService.getWhgActTicket4ActId(actId, selectSeat[0]);
-//				if(whgActSeat.getSeatstatus() != 1){
-//					res.setCode(106);
-//					res.setMsg("该座位已被预定！");
-//				}
+	@RequestMapping(value = "/bookingsave", method = RequestMethod.POST)
+	public RetMobileEntity bookingsave(String actId,String eventId, String userId,String orderPhoneNo,String seatStr,int seats,String name ){
+		RetMobileEntity res = new RetMobileEntity();
+		WhgActActivity whgActActivity = whhdService.getActDetail(actId);
+		Map<String,Object> map = whhdService.checkActOrder(actId, eventId, userId, seatStr, seats);
+		try {
+			if(Integer.parseInt(String.valueOf(map.get("code"))) != 0){
+				res.setCode(Integer.parseInt(String.valueOf(map.get("code"))));
+				res.setMsg(String.valueOf(map.get("msg")));
 			}
-        	if(whgActActivity.getSellticket() == 2){
-				int seatCount = whgActActivity.getTicketnum();
-				JSONObject seatJson = whhdService.getSeat4ActId(actId,eventId,userId);
-				int userSeatNum = seatJson.getIntValue("seatSizeUser");//当前用户订票数
-				int seatSize = seatJson.getIntValue("seatSize");//当前活动已被预定票数
-				if(seatCount - seatSize <= 0 ){
-					res.setCode(107);
-					res.setMsg("该活动已无可预订座位！");
-					flag = false;
-				}
-				if(userSeatNum + seats > whgActActivity.getSeats() ){
-					res.setCode(108);
-					res.setMsg("每位用户最多可以预定"+whgActActivity.getSeats()+"座位！");
-					flag = false;
-				}
-				if(seatSize + seats > seatCount ){
-					res.setCode(109);
-					res.setMsg("该活动已无可预订座位！");
-					flag = false;
-				}
+			else{
+				res.setCode(0);
+				String id = this.commservice.getKey("WhgActOrder");
+				whhdService.saveActOrder(id,actId, eventId, userId, orderPhoneNo, seatStr, seats, name);
 			}
-        	if(flag){
-        		String validCode = this.whhdService.checkApplyAct(actId, userId);
-	            /*if(!"0".equals("1")){
-	                res.setSuccess(ResponseBean.FAIL);
-	                res.setErrormsg(validCode);
-	            }else{*/
-                	//验证通过，报名活动
-	            	WhgActOrder actOrder = new WhgActOrder();
-                	String id = this.commservice.getKey("WhgActOrder");
-                	actOrder.setId(id);
-                	actOrder.setOrderphoneno(orderPhoneNo);
-                	actOrder.setOrdername(name);
-                	actOrder.setEventid(eventId);
-                	actOrder.setOrdernumber(this.commservice.getOrderId(EnumOrderType.ORDER_ACT.getValue()));
-                	actOrder.setUserid(userId);
-                	whhdService.addActOrder(actId, actOrder);
-                	WhgActTime actTime = whhdService.selectOnePlay(actOrder.getEventid());
-//        			String mySelectSeat = request.getParameter("seatStr"); //在线选座位置数
-//        			int seatNum = Integer.parseInt(request.getParameter("seats")); //自由入座位置数
-        			String mySelectSeat = seatStr; //在线选座位置数
-        			int seatNum = seats; //自由入座位置数
-        			String[] selectSeat = mySelectSeat.split(",");
-        			int totalSeat = selectSeat.length;
-        			if(seatNum > 0){
-        				totalSeat = seatNum;
-        			}
-        			int sum_ = 1;
-        			for(int i=0;i<totalSeat;i++){
-        				if(seatNum > 0){//自由入座
-        					whhdService.saveSeatOrder("P"+sum_, id,"票"+sum_);
-        				}else{ //在线选座
-        					WhgActSeat whgActSeat =whhdService.getWhgActTicket4ActId(actId, selectSeat[i]);
-        					whhdService.saveSeatOrder(whgActSeat.getId(), id,whgActSeat.getSeatnum());
-        				}
-        				sum_++;
-        			}
-        			//发送短信
-        			Map<String, String> smsData = new HashMap<String, String>();
-        			smsData.put("userName", actOrder.getOrdername());
-        			smsData.put("activityName", whgActActivity.getName());
-        			smsData.put("ticketCode", actOrder.getOrdernumber());
-        			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        			Date date = actTime.getPlaydate();
-        			String dateStr = sdf.format(date);
-        			smsData.put("beginTime", dateStr +" "+ actTime.getPlaystime());
-        			int num = 0;
-        			if(totalSeat > 0){
-        				num=totalSeat;
-        			}else{
-        				num = seatNum;
-        			}
-        			smsData.put("number", String.valueOf(num));
-        			smsService.t_sendSMS(actOrder.getOrderphoneno(), "ACT_DUE", smsData);
-        			//短信发送成功后更改订单短信状态
-        			actOrder.setOrdersmsstate(2);
-        			actOrder.setOrdersmstime(new Date());
-        			whhdService.upActOrder(actOrder);
-            	//}
-        	}
-        } catch (Exception e){
-            log.error(e.getMessage(), e);
-            res.setCode(110);
-    		res.setMsg("报名失败");
-        }
-        return res;
-    }
-    
-    /**
-     * 查询活动列表
-     * @param request
-     * @return
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/actList", method = RequestMethod.POST)
-    public RetMobileEntity actList(HttpServletRequest request){
-    	RetMobileEntity retMobileEntity = new RetMobileEntity();
-    	String type = getParam(request,"type",null);//活动类型
-    	String district = getParam(request,"district",null);//区域
-    	String sdate = getParam(request,"sdate",null);//排序值
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return res;
+	}
+
+	/**
+	 * 查询活动列表
+	 * @param request
+	 * @return
+	 */
+	@CrossOrigin
+	@RequestMapping(value = "/actList", method = RequestMethod.POST)
+	public RetMobileEntity actList(HttpServletRequest request){
+		RetMobileEntity retMobileEntity = new RetMobileEntity();
+		String type = getParam(request,"type",null);//活动类型
+		String district = getParam(request,"district",null);//区域
+		String sdate = getParam(request,"sdate",null);//排序值
 		String index = getParam(request,"index","1");//pageNo
 		String size = getParam(request,"size","10");//pageSize
-    	Map param = new HashMap();
-    	if(null != type){
+		Map param = new HashMap();
+		if(null != type){
 			param.put("etype", type);
 		}
 		if(null != district){
@@ -343,37 +235,37 @@ public class APIActivityAction {
 		pager.setSize(pageInfo.getSize());
 		pager.setCount(pageInfo.getPages());
 		retMobileEntity.setPager(pager);
-    	return retMobileEntity;
-    }
-    
-    /**
-     * 查询活动详情
-     * @param actvid
-     * @param request
-     * @return
-     * @throws Exception  
-     * [{value: '110000',text: '北京市', children: [{value: '110101',text: '东城区' },{value: '2',text: '区' }]}]
-     */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+		return retMobileEntity;
+	}
+
+	/**
+	 * 查询活动详情
+	 * @param actvid
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 * [{value: '110000',text: '北京市', children: [{value: '110101',text: '东城区' },{value: '2',text: '区' }]}]
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@CrossOrigin
-    @RequestMapping(value = "/detail", method = RequestMethod.POST)
-    public RetMobileEntity  detail(String actvid,String userId,WebRequest request ){
-    	RetMobileEntity  res = new RetMobileEntity ();
-    	Map<String,Object> param = new HashMap<>();
+	@RequestMapping(value = "/detail", method = RequestMethod.POST)
+	public RetMobileEntity  detail(String actvid,String userId,WebRequest request ){
+		RetMobileEntity  res = new RetMobileEntity ();
+		Map<String,Object> param = new HashMap<>();
 		try {
-			if(actvid ==null || actvid ==""){
+			if(actvid ==null || "".equals(actvid)){
 				res.setCode(101);
 				res.setMsg("活动Id不允许为空");//活动Id不允许为空
-        	}else{
-        		//活动详情
-    			WhgActActivity actdetail = this.whhdService.getActDetail(actvid);
-    			//判断该活动是否已经收藏
-    			if(userId !=null && userId != "0"){
-    				List<WhCollection> collectionList = whhdService.findCollection4UserIdAndItemId(userId, actvid,"4");
-    				if(collectionList.size()>0){
-    					param.put("scState", 1);
-    				}
-    			}
+			}else{
+				//活动详情
+				WhgActActivity actdetail = this.whhdService.getActDetail(actvid);
+				//判断该活动是否已经收藏
+				if(userId !=null && userId != "0"){
+					List<WhCollection> collectionList = whhdService.findCollection4UserIdAndItemId(userId, actvid,"4");
+					if(collectionList.size()>0){
+						param.put("scState", 1);
+					}
+				}
 				List<Object> userList =  new ArrayList<Object>();
 				//活动场次信息
 				List<String> dateList = whhdService.getActDate(actvid);
@@ -435,30 +327,30 @@ public class APIActivityAction {
 				 }
 				 */
 				param.put("timeList", myTimeList);
-    			param.put("actdetail", actdetail);
-    			res.setData(param);
-        	}
+				param.put("actdetail", actdetail);
+				res.setData(param);
+			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			e.printStackTrace();
 		}
-    	return res;
-    }
-    
-    
-    /**
-     * 查询座位信息
-     * @param actId
-     * @param userId
-     * @param eventId
-     * @param request
-     * @return
-     */
-    @CrossOrigin
-    @RequestMapping(value = "/findSeat4ActId", method = RequestMethod.POST)
-    public RetMobileEntity findSeat4ActId(String actId,String userId,String eventId,WebRequest request){
-    	RetMobileEntity res = new RetMobileEntity();
-    	Map<String,Object> map = new HashMap<>();
+		return res;
+	}
+
+
+	/**
+	 * 查询座位信息
+	 * @param actId
+	 * @param userId
+	 * @param eventId
+	 * @param request
+	 * @return
+	 */
+	@CrossOrigin
+	@RequestMapping(value = "/findSeat4ActId", method = RequestMethod.POST)
+	public RetMobileEntity findSeat4ActId(String actId,String userId,String eventId,WebRequest request){
+		RetMobileEntity res = new RetMobileEntity();
+		Map<String,Object> map = new HashMap<>();
 		try {
 			JSONObject seatJson = whhdService.getSeat4ActId(actId,eventId,userId);
 			WhgActActivity actModel = whhdService.getActDetail(actId);
@@ -481,12 +373,12 @@ public class APIActivityAction {
 		}
 		res.setData(map);
 		return res;
-    }
+	}
 
-    private String getParam(HttpServletRequest request,String paramName,String defaultValue){
-    	String value = request.getParameter(paramName);
-    	if(null == value || value.trim().isEmpty()){
-    		return defaultValue;
+	private String getParam(HttpServletRequest request,String paramName,String defaultValue){
+		String value = request.getParameter(paramName);
+		if(null == value || value.trim().isEmpty()){
+			return defaultValue;
 		}
 		return value;
 	}
