@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.mapper.admin.CrtWhgPavilionMapper">
+    <!-- 根据状态获取展馆 -->
+    <select id="getPavilionListByState" resultType="hashmap">
+        SELECT
+            wse.id AS id,
+            wse.hallname AS hallname,
+            wse.hallsummary AS hallsummary,
+            wse.halladdress AS halladdress,
+            wse.hallphone AS hallphone,
+            wse.hallcover AS hallcover,
+            wse.hallexterior360 AS hallexterior360,
+            wse.hallInterior360 AS hallInterior360,
+            wse.hallsort AS hallsort,
+            wse.isrecommend AS isrecommend,
+            wse.hallstate AS hallstate,
+            wse.lastoperator AS lastoperator,
+            date_format(wse.lastoperatortime,'%Y-%m-%d %H:%m:%s') AS lastoperatortime,
+            wse.isdel AS isdel
+        FROM wh_szzg_exhhall wse
+        <where>
+            1 = 1
+            <if test="mystate == 0">
+                AND wse.hallstate = 0
+                AND wse.isdel = 0
+            </if>
+            <if test="mystate == 1">
+                AND wse.hallstate = 1
+                AND wse.isdel = 0
+            </if>
+            <if test="mystate == 2">
+                AND  wse.hallstate in (2,3)
+                AND wse.isdel = 0
+            </if>
+            <if test="mystate == 3">
+                AND  wse.isdel = 1
+            </if>
+        </where>
+        ORDER BY wse.lastoperatortime DESC
+    </select>
+
+    <update id="updatePavilionState">
+        UPDATE wh_szzg_exhhall wse
+        SET wse.hallstate = #{mySate}
+        <where>
+            wse.id = #{myId}
+        </where>
+    </update>
+
+    <select id="updatePavilionIsDel">
+        UPDATE wh_szzg_exhhall wse
+        SET wse.isdel = #{mySate}
+        <where>
+            wse.id = #{myId}
+        </where>
+    </select>
+
+    <select id="getAntiquesListByState" resultType="hashmap">
+        SELECT
+            wse.id,
+            wse.exhname,
+            wse.exhsummary,
+            wse.exhtype,
+            wse.exhtheme,
+            wse.exhphoto,
+            wse.exhstate,
+            wse.exhsort,
+            wse.isrecommend,
+            wse.lastoperator,
+            wse.lastoperatortime,
+            wse.hallid,
+            (SELECT wsh.hallname FROM wh_szzg_exhhall wsh WHERE wsh.id = wse.hallid) AS hallname,
+            wse.isdel
+        FROM wh_szzg_exhibit wse
+        <where>
+            1 = 1
+            <if test="mystate == 0">
+                AND wse.exhstate = 0
+                AND wse.isdel = 0
+            </if>
+            <if test="mystate == 1">
+                AND wse.exhstate = 1
+                AND wse.isdel = 0
+            </if>
+            <if test="mystate == 2">
+                AND  wse.exhstate in (2,3)
+                AND wse.isdel = 0
+            </if>
+            <if test="mystate == 3">
+                AND wse.isdel = 1
+            </if>
+        </where>
+        ORDER BY wse.lastoperatortime DESC
+    </select>
+
+    <insert id="addOneAntiques">
+        INSERT INTO wh_szzg_exhibit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="map.id != null">
+                id,
+            </if>
+            <if test="map.exhname != null">
+                exhname,
+            </if>
+            <if test="map.exhsummary != null">
+                exhsummary,
+            </if>
+            <if test="map.exhtype != null">
+                exhtype,
+            </if>
+            <if test="map.exhtheme != null">
+                exhtheme,
+            </if>
+            <if test="map.exhphoto != null">
+                exhphoto,
+            </if>
+            <if test="map.exhstate != null">
+                exhstate,
+            </if>
+            <if test="map.exhsort != null">
+                exhsort,
+            </if>
+            <if test="map.isrecommend != null">
+                isrecommend,
+            </if>
+            <if test="map.lastoperator != null">
+                lastoperator,
+            </if>
+            <if test="map.hallid != null">
+                hallid,
+            </if>
+            lastoperatortime,
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="map.id != null">
+                #{map.id,jdbcType=VARCHAR},
+            </if>
+            <if test="map.exhname != null">
+                #{map.exhname,jdbcType=VARCHAR},
+            </if>
+            <if test="map.exhsummary != null">
+                #{map.exhsummary,jdbcType=VARCHAR},
+            </if>
+            <if test="map.exhtype != null">
+                #{map.exhtype,jdbcType=VARCHAR},
+            </if>
+            <if test="map.exhtheme != null">
+                #{map.exhtheme,jdbcType=VARCHAR},
+            </if>
+            <if test="map.exhphoto != null">
+                #{map.exhphoto,jdbcType=VARCHAR},
+            </if>
+            <if test="map.exhstate != null">
+                #{map.exhstate,jdbcType=INTEGER},
+            </if>
+            <if test="map.exhsort != null">
+                #{map.exhsort,jdbcType=INTEGER},
+            </if>
+            <if test="map.isrecommend != null">
+                #{map.isrecommend,jdbcType=INTEGER},
+            </if>
+            <if test="map.lastoperator != null">
+                #{map.lastoperator,jdbcType=VARCHAR},
+            </if>
+            <if test="map.hallid != null">
+                #{map.hallid,jdbcType=VARCHAR},
+            </if>
+            now(),
+        </trim>
+    </insert>
+
+    <update id="updateOneAntiques">
+      UPDATE wh_szzg_exhibit
+      SET
+        <trim suffixOverrides=",">
+            <if test="map.exhname != null">
+                exhname = #{map.exhname,jdbcType=VARCHAR},
+            </if>
+            <if test="map.exhsummary != null">
+                exhsummary = #{map.exhsummary,jdbcType=VARCHAR},
+            </if>
+            <if test="map.exhtype != null">
+                exhtype = #{map.exhtype,jdbcType=VARCHAR},
+            </if>
+            <if test="map.exhtheme != null">
+                exhtheme = #{map.exhtheme,jdbcType=VARCHAR},
+            </if>
+            <if test="map.exhphoto != null">
+                exhphoto = #{map.exhphoto,jdbcType=VARCHAR},
+            </if>
+            <if test="map.exhstate != null">
+                exhstate = #{map.exhstate,jdbcType=INTEGER},
+            </if>
+            <if test="map.exhsort != null">
+                exhsort = #{map.exhsort,jdbcType=INTEGER},
+            </if>
+            <if test="map.isrecommend != null">
+                isrecommend = #{map.isrecommend,jdbcType=INTEGER},
+            </if>
+            <if test="map.lastoperator != null">
+                lastoperator = #{map.lastoperator,jdbcType=VARCHAR},
+            </if>
+            <if test="map.hallid != null">
+                hallid = #{map.hallid,jdbcType=VARCHAR},
+            </if>
+            lastoperatortime = now(),
+        </trim>
+        <where>
+            id = #{map.id,jdbcType=VARCHAR}
+        </where>
+    </update>
+
+    <update id="updateOneAntiquesState">
+        UPDATE wh_szzg_exhibit SET exhstate = #{myState,jdbcType=INTEGER}
+        <where>
+            id = #{id,jdbcType=VARCHAR}
+        </where>
+    </update>
+
+    <update id="updateOneAntiquesDelState">
+        UPDATE wh_szzg_exhibit SET isdel = #{myState,jdbcType=INTEGER}
+        <where>
+            id = #{id,jdbcType=VARCHAR}
+        </where>
+    </update>
+
+    <select id="getAllPavilion" resultType="hashmap">
+        SELECT
+          id,
+          hallname,
+          hallsummary,
+          halladdress,
+          hallphone,
+          hallcover,
+          hallexterior360,
+          hallInterior360,
+          hallsort,
+          isrecommend,
+          hallstate,
+          lastoperator,
+          lastoperatortime
+        FROM wh_szzg_exhhall
+        <where>
+            hallstate = 3
+        </where>
+        ORDER BY lastoperatortime DESC
+    </select>
+
+    <select id="getExhbitById" resultType="hashmap">
+        SELECT
+        wse.id AS id,
+        wse.exhname AS exhname,
+        wse.exhsummary AS exhsummary,
+        wse.exhtype AS exhtype,
+        wse.exhtheme AS exhtheme,
+        wse.exhphoto AS exhphoto,
+        wse.exhstate AS exhstate,
+        wse.exhsort AS exhsort,
+        wse.isrecommend AS isrecommend,
+        wse.lastoperator AS lastoperator,
+        wse.hallid AS hallid,
+        (SELECT wsh.hallname FROM wh_szzg_exhhall wsh WHERE wsh.id = wse.hallid) AS hallname
+        FROM wh_szzg_exhibit wse
+        <where>
+            wse.id = #{id}
+        </where>
+    </select>
+    
+</mapper>

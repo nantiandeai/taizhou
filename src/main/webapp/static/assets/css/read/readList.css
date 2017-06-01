@@ -1,0 +1,137 @@
+/*---------------------------------------------------------------------
+	* Filename:         login.css
+	* Description:      login
+	* Version:          1.0.0 (2016-10-20)
+	* Website:          hn.sun3d.com
+	* Author:           JackyZeng (zrongs@vip.qq.com)
+---------------------------------------------------------------------*/
+
+.public-tz-main{
+    width:1200px;
+    margin:40px auto 100px auto;
+    min-height:600px;
+    -moz-box-shadow:2px 2px 2em #e5e1d5;
+    -webkit-box-shadow:2px 2px 2em #e5e1d5;
+    box-shadow:2px 2px 2em #e5e1d5;
+    background-color:#fff;
+}
+
+.public-tz-main .list-3-type-1{
+    width:1008px;
+    padding:70px 96px;
+}
+.public-tz-main .list-3-type-1 .u-b li{
+    background-color:#137db7
+}
+.public-tz-main .list-3-type-1 .u-r li{
+    background-color:#8f1e60
+}
+.public-tz-main .list-3-type-1 ul li{
+    background-color:#eee;
+    float:left;
+    width:300px;
+    margin:0px 18px 36px 18px;
+    height:270px; 
+    transition: .5s;
+}
+.public-tz-main .list-3-type-1 ul li:hover{
+    -moz-box-shadow:2px 2px 20px #333333;
+    -webkit-box-shadow:2px 2px 20px #333333;
+    box-shadow:2px 2px 20px #333333;
+}
+.public-tz-main .list-3-type-1 ul li .img{
+    width:300px;
+    height:190px;
+    overflow: hidden;
+}
+.public-tz-main .list-3-type-1 ul li .info{
+    height:80px;
+    overflow: hidden;
+}
+.public-tz-main .list-3-type-1 ul li h2,.public-tz-main .list-3-type-1 ul li p{
+    padding:0px 15px;
+    text-align: center;
+    height:14px;
+    line-height:24px;
+    height:24px;
+    overflow: hidden;
+}
+.public-tz-main .list-3-type-1 ul li h2{
+    font-size:20px;
+    color:#fff;
+    margin:15px 0px 0px 0px;
+}
+.public-tz-main .list-3-type-1 ul li p{
+    color:#fff;
+    margin:0px;
+    font-size:14px;
+}
+
+.public-tz-main .ad-1{
+    background-color:#eee;
+    height:400px;
+    width:1200px;
+    overflow: hidden;
+}
+.public-tz-main .ad-1 img{
+    height:400px;
+    width:1200px;
+}
+
+
+.public-tz-main .search-cont{
+    padding-top:50px;
+    width:570px;
+    height:67px;
+    margin:0px auto;
+}
+
+.public-tz-main .search-cont{
+    padding-top:50px;
+    width:570px;
+    height:67px;
+    margin:0px auto;
+}
+
+.public-tz-main .search-cont .tab-list{
+    overflow: hidden;
+}
+.public-tz-main .search-cont .tab-list li{
+    padding:5px 15px;
+    color:#999;
+    font-size:12px;
+    float:left;
+    cursor: pointer;
+}
+.public-tz-main .search-cont .tab-list .active{
+    background-color:#388652;
+    color:#fff;
+}
+.public-tz-main .search-cont .bg{
+    height:40px;
+    background-color:#fff;
+    border:#b9d9c4 1px solid;
+    position:relative;
+}
+
+.public-tz-main .search-cont .search-input{
+    width:450px;
+    height:36px;
+    border:1px #fff solid;
+    line-height: 36px;
+    position:absolute;
+    left: 10px;
+    top:0px;
+    font-size:14px;
+
+}
+.public-tz-main .search-cont .search-btn{
+    width:80px;
+    height:42px;
+    position:absolute;
+    right: 0px;
+    top:-1px;
+    background:url(../../../assets/img/read/search.jpg) no-repeat 50% 50%;
+
+}
+

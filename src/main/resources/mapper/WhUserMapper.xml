@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.mapper.WhUserMapper">
+
+	<!--个人中心消息提示  count(*) as num -->
+	<select id="msgAlert" resultType='hashmap'>
+		SELECT 
+			t.reftype,
+		FROM
+			wh_user_alerts t
+		WHERE
+			1=1
+			<if test="refuid != null">
+				and	t.refuid = #{refuid}
+			</if>
+	</select>
+	
+	<!--个人中心头部消息提示 -->
+	<select id="msgHeader" resultType='String'>
+		SELECT 
+			SUM(reftype) as num 
+		FROM
+			wh_user_alerts t
+		WHERE
+			1=1
+			<if test="refuid != null">
+				and	t.refuid = #{refuid}
+			</if>
+		GROUP BY
+			t.refuid
+	</select>
+
+	<!-- 获取过期的用户订单 -->
+	<select id="getUserActOrderTimeOut" resultType="hashmap">
+			SELECT
+					wao.id AS id,
+					wao.activityid AS activityid,
+					wao.userid AS userid,
+					wao.ordernumber AS ordernumber,
+					wao.ordersms AS ordersms,
+					wao.ordersmstime AS ordersmstime,
+					wao.ordersmsstate AS ordersmsstate,
+					wao.ordername AS ordername,
+					wao.orderphoneno AS orderphoneno,
+					wao.ordersummary AS ordersummary,
+					wao.orderisvalid AS orderisvalid,
+					wao.ordercreatetime AS ordercreatetime,
+					wao.eventid AS eventid,
+					wao.ticketstatus AS ticketstatus,
+					wao.ticketcode AS ticketcode,
+					wao.printtickettimes AS printtickettimes,
+					waa.name AS name,
+					waa.address AS address,
+					wat.playstarttime AS playstarttime,
+					wat.playendtime AS playendtime,
+					wat.playdate as playdate,
+					wat.playstime as playstime,
+					wat.playetime as playetime 
+			FROM whg_act_order wao,whg_act_time wat,whg_act_activity waa
+			<where>
+				  wao.eventid = wat.id AND
+				  wao.activityid = waa.id AND
+				  wao.userid = #{userid} AND
+				  wat.playstarttime &lt; now() 
+			</where>
+			  order by wao.ordercreatetime desc  
+	</select>
+
+	<!-- 获取未过期的用户订单 -->
+	<select id="getUserActOrderNotTimeOut" resultType="hashmap">
+		SELECT
+		wao.id AS id,
+		wao.activityid AS activityid,
+		wao.userid AS userid,
+		wao.ordernumber AS ordernumber,
+		wao.ordersms AS ordersms,
+		wao.ordersmstime AS ordersmstime,
+		wao.ordersmsstate AS ordersmsstate,
+		wao.ordername AS ordername,
+		wao.orderphoneno AS orderphoneno,
+		wao.ordersummary AS ordersummary,
+		wao.orderisvalid AS orderisvalid,
+		wao.ordercreatetime AS ordercreatetime,
+		wao.eventid AS eventid,
+		wao.ticketstatus AS ticketstatus,
+		wao.ticketcode AS ticketcode,
+		wao.printtickettimes AS printtickettimes,
+		waa.name AS name,
+		waa.address AS address,
+		wat.playstarttime AS playstarttime,
+		wat.playendtime AS playendtime,
+		wat.playdate as playdate,
+		wat.playstime as playstime,
+		wat.playetime as playetime 
+		FROM whg_act_order wao,whg_act_time wat,whg_act_activity waa
+		<where>
+			wao.eventid = wat.id AND
+			wao.activityid = waa.id AND
+			wao.userid = #{userid} AND
+			wat.playstarttime &gt; now() 
+		</where>
+		order by wao.ordercreatetime desc  
+	</select>
+	
+	<!-- 获取未过期的用户订单 -->
+	<select id="getUserActOrderAll" resultType="hashmap">
+		SELECT
+		wao.id AS id,
+		wao.activityid AS activityid,
+		wao.userid AS userid,
+		wao.ordernumber AS ordernumber,
+		wao.ordersms AS ordersms,
+		wao.ordersmstime AS ordersmstime,
+		wao.ordersmsstate AS ordersmsstate,
+		wao.ordername AS ordername,
+		wao.orderphoneno AS orderphoneno,
+		wao.ordersummary AS ordersummary,
+		wao.orderisvalid AS orderisvalid,
+		wao.ordercreatetime AS ordercreatetime,
+		wao.eventid AS eventid,
+		wao.ticketstatus AS ticketstatus,
+		wao.ticketcode AS ticketcode,
+		wao.printtickettimes AS printtickettimes,
+		waa.name AS name,
+		waa.address AS address,
+		wat.playstarttime AS playstarttime,
+		wat.playendtime AS playendtime,
+		wat.playdate as playdate,
+		wat.playstime as playstime,
+		wat.playetime as playetime 
+		FROM whg_act_order wao,whg_act_time wat,whg_act_activity waa
+		<where>
+			wao.eventid = wat.id AND
+			wao.activityid = waa.id AND
+			wao.userid = #{userid} 
+		</where>
+		order by wao.ordercreatetime desc  
+	</select>
+	
+
+	<select id="getUserByCondition" resultType="hashmap">
+		SELECT
+			wu.id,
+			wu.name,
+			wu.nickname,
+			wu.phone,
+			wu.email,
+			date_format(wu.lastdate,'%Y-%m-%d %H:%m:%s') AS lastdate,
+			wu.sex,
+			wu.job,
+			date_format(wu.birthday,'%Y-%m-%d') AS birthday,
+			wu.qq,
+			wu.wx,
+			wu.password,
+			wu.nation,
+			wu.origo,
+			wu.company,
+			wu.address,
+			wu.resume,
+			wu.actBrief,
+			wu.isrealname,
+			wu.isperfect,
+			wu.idcard,
+			wu.idcardface,
+			wu.idcardback,
+			wu.checkmsg,
+			wu.openid,
+			wu.isinner,
+			wu.innerdesc,
+			wu.venueid,
+			wu.wid,
+			wu.wxopenid,
+			wu.headurl
+		FROM wh_user wu
+		<where>
+			1=1
+			<if test="whUser.id != null">
+				AND wu.id = #{whUser.id}
+			</if>
+			<if test="whUser.name != null">
+				AND wu.name = #{whUser.name}
+			</if>
+			<if test="whUser.nickname != null">
+				AND wu.nickname = #{whUser.nickname}
+			</if>
+			<if test="whUser.phone != null">
+				AND wu.phone = #{whUser.phone}
+			</if>
+			<if test="whUser.email != null">
+				AND wu.email = #{whUser.email}
+			</if>
+			<if test="whUser.id != null">
+				AND wu.id = #{whUser.id}
+			</if>
+			<if test="whUser.lastdate != null">
+				AND wu.lastdate = #{whUser.lastdate}
+			</if>
+			<if test="whUser.sex != null">
+				AND wu.sex = #{whUser.sex}
+			</if>
+			<if test="whUser.job != null">
+				AND wu.job = #{whUser.job}
+			</if>
+			<if test="whUser.birthday != null">
+				AND wu.birthday = #{whUser.birthday}
+			</if>
+			<if test="whUser.qq != null">
+				AND wu.qq = #{whUser.qq}
+			</if>
+			<if test="whUser.wx != null">
+				AND wu.wx = #{whUser.wx}
+			</if>
+			<if test="whUser.password != null">
+				AND wu.password = #{whUser.password}
+			</if>
+			<if test="whUser.nation != null">
+				AND wu.nation = #{whUser.nation}
+			</if>
+			<if test="whUser.origo != null">
+				AND wu.origo = #{whUser.origo}
+			</if>
+			<if test="whUser.company != null">
+				AND wu.company = #{whUser.company}
+			</if>
+			<if test="whUser.address != null">
+				AND wu.address = #{whUser.address}
+			</if>
+			<if test="whUser.resume != null">
+				AND wu.resume = #{whUser.resume}
+			</if>
+			<if test="whUser.isrealname != null">
+				AND wu.isrealname = #{whUser.isrealname}
+			</if>
+			<if test="whUser.isperfect != null">
+				AND wu.isperfect = #{whUser.isperfect}
+			</if>
+			<if test="whUser.idcard != null">
+				AND wu.idcard = #{whUser.idcard}
+			</if>
+			<if test="whUser.idcardface != null">
+				AND wu.idcardface = #{whUser.idcardface}
+			</if>
+			<if test="whUser.idcardback != null">
+				AND wu.idcardback = #{whUser.idcardback}
+			</if>
+			<if test="whUser.checkmsg != null">
+				AND wu.checkmsg = #{whUser.checkmsg}
+			</if>
+			<if test="whUser.openid != null">
+				AND wu.openid = #{whUser.openid}
+			</if>
+			<if test="whUser.isinner != null">
+				AND wu.isinner = #{whUser.isinner}
+			</if>
+			<if test="whUser.innerdesc != null">
+				AND wu.innerdesc = #{whUser.innerdesc}
+			</if>
+			<if test="whUser.venueid != null">
+				AND wu.venueid = #{whUser.venueid}
+			</if>
+			<if test="whUser.wid != null">
+				AND wu.wid = #{whUser.wid}
+			</if>
+			<if test="whUser.wxopenid != null">
+				AND wu.wxopenid = #{whUser.wxopenid}
+			</if>
+			<if test="whUser.headurl != null">
+				AND wu.headurl = #{whUser.headurl}
+			</if>
+		</where>
+	</select>
+
+	<select id="getActCount" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM whg_act_order
+		<where>
+			userid = #{userId}
+			<if test="queryType == 1">
+				AND ticketstatus = 1
+			</if>
+			<if test="queryType == 2">
+				AND ticketstatus = 2
+			</if>
+		</where>
+	</select>
+
+	<select id="getVenCount" resultType="java.lang.Integer">
+		SELECT
+		COUNT(*)
+		FROM whg_ven_room_order
+		<where>
+			userid = #{userId}
+			<if test="queryType == 1">
+				AND ticketcheckstate = 1
+			</if>
+			<if test="queryType == 2">
+				AND ticketcheckstate = 2
+			</if>
+		</where>
+	</select>
+
+	<select id="getUserAct" resultType="hashmap">
+		SELECT
+		wao.id,
+		wao.activityid,
+		wao.userid,
+		wao.eventid,
+		wao.ticketstatus,
+		wao.ordercreatetime,
+		(SELECT waa.name FROM whg_act_activity waa WHERE waa.id = wao.activityid),
+		(SELECT waa.sellticket FROM whg_act_activity waa WHERE waa.id = wao.activityid),
+		(SELECT waa.sellticket FROM whg_act_time wat WHERE wat.id = wao.eventid),
+		FROM whg_act_order wao,whg_act_time wat,whg_act_activity waa
+		<where>
+			wat.id = wao.eventid AND
+			waa.id = wao.activityid AND
+			wao.userid = #{userId}
+		</where>
+		ORDER BY wao.ordercreatetime DESC
+	</select>
+
+	<select id="getUserCollection" resultType="hashmap">
+		SELECT
+		FROM
+	</select>
+
+</mapper>

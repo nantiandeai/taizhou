@@ -1,0 +1,435 @@
+.container {
+    width: 1200px;
+    margin: 40px auto;
+}
+.container ul.list {
+    width: 1230px;
+}
+.container ul.list li {
+    width: 280px;
+    height: 236px;
+    margin-right: 27px;
+    margin-bottom: 30px;
+    position: relative;
+    float: left;
+    -webkit-box-shadow: 0px 7px 5px #e2dede;
+    -moz-box-shadow: 0px 7px 5px #e2dede;
+    box-shadow: 0px 7px 5px #e2dede;
+}
+.container ul.list li div.img {
+    width: 280px;
+    height: 236px;
+    position: relative;
+    overflow: hidden;
+}
+.container ul.list li div.img span {
+    background-image: url("../../../assets/img/public/green-bg.png");
+    height: 60px;
+    width: 100%;
+    line-height: 60px;
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.container ul.list li div.img .detail {
+    background-image: url("../../../assets/img/public/green-bg.png");
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+.container ul.list li div.img .detail h2 {
+    font-size: 18px;
+    line-height: 28px;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.container ul.list li div.img .detail p {
+    font-size: 14px;
+    line-height: 24px;
+    max-height: 96px;
+    overflow: hidden;
+    color: #fff;
+    padding: 20px;
+}
+.container ul.list li div.img .detail i {
+    background-image: url("../../../assets/img/public/jia.png");
+    display: block;
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    left: 45%;
+    bottom: 20px;
+}
+.container ul.list li div.img a {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.container .banner {
+    position: relative;
+    width: 1200px;
+    height: 460px;
+    margin-bottom: 40px;
+    text-align: center;
+    overflow: hidden;
+}
+.container .banner > span {
+    display: inline-block;
+    position: relative;
+    bottom: 80px;
+    padding: 0 50px;
+    height: 50px;
+    font-size: 20px;
+    text-align: center;
+    line-height: 50px;
+    color: #fff;
+    background-image: url("../../../assets/img/public/b.png");
+    max-width: 800px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.container ul.detail {
+    width: 1230px;
+}
+.container ul.detail li {
+    width: 280px;
+    height: 300px;
+    margin-right: 27px;
+    margin-bottom: 30px;
+    position: relative;
+    float: left;
+    -webkit-box-shadow: 0px 7px 5px #e2dede;
+    -moz-box-shadow: 0px 7px 5px #e2dede;
+    box-shadow: 0px 7px 5px #e2dede;
+    padding-bottom: 20px;
+    overflow: hidden;
+}
+.container ul.detail li div.img {
+    width: 280px;
+    height: 320px;
+    position: relative;
+    overflow: hidden;
+}
+/*.container ul.detail li div.img span {
+    background-image: url("../../../assets/img/public/green-bg.png");
+    height: 60px;
+    width: 100%;
+    line-height: 60px;
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}*/
+.container ul.detail li div.img .detail {
+     background-image: url(../../../assets/img/public/green-bg.png);
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 84px;
+    overflow: hidden;
+}
+.container ul.detail li div.img .detail .mask {
+    background: #398554;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: none;
+}
+.container ul.detail li div.img .detail h2 {
+    font-size: 18px;
+    line-height: 28px;
+    color: #fff;
+    padding: 20px 20px 0 20px;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    z-index: 2;
+}
+.container ul.detail li div.img .detail p {
+    font-size: 14px;
+    line-height: 24px;
+    height: 24px;
+    max-height: 72px;
+    overflow: hidden;
+    color: #fff;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+}
+.container ul.detail li div.img .detail i {
+    background-image: url("../../../assets/img/public/jia.png");
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    left: 45%;
+    bottom: 20px;
+    z-index: 2;
+    display: none;
+}
+.container ul.detail li  a {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 9999;
+}
+
+
+.container .index-banner {
+    width: 1200px;
+    height: 460px;
+    position: relative;
+    float: left;
+}
+.container .index-banner>a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top:0;
+}
+.container .index-banner .desc {
+    position: absolute;
+    right: 0px;
+    top:0px;
+    width: 100%;
+    height: 100%;
+}
+.container .index-banner .desc div.title {
+    font-size: 22px;
+    color: #fff;
+    line-height: 48px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 15px;
+    border-bottom: 1px #fff solid;
+    width: 500px;
+    position: absolute;
+    right: 45px;
+    top:100px;
+}
+
+.container .index-banner .desc > a {
+    font-size: 16px;
+    color: #fff;
+    line-height: 40px;
+    text-align: center;
+    background: #398554;
+    display: block;
+    width: 160px;
+    height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: absolute;
+    right: 45px;
+    top:180px;
+
+}
+.container .index-banner .desc > a i {
+    position: relative;
+    top: 2px;
+    font-size: 20px;
+}
+.container .venue-list {
+    padding: 60px 80px;
+    background: #fff;
+    -webkit-box-shadow: 0px 7px 5px #e2dede;
+    -moz-box-shadow: 0px 7px 5px #e2dede;
+    box-shadow: 0px 7px 5px #e2dede;
+}
+.container .venue-list .lists {
+    width: 820px;
+    height: 220px;
+    float: left;
+    padding-top: 60px;
+}
+.container .venue-list .lists .arrow {
+    width: 110px;
+    height: 40px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+.container .venue-list .lists .arrow  .arrows {
+    width: 50px;
+    height: 40px;
+    background: #ddd;
+    float: left;
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+}
+.container .venue-list .lists .arrow  .arrows:hover {
+    background: #398554;
+}
+.container .venue-list .lists .arrow  .right-arrow {
+    margin-left: 10px;
+}
+.container .venue-list .lists .arrow  .arrows i{
+    font-size: 30px;
+    position: relative;
+    top: 5px;
+}
+.container .venue-list .lookmore {
+    width: 180px;
+    float: right;
+    padding-top: 60px;
+}
+.container .venue-list .lookmore .title h2 {
+    font-size: 35px;
+    color: #e0e0e0;
+    margin: 0 0 15px 0;
+}
+.container .venue-list .lookmore .title p {
+    font-size: 24px;
+    color: #398554;
+    margin: 0 0 30px 0;
+}
+.container .venue-list .lookmore > a {
+    width: 138px;
+    height: 38px;
+    display: block;
+    border: solid 1px #398554;
+    color: #398554;
+    font-size: 14px;
+    line-height: 40px;
+    text-align: center;
+}
+.container .venue-list .lists ul li {
+    width: 260px;
+    height: 220px;
+    margin-right: 20px;
+    position: relative;
+    float: left;
+}
+.container .venue-list .lists ul li div.img {
+    width: 260px;
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+}
+.container .venue-list .lists ul li div.img span {
+    background-image: url("../../../assets/img/public/green-bg.png");
+    height: 60px;
+    width: 100%;
+    line-height: 60px;
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.container .venue-list .lists ul li div.img .detail {
+    background-image: url("../../../assets/img/public/green-bg.png");
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+.container .venue-list .lists ul li div.img .detail h2 {
+    font-size: 18px;
+    line-height: 28px;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.container .venue-list .lists ul li div.img .detail p {
+    font-size: 14px;
+    line-height: 24px;
+    max-height: 96px;
+    overflow: hidden;
+    color: #fff;
+    padding: 20px;
+}
+.container .venue-list .lists ul li div.img .detail i {
+    background-image: url("../../../assets/img/public/jia.png");
+    display: block;
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    left: 45%;
+    bottom: 20px;
+}
+.container .venue-list .lists ul li div.img a {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.index-banner-content {
+    height: 460px;
+    position: relative;
+}
+.index-banner-content .page {
+    position: absolute;
+    bottom: 10px;
+    left: 0px;
+    width: 100%;
+}
+.index-banner-content .page .pages {
+    text-align: center;
+    width: 100%;
+}
+
+.index-banner-content .page .pages li {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #666;
+    text-indent: 10000px;
+    margin: 0 5px;
+    cursor: pointer;
+
+}
+
+.index-banner-content .page .pages li.active {
+    background: #fff;
+}

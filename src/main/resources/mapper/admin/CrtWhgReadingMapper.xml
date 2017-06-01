@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.mapper.admin.CrtWhgReadingMapper">
+    <select id="getInfoListByState" resultType="hashmap">
+        SELECT
+            wsz.id AS id,
+            wsz.infotitle AS infotitle,
+            wsz.infosummary AS infosummary,
+            wsz.author AS author,
+            wsz.infocover AS infocover,
+            wsz.infolink AS infolink,
+            date_format(wsz.infocreatetime,'%Y-%m-%d %H:%m:%s') AS infocreatetime,
+            wsz.infostate AS infostate,
+            wsz.infosort AS infosort,
+            wsz.isrecommend AS isrecommend,
+            wsz.infosource AS infosource,
+            wsz.isdel AS isdel
+        FROM wh_szyd_zx wsz
+        <where>
+            1 = 1 
+            <if test="mystate == 0">
+                AND wsz.infostate = 0
+                AND wsz.isdel = 0
+            </if>
+            <if test="mystate == 1">
+                AND wsz.infostate = 1
+                AND wsz.isdel = 0
+            </if>
+            <if test="mystate == 2">
+                AND  wsz.infostate in (2,3)
+                AND wsz.isdel = 0
+            </if>
+            <if test="mystate == 3">
+                AND wsz.isdel = 1
+            </if>
+        </where>
+        ORDER BY wsz.infoupdatetime DESC
+    </select>
+    
+    <insert id="addOneReadingZx">
+        INSERT INTO wh_szyd_zx
+        (
+            id,
+            infotitle,
+            infosummary,
+            author,
+            infocover,
+            infolink,
+            infocreatetime,
+            infosource,
+            infoupdatetime,
+            infostate
+        )VALUES(
+            #{param.id},
+            #{param.infotitle},
+            #{param.infosummary},
+            #{param.author},
+            #{param.infocover},
+            #{param.infolink},
+            now(),
+            #{param.infosource},
+            now(),
+            #{param.infostate}
+        )
+    </insert>
+    
+    <select id="getActListForReading" resultType="hashmap">
+        SELECT
+          waa.id,
+          waa.name,
+          waa.starttime,
+          waa.endtime,
+          waa.crtdate
+        FROM whg_act_activity waa
+        <where>
+            waa.state = 6 AND
+            waa.endtime &gt; now()
+        </where>
+        ORDER BY waa.crtdate DESC
+    </select>
+</mapper>

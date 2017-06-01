@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.mapper.home.CrtExhibitionhallMapper">
+
+    <select id="get360Photo" resultType="hashmap">
+        SELECT
+        wyl.id,
+        wyl.name,
+        wyl.picture,
+        wyl.type,
+        wyl.url,
+        wyl.crtuser,
+        wyl.crtdate,
+        wyl.state,
+        wyl.statemdfdate,
+        wyl.statemdfuser,
+        wyl.delstate
+        FROM whg_ywi_lbt wyl
+        <where>
+            wyl.state = 1 AND
+            wyl.delstate = 0 AND
+            wyl.type = 10
+        </where>
+        ORDER BY wyl.crtdate DESC
+    </select>
+
+    <select id="getExhibitionhallList" resultType="hashmap">
+        SELECT
+            wse.id,
+            wse.hallname,
+            wse.hallsummary,
+            wse.halladdress,
+            wse.hallphone,
+            wse.hallcover,
+            wse.hallexterior360,
+            wse.hallInterior360,
+            wse.hallsort,
+            wse.isrecommend,
+            wse.hallstate,
+            wse.lastoperator,
+            wse.lastoperatortime
+        FROM wh_szzg_exhhall wse
+        <where>
+            wse.hallstate = 3
+        </where>
+        ORDER BY wse.lastoperatortime DESC
+    </select>
+
+    <select id="getExhibitionhallInfo" resultType="hashmap">
+        SELECT
+            wse.id,
+            wse.hallname,
+            wse.hallsummary,
+            wse.halladdress,
+            wse.hallphone,
+            wse.hallcover,
+            wse.hallexterior360,
+            wse.hallInterior360,
+            wse.hallsort,
+            wse.isrecommend,
+            wse.hallstate,
+            wse.lastoperator,
+            wse.lastoperatortime
+        FROM wh_szzg_exhhall wse
+        <where>
+            wse.id = #{id}
+        </where>
+    </select>
+
+    <select id="getExhibitList" resultType="hashmap">
+        SELECT
+            wse.id,
+            wse.exhname,
+            wse.exhsummary,
+            wse.exhtype,
+            wse.exhtheme,
+            wse.exhphoto,
+            wse.exhstate,
+            wse.exhsort,
+            wse.isrecommend,
+            wse.lastoperator,
+            wse.lastoperatortime,
+            wse.hallid
+        FROM wh_szzg_exhibit wse
+        <where>
+            wse.hallid = #{id} AND
+            wse.exhstate = 3
+        </where>
+        ORDER BY wse.lastoperatortime DESC
+    </select>
+
+</mapper>

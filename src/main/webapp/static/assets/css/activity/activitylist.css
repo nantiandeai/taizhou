@@ -1,0 +1,103 @@
+.container{width: 1200px;margin: 0 auto;}
+.categoryChange {
+    width: 1190px;
+    margin: 40px auto;
+    padding: 0 5px;
+    -webkit-box-shadow: 0px 7px 5px #e2dede;
+    -moz-box-shadow: 0px 7px 5px #e2dede;
+    box-shadow: 0px 7px 5px #e2dede;
+    background: #fff;
+}
+.categoryChange .row{padding: 15px 20px 0; border-bottom:1px #e5e5e5 solid ;}
+.categoryChange .border-none{border-bottom:0px; margin-bottom:0px;}
+.categoryChange .row .title{float:left; width:70px; font-size:16px; padding-top:5px;}
+.categoryChange .row .adrList{width:1050px; float:left;}
+.categoryChange .row .adrList1{width:700px; float:left;}
+.categoryChange .row .adrList .item a{color:#808080;font-size: 16px;}
+.categoryChange .row .adrList .active{}
+.categoryChange .row .adrList .active a,.categoryChange .type-row .categoryName.active a{color: #398554;font-weight:bold;}
+.categoryChange .row .adrList .item{padding: 0px 25px;margin-bottom: 15px;border-radius: 3px;display: inline-block;height: 30px;line-height: 30px;}
+.categoryChange .row .searchCont{float: right;width: 260px;height: 30px;border: 1px #ddd solid; border-radius: 5px; background-color: #fff; margin-right:0px;}
+.categoryChange .row .searchCont input{height: 25px;line-height: 25px; border: 1px #fff solid; color: #808080; font-size: 14px;vertical-align: top; margin-left: 10px;}
+.categoryChange .row .searchCont button{height:30px; width:36px; background:url(../../img/activity/search.png) 40% 55% no-repeat; float: right;}
+/*页面主体*/
+.active-list .con{width: 1230px; margin-bottom:80px;}
+.active-list .con ul li{width: 280px;background: #fff;float: left;margin: 0px 27px 30px 0;
+    -webkit-box-shadow: 0px 7px 5px #e2dede;
+    -moz-box-shadow: 0px 7px 5px #e2dede;
+    box-shadow: 0px 7px 5px #e2dede;}
+.active-list .con ul li div.img{width: 280px;height: 210px;overflow: hidden;position: relative;}
+.active-list .con ul li div.img .mask{width: 280px;height: 210px;position:absolute;left:0;top:0;
+    /*background: url(../../img/public/mask1.png) no-repeat 50% 50%;*/
+    text-align: center; display:none;}
+.active-list .con ul li div.detail{padding:10px 10px 5px;}
+.active-list .con ul li div.detail h2{font-size: 18px;
+    line-height: 28px;
+    color: #333;
+    margin: 0 0 5px 0;
+    height: 28px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.active-list .con ul li div.button {
+    padding: 0 10px 10px;
+}
+.active-list .con ul li div.button>a {
+    float: left;
+    width: 140px;
+    height: 35px;
+    color: #fff;
+    background: #398554;
+    font-size: 14px;
+    text-align: center;
+    line-height: 35px;
+    border-radius: 4px;
+}
+.active-list .con ul li div.button>.likes,.active-list .con ul li div.button>.collection {
+    float: right;
+    position: relative;
+    line-height: 35px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+.active-list .con ul li div.button>.likes span,.active-list .con ul li div.button>.collection span {
+    color: #333;
+    font-size: 12px;
+    margin-left: 20px;
+}
+.active-list .con ul li div.button>.likes i{
+    position: absolute;
+    left: 0px;
+    top: 13px;
+    width: 17px;
+    height: 15px;
+    background: url("../../img/public/zan-off.png");
+}
+.active-list .con ul li div.button>.likes.on i {
+    background: url("../../img/public/zan-on.png");
+}
+.active-list .con ul li div.button>.collection i{
+    position: absolute;
+    left: 0px;
+    top: 11px;
+    width: 17px;
+    height: 15px;
+    background: url("../../img/public/sc-off.png");
+}
+.active-list .con ul li div.button>.collection.on i {
+    background: url("../../img/public/sc-on.png");
+}
+ .active-list .con ul li div.detail p{font-size: 14px;color: #808080;margin: 0 0 0px 0;max-height: 48px;overflow: hidden;line-height: 24px;}
+.active-list .con ul li div.detail p span.tt {float: left;width: 42px;}
+.active-list .con ul li div.detail p span.desc {float: left;width: 218px; height:24px;
+    overflow: hidden;}
+.topicslist-list .con{width: 1200px; margin-bottom:80px;}
+.topicslist-list .con ul li{height:190px;border-bottom: solid 1px #e5e5e5;padding: 30px 0px;}
+.topicslist-list .con ul li:before{clear: both;}
+.topicslist-list .con ul li div.img{width: 300px;height: 190px;float: left;overflow: hidden;}
+.topicslist-list .con ul li div.img .mask{width: 380px;height: 240px;background: url(../../img/public/mask1.png) no-repeat 50% 50%;text-align: center; display:none;}
+.topicslist-list .con ul li div.detail{padding:0px 0 0px 20px;float: left;width: 870px;}
+.topicslist-list .con ul li div.detail h2{font-size: 18px;color: #333;margin: 0px 0 10px 0;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.topicslist-list .con ul li div.detail p{font-size: 14px;color: #808080;margin: 0 0 30px 0;overflow: hidden;line-height: 24px;max-height:72px;height: 72px;}
+.topicslist-list .con ul li div.detail a.enter-zt{background: #398554;height: 40px;line-height: 40px;float: left;padding: 0 40px;color: #fff;font-size: 16px;}

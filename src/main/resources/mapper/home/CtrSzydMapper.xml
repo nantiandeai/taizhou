@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.mapper.home.CtrSzydMapper">
+
+    <select id="getReadingInfo" resultType="hashmap">
+        SELECT
+            wsz.infotitle AS infotitle,
+            wsz.infosummary AS infosummary,
+            wsz.infocover AS infocover,
+            wsz.infolink AS infolink
+        FROM wh_szyd_zx wsz
+        <where>
+            wsz.infostate = 3
+        </where>
+        ORDER BY
+            wsz.infoupdatetime DESC
+    </select>
+
+    <select id="getCarouselForReading" resultType="hashmap">
+        SELECT
+            wyl.name,
+            wyl.picture,
+            wyl.url
+        FROM whg_ywi_lbt wyl
+        <where>
+            wyl.type = 9 AND
+            wyl.state = 1
+        </where>
+        ORDER BY
+          wyl.crtdate DESC
+    </select>
+
+</mapper>

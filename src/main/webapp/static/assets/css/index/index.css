@@ -1,0 +1,470 @@
+/*---------------------------------------------------------------------
+	* Filename:         index.css
+	* Description:      index
+	* Version:          1.0.0 (2016-11-08)
+	* Website:          hn.sun3d.com
+	* Author:           JackyZeng (zrongs@vip.qq.com)
+	                    LiD(lidong@creatoo.cn)
+---------------------------------------------------------------------*/
+
+.banner-position {
+    height: 644px;
+    position: relative;
+    overflow: hidden;
+}
+
+.banner-position .big-banner {
+    height: 644px;
+    width: 1920px;
+    top: auto;
+    left: 50%;
+    position: absolute;
+}
+
+.banner-cont {
+    width: 1920px;
+    height: 644px;
+    left: -960px;
+    right: auto;
+    position: absolute;
+}
+
+.banner-position .banner-cont li {
+    width: 1920px;
+    height: 644px;
+    float: left;
+    cursor: pointer;
+    position: relative;
+}
+
+.banner-position .banner-cont li a {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.banner-position .page {
+    position: absolute;
+    bottom: 10px;
+    left: 0px;
+    width: 100%;
+}
+
+.banner-position .page .pages {
+    text-align: center;
+    width: 100%;
+}
+
+.banner-position .page .pages li {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #666;
+    text-indent: 10000px;
+    margin: 0 5px;
+    cursor: pointer;
+
+}
+
+.banner-position .page .pages li.active {
+    background: #fff;
+}
+
+.public-index-bg {
+    padding: 95px 0px 100px 0px;
+}
+.row-1-bg{
+    background:url(../../img/index/row-1-bg.png) no-repeat 50% 0%;
+}
+.public-index-color {
+    background-color: #eee;
+}
+
+.public-index-color {
+    background-color: #eee;
+}
+
+.public-index-cont {
+    width: 1200px;
+    margin: 0px auto;
+    position: relative;
+}
+
+.public-index-cont h2 {
+    height: 58px;
+    text-align: center;
+    position: relative;
+    margin-bottom:80px;
+}
+
+.public-index-cont > a {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    font-size: 18px;
+    color: #398544;
+}
+
+.public-index-cont > a:hover {
+    color: #479352;
+}
+
+
+/*文化新闻*/
+.public-index-cont .culture-news {
+    background: #fff;
+    border-bottom: solid 20px #398554;
+}
+
+.public-index-cont .culture-news .calendars {
+    width: 80px;
+    height: 100px;
+    border: solid 1px #e5e5e5;
+    float: left;
+    margin: 40px 50px;
+}
+
+.public-index-cont .culture-news .calendars span.years {
+    font-size: 14px;
+    font-weight: bold;
+    color: #808080;
+    display: block;
+    text-align: center;
+    margin: 30px 0 0 0;
+}
+
+.public-index-cont .culture-news .calendars span.months {
+    font-size: 17px;
+    font-weight: bold;
+    color: #398554;
+    display: block;
+    text-align: center;
+    margin: 5px 0 0 0;
+}
+
+.public-index-cont .calendats-news {
+    width: 400px;
+    height: 100px;
+    float: left;
+    margin: 40px 0px;
+}
+
+.public-index-cont .calendats-news h2 {
+    font-size: 20px;
+    line-height: 20px;
+    color: #398554;
+    position: relative;
+    padding-left: 15px;
+    margin-bottom: 10px;
+    height: 26px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.public-index-cont .calendats-news h2 a {
+    color: #398554;
+}
+
+.public-index-cont .calendats-news h2 a:hover {
+    color: #479352;
+}
+
+.public-index-cont .calendats-news h2 i {
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    position: relative;
+    left: -15px;
+    top: 14px;
+    background: #398554;
+
+}
+
+.public-index-cont .calendats-news p {
+    font-size: 14px;
+    color: #808080;
+    line-height: 24px;
+    height: 72px;
+    overflow: hidden;
+}
+.public-index-cont .calendats-list {
+    width: 518px;
+    height: 100px;
+    float: left;
+    margin: 40px 50px;
+}
+.public-index-cont .calendats-list ul li {
+    font-size: 14px;
+    color: #808080;
+    line-height: 24px;
+    position: relative;
+    padding-left: 15px;
+    margin-bottom: 8px;
+}
+.public-index-cont .calendats-list ul li i {
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    position: relative;
+    left: -15px;
+    top: 14px;
+    background: #398554;
+}
+
+.public-index-cont .calendats-list ul li a {
+    color: #808080;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    width: 400px;
+    float: left;
+}
+
+.public-index-cont .calendats-list ul li a:hover {
+    color: #479352;
+}
+
+.public-index-cont .calendats-list ul li span {
+    float: right;
+}
+
+/*文化新闻*/
+.margin-bo0px {
+    padding-bottom: 0px
+}
+
+.activity-list > ul > li {
+    width: 326px;
+    margin: 0px 111px 30px 0px;
+    float: left;
+}
+
+.activity-list > ul > .last {
+    margin-right: 0px;
+}
+
+.activity-list>ul>li h4{
+    height:24px;
+    width:326px;
+    overflow: hidden;
+    font-size:18px;
+    margin:20px 0px 8px 0px;
+}
+.activity-list>ul>li p{
+    width:326px;
+    overflow: hidden;
+    margin-bottom:8px;
+    font-size:13px;
+    color:#999;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/*热门资源*/
+.public-index-cont .left-wrapper {
+    width: 500px;
+    height: 420px;
+    float: left;
+    position: relative;
+}
+
+.public-index-cont .right-wrapper {
+    width: 666px;
+    height: 420px;
+    float: right;
+    position: relative;
+}
+
+.public-index-cont .right-wrapper a, .public-index-cont .left-wrapper a {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.public-index-cont .left-wrapper div.title {
+    width: 470px;
+    height: 40px;
+    font-size: 16px;
+    line-height: 40px;
+    color: #fff;
+    background-image: url("../../../assets/img/public/b1.png");
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    padding: 0 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.public-index-cont .right-wrapper ul {
+    width: 700px;
+}
+
+.public-index-cont .right-wrapper ul li {
+    width: 316px;
+    height: 193px;
+    float: left;
+    margin-right: 34px;
+    margin-bottom: 34px;
+    position: relative;
+}
+
+.public-index-cont .right-wrapper ul li div.title {
+    width: 286px;
+    height: 40px;
+    font-size: 16px;
+    line-height: 40px;
+    color: #fff;
+    background-image: url("../../../assets/img/public/b1.png");
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    padding: 0 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/*文化场馆*/
+.public-index-bg .venue-content {
+    height: 685px;
+    background: url("../../../assets/img/index/changguan-bg.jpg") no-repeat 50% 0%;
+}
+.venue-list {
+    width: 1200px;
+    height: 685px;
+    margin: 0 auto;
+}
+
+.venue-list ul {
+    width: 1200px;
+    margin: 0 auto;
+    padding-top: 65px;
+}
+
+.venue-list ul li {
+    width: 400px;
+    height: 598px;
+    float: left;
+    position: relative;
+}
+.venue-list ul li div.img {
+    width: 340px;
+    height: 240px;
+}
+
+.venue-list ul li div.img img {
+    width: 340px;
+    height: 240px;
+    vertical-align: top;
+}
+
+.venue-list ul li .content {
+    margin-top: 60px;
+    position: relative;
+}
+.venue-list ul li a {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+}
+.venue-list ul li .content div.desc {
+    background: #fff;
+    width: 250px;
+    padding: 45px;
+    -webkit-box-shadow: 0px 7px 5px #e2dede;
+    -moz-box-shadow: 0px 7px 5px #e2dede;
+    box-shadow: 0px 7px 5px #e2dede;
+}
+
+.venue-list ul li .content div.desc h2 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    padding: 0 0 45px 0;
+    margin: 0;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.venue-list ul li .content div.desc p {
+    font-size: 14px;
+    color: #808080;
+    line-height: 24px;
+    height: 96px;
+    overflow: hidden;
+    margin: 0;
+}
+
+.venue-list ul li.active {
+    width: 400px;
+    height: 598px;
+    float: left;
+    margin-right: 60px;
+    background: #fff;
+}
+
+.venue-list ul li.active .content {
+    margin-top: 0px;
+    border: solid 2px #398554;
+    background: #fff;
+    -webkit-box-shadow: 0px 7px 5px #e2dede;
+    -moz-box-shadow: 0px 7px 5px #e2dede;
+    box-shadow: 0px 7px 5px #e2dede;
+}
+
+.venue-list ul li.active .content div.img {
+    width: 396px;
+    height: 280px;
+}
+
+.venue-list ul li.active .content div.img img {
+    width: 396px;
+    height: 280px;
+    vertical-align: top;
+}
+
+.venue-list ul li.active .content div.desc {
+    width: 396px;
+    padding: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.venue-list ul li.active .content div.desc h2 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    padding: 60px;
+    margin: 0;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.venue-list ul li.active .content div.desc p {
+    padding: 0 60px 0px;
+    font-size: 18px;
+    color: #808080;
+    line-height: 28px;
+    height: 138px;
+    overflow: hidden;
+    margin-bottom: 50px;
+}
