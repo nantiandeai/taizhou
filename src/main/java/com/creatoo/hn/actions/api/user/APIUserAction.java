@@ -51,9 +51,9 @@ public class APIUserAction {
      */
     @Autowired
     private ApiUserService apiUserService;
-    
+
     @Autowired
-	private UserCenterService userCenterService;
+    private UserCenterService userCenterService;
 
     /**
      * 短信服务
@@ -72,9 +72,9 @@ public class APIUserAction {
 
     @Autowired
     public RegistService regService;
-    
+
     @Autowired
-	private VenueOrderService service;
+    private VenueOrderService service;
 
     @Autowired
     private CollectionService colleService;
@@ -325,12 +325,12 @@ public class APIUserAction {
                     return responseBean;
                 }
             }else {
-                    WhUser newWhUser = apiUserService.newOneUserByWxUser(whgUsrWeixin,mobile);
-                    Map<String, String> smsData = new HashMap<String, String>();
-                    smsData.put("userName", newWhUser.getName());
-                    smsData.put("password", newWhUser.getPassword());
-                    smsService.t_sendSMS(mobile, "LOGIN_PASSWROD", smsData);
-                    responseBean.setData(newWhUser);
+                WhUser newWhUser = apiUserService.newOneUserByWxUser(whgUsrWeixin,mobile);
+                Map<String, String> smsData = new HashMap<String, String>();
+                smsData.put("userName", newWhUser.getName());
+                smsData.put("password", newWhUser.getPassword());
+                smsService.t_sendSMS(mobile, "LOGIN_PASSWROD", smsData);
+                responseBean.setData(newWhUser);
             }
         }catch (Exception e){
             log.error(e.toString());
@@ -629,6 +629,42 @@ public class APIUserAction {
     }
 
     /**
+     * 密码修改
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/upPwd",method = RequestMethod.POST)
+    public RetMobileEntity upPwd(HttpServletRequest request,String userId,String oldPwd,String newPwd){
+        RetMobileEntity retMobileEntity = new RetMobileEntity();
+        if(oldPwd == null  ){
+            retMobileEntity.setCode(101);
+            retMobileEntity.setMsg("旧密码不允许为空！");
+        }
+        if( newPwd == null){
+            retMobileEntity.setCode(102);
+            retMobileEntity.setMsg("新密码不允许为空！");
+        }
+        try {
+            if(userId != null){
+                WhUser whUser = new WhUser();
+                whUser.setId(userId);
+                Map temp = apiUserService.getOneUser(whUser);
+                if(temp.get("password") != oldPwd){
+                    retMobileEntity.setCode(103);
+                    retMobileEntity.setMsg("旧密码不正确！");
+                }else{
+                    whUser.setPassword(newPwd);
+                    apiUserService.saveUserInfo(whUser);
+                    retMobileEntity.setCode(0);
+                    retMobileEntity.setMsg("密码修改成功！");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return retMobileEntity;
+    }
+
+    /**
      * 微信注册(拆)
      * 访问地址 /api/user/register/{phone}/{password}
      * @param phone 手机号码
@@ -687,7 +723,7 @@ public class APIUserAction {
         }
         return res;
     }
-    
+
     /**
      * 找回密码
      * @param mobile  手机号码
@@ -700,29 +736,29 @@ public class APIUserAction {
      */
 
     public ResponseBean setPasswd(String mobile,String code,String password){
-    	ResponseBean res = new ResponseBean();
-    	WhUser whUser = apiUserService.findUser4Phone(mobile);
-    	//验证手机号码是否存在
-    	if(whUser == null){
-    		res.setSuccess(ResponseBean.FAIL);
-    		res.setErrormsg("101");
-    	}
-    	//验证验证码是否填写正确
-    	WhCode whCode = apiUserService.findWhCode4SmsContent(code);
-    	if(whCode == null){
-    		res.setSuccess(ResponseBean.FAIL);
-    		res.setErrormsg("102");
-    	}
-    	//修改密码
-    	try {
-    		whUser.setPassword(password);
-			apiUserService.saveUserInfo(whUser);
-		} catch (Exception e) {
-			e.printStackTrace();
-			res.setSuccess(ResponseBean.FAIL);
-    		res.setErrormsg("103");
-		}
-    	return res;
+        ResponseBean res = new ResponseBean();
+        WhUser whUser = apiUserService.findUser4Phone(mobile);
+        //验证手机号码是否存在
+        if(whUser == null){
+            res.setSuccess(ResponseBean.FAIL);
+            res.setErrormsg("101");
+        }
+        //验证验证码是否填写正确
+        WhCode whCode = apiUserService.findWhCode4SmsContent(code);
+        if(whCode == null){
+            res.setSuccess(ResponseBean.FAIL);
+            res.setErrormsg("102");
+        }
+        //修改密码
+        try {
+            whUser.setPassword(password);
+            apiUserService.saveUserInfo(whUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.setSuccess(ResponseBean.FAIL);
+            res.setErrormsg("103");
+        }
+        return res;
     }
 
     /**
@@ -1014,17 +1050,17 @@ public class APIUserAction {
         return retMobileEntity;
     }
 
-    
+
     /***
      * 获取我的活动
      * @param request
      * @return
      */
     @SuppressWarnings("unused")
-	@CrossOrigin
+    @CrossOrigin
     @RequestMapping(value = "/activity",method = RequestMethod.POST)
     public RetMobileEntity activity(int index,int size,String type,String userId,HttpServletRequest request){
-    	RetMobileEntity rme = new RetMobileEntity();
+        RetMobileEntity rme = new RetMobileEntity();
         if(null == userId){
             rme.setCode(101);
             rme.setMsg("获取用户活动订单失败");
@@ -1034,37 +1070,37 @@ public class APIUserAction {
         Map<String,Object> param = new HashMap<>();
         Pager pager = new RetMobileEntity.Pager();
         pager.setCount(pageInfo.getList().size());
-		pager.setIndex(index);
-		pager.setSize(size);
-		pager.setTotal(Integer.parseInt(String.valueOf(pageInfo.getTotal())));
+        pager.setIndex(index);
+        pager.setSize(size);
+        pager.setTotal(Integer.parseInt(String.valueOf(pageInfo.getTotal())));
         param.put("actOrderList",pageInfo.getList());
         param.put("pager", pager);
         param.put("total", pageInfo.getTotal());
         rme.setData(param);
         return rme;
     }
-    
+
     /**
-	 * 取消订单
-	 * @param request
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@CrossOrigin
-	 @RequestMapping(value = "/cancel",method = RequestMethod.POST)
-	public RetMobileEntity cancel(HttpServletRequest request,String itemId,String userId,String type){
-		RetMobileEntity rme = new RetMobileEntity();
-		//type 订单类型 1. 活动 2. 场馆活动室 3. 培训课程
-		try {
-			if(itemId == null || itemId == ""){
-				rme.setCode(101);
-	            rme.setMsg("订单ID不允许为空!");
-	            return rme;
-			}
-			if(type.equals("1")){
-				WhgActOrder actOrder = userCenterService.findOrderDetail(itemId);
-				int canCancel = canActCancel(actOrder);
+     * 取消订单
+     * @param request
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @CrossOrigin
+    @RequestMapping(value = "/cancel",method = RequestMethod.POST)
+    public RetMobileEntity cancel(HttpServletRequest request,String itemId,String userId,String type){
+        RetMobileEntity rme = new RetMobileEntity();
+        //type 订单类型 1. 活动 2. 场馆活动室 3. 培训课程
+        try {
+            if(itemId == null ||"".equals(itemId) ){
+                rme.setCode(101);
+                rme.setMsg("订单ID不允许为空!");
+                return rme;
+            }
+            if(type.equals("1")){
+                WhgActOrder actOrder = userCenterService.findOrderDetail(itemId);
+                int canCancel = canActCancel(actOrder);
                 if(1 == canCancel){
                     rme.setCode(101);
                     rme.setMsg("该订单不存在");
@@ -1080,30 +1116,30 @@ public class APIUserAction {
                     rme.setMsg("已经有验过的票，不能取消");
                     return rme;
                 }
-				actOrder.setTicketstatus(3);
-				actOrder.setOrderisvalid(2);
-				userCenterService.upActOrder(actOrder);
-				rme.setCode(0);
-				rme.setMsg("活动订单取消成功！");
-			}else if(type.equals("2")){
-				int count =  this.service.unOrder(itemId);
-				rme.setData(count);
-				rme.setCode(0);
-				rme.setMsg("活动室订单取消成功！");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return rme;
-		
-	}
+                actOrder.setTicketstatus(3);
+                actOrder.setOrderisvalid(2);
+                userCenterService.upActOrder(actOrder);
+                rme.setCode(0);
+                rme.setMsg("活动订单取消成功！");
+            }else if(type.equals("2")){
+                int count =  this.service.unOrder(itemId);
+                rme.setData(count);
+                rme.setCode(0);
+                rme.setMsg("活动室订单取消成功！");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rme;
+
+    }
 
     /**
      *  判断活动订单能否取消
      * @param actOrder
      * @return：0:可以取消；1:该订单不存在；2:活动已经不能取消；3:已经有人验票
      */
-	private int canActCancel(WhgActOrder actOrder){
+    private int canActCancel(WhgActOrder actOrder){
         if(null == actOrder){
             return 1;
         }
@@ -1124,13 +1160,13 @@ public class APIUserAction {
     }
 
     private LocalDateTime date2LocalDateTime(Date date){
-	    try {
+        try {
             Instant instant = date.toInstant();
             ZoneId zone = ZoneId.systemDefault();
             return LocalDateTime.ofInstant(instant, zone);
         }catch (Exception e){
-	        log.error(e.toString());
-	        return null;
+            log.error(e.toString());
+            return null;
         }
     }
 
@@ -1140,16 +1176,16 @@ public class APIUserAction {
      * @return
      */
     @SuppressWarnings("unused")
-	@CrossOrigin
+    @CrossOrigin
     @RequestMapping(value = "/venue",method = RequestMethod.POST)
     public RetMobileEntity venue(int index,int size,String userId,HttpServletRequest request){
-    	RetMobileEntity rme = new RetMobileEntity();
-    	Map<String,Object> param = new HashMap<>();
-    	//分页查询
+        RetMobileEntity rme = new RetMobileEntity();
+        Map<String,Object> param = new HashMap<>();
+        //分页查询
         Map<String, Object> rtnMap = new HashMap<String, Object>();
-    	param.put("page", index);
-    	param.put("rows", size);
-	 
+        param.put("page", index);
+        param.put("rows", size);
+
         if(null == userId){
             rme.setCode(101);
             rme.setMsg("获取用户场馆订单失败");
@@ -1157,18 +1193,18 @@ public class APIUserAction {
         }
         param.put("userid", userId);
         try {
-			rtnMap = this.service.findOrder4User(index, size, param);
-			rme.setData(rtnMap);
-			Pager pager = new RetMobileEntity.Pager();
-	        pager.setCount(rtnMap.size());
-			pager.setIndex(index);
-			pager.setSize(size);
-			pager.setTotal(Integer.parseInt(String.valueOf(rtnMap.get("total"))));
-			rtnMap.put("pager", pager);
-			rme.setPager(pager);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+            rtnMap = this.service.findOrder4User(index, size, param);
+            rme.setData(rtnMap);
+            Pager pager = new RetMobileEntity.Pager();
+            pager.setCount(rtnMap.size());
+            pager.setIndex(index);
+            pager.setSize(size);
+            pager.setTotal(Integer.parseInt(String.valueOf(rtnMap.get("total"))));
+            rtnMap.put("pager", pager);
+            rme.setPager(pager);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return rme;
     }
 
@@ -1224,7 +1260,7 @@ public class APIUserAction {
                     //场馆
                     whCollection.setCmtitle(targetObject.getString("title"));
                 }else if("3".equals(cmreftyp)){
-                	//活动室
+                    //活动室
                     whCollection.setCmtitle(targetObject.getString("title"));
                 }
                 this.colleService.addMyColle(whCollection);
