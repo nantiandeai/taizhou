@@ -172,7 +172,7 @@
     });
 
     function getExhType() {
-        debugger;
+//        debugger;
         var whgYwiKeyList = eval('${whgYwiKeyList}');
         var data = [];
         if(null != whgYwiKeyList){
