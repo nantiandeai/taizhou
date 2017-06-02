@@ -164,6 +164,18 @@
             });
         }
 
+        function doDel(idx) {
+            var row = $("#whgdg").datagrid("getRows")[idx];
+            var url = getFullUrl('/admin/branch/saveBranch?saveType=del&id='+row.id + "&state=0");
+            $.getJSON(url,function (data) {
+                if("1" != data.success){
+                    $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                }else {
+                    $('#whgdg').datagrid('reload');
+                }
+            });
+        }
+
         function preForEdit(row) {
             getAreaList();
             $("#name").textbox("setValue",row.name);
