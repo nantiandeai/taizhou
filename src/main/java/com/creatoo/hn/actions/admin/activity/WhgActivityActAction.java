@@ -1,21 +1,17 @@
 package com.creatoo.hn.actions.admin.activity;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.creatoo.hn.ext.annotation.WhgOPT;
+import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.ext.emun.EnumOptType;
+import com.creatoo.hn.model.*;
+import com.creatoo.hn.services.admin.activity.*;
+import com.creatoo.hn.services.admin.venue.WhgVenueService;
+import com.creatoo.hn.services.comm.CommService;
+import com.creatoo.hn.services.comm.SMSService;
+import com.creatoo.hn.utils.CommUtil;
+import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
@@ -25,24 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.creatoo.hn.ext.bean.ResponseBean;
-import com.creatoo.hn.model.WhgActActivity;
-import com.creatoo.hn.model.WhgActOrder;
-import com.creatoo.hn.model.WhgActTime;
-import com.creatoo.hn.model.WhgSysUser;
-import com.creatoo.hn.model.WhgVen;
-import com.creatoo.hn.services.admin.activity.WhgActivityActService;
-import com.creatoo.hn.services.admin.activity.WhgActivityOrderService;
-import com.creatoo.hn.services.admin.activity.WhgActivityPalyService;
-import com.creatoo.hn.services.admin.activity.WhgActivitySeatService;
-import com.creatoo.hn.services.admin.activity.WhgActivityTimeService;
-import com.creatoo.hn.services.admin.venue.WhgVenueService;
-import com.creatoo.hn.services.comm.CommService;
-import com.creatoo.hn.services.comm.SMSService;
-import com.creatoo.hn.utils.CommUtil;
-import com.github.pagehelper.PageInfo;
+import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 
 /**
@@ -392,7 +375,6 @@ public class WhgActivityActAction {
             act = service.t_add(act, (WhgSysUser) request.getSession().getAttribute("user"));
             //添加时间段模板
             List<Map<String, String>>  timePlayList = whgActivityPalyService.setTimeTemp(timeJson);
-            whgActivityPalyService.t_add(timePlayList,act);
 
             //如果是在线选座，需要添加活动座位信息
             int ticketnum = 0;//
