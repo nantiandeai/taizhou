@@ -31,8 +31,8 @@
     <menus>
         <!-- 系统管理 -->
         <menu id="M_SYS" type="0" state="1" text="系统管理" iconcls="p-1">
-
             <menu type="1" state="1"  href="/admin/system/dept/view/list" id="M_SYS_DEPT" text="部门管理" opts="view, add, edit, del" />
+            <menu type="1" state="1"  href="/admin/branch/index" id="M_SYS_BRANCH" text="分馆管理" opts="view, add, edit, off, on, del" />
             <menu type="1" state="1"  href="/admin/system/role/view/list" id="M_SYS_ROLE" text="岗位管理" opts="view, add, edit, del, off, on" />
             <menu type="1" state="1"  href="/admin/system/user/view/list" id="M_SYS_USER" text="管理员管理" opts="view, add, edit, del, off, on" />
         </menu>
