@@ -32,13 +32,13 @@
 <body>
 <!-- 表格 -->
 <table id="whgdg" title="${pageTitle}" class="easyui-datagrid" style="display: none"
-       data-options="fit:true, striped:true, rownumbers:true, fitColumns:false, singleSelect:false, checkOnSelect:true, selectOnCheck:true, pagination:true, toolbar:'#whgdg-tb', url:'${basePath}/admin/cultheritage/srchList4p?type=${type}'">
+       data-options="fit:true, striped:true, rownumbers:true, fitColumns:true, singleSelect:false, checkOnSelect:true, selectOnCheck:true, pagination:true, toolbar:'#whgdg-tb', url:'${basePath}/admin/cultheritage/srchList4p?type=${type}'">
     <thead>
     <tr>
-        <th data-options="field:'name'">名称</th>
-        <th data-options="field:'summary'">简介</th>
-        <th data-options="field:'crtdate', formatter:WhgComm.FMTDateTime">创建时间</th>
-        <th data-options="field:'state', formatter:WhgComm.FMTBizState" >状态</th>
+        <th data-options="field:'name',width:80">名称</th>
+        <th data-options="field:'summary',width:80">简介</th>
+        <th data-options="field:'crtdate', width:60,formatter:WhgComm.FMTDateTime">创建时间</th>
+        <th data-options="field:'state', width:50,formatter:WhgComm.FMTBizState" >状态</th>
         <th data-options="field:'_opt', formatter:WhgComm.FMTOpt,fixed:true, optDivId:'whgdg-opt'">操作</th>
     </tr>
     </thead>
@@ -92,6 +92,10 @@
         var row = $("#whgdg").datagrid("getRows")[idx];
         return row.state == 1 || row.state == 9 || row.state == 2 || row.state == 4 || row.state == 5;
     }
+    function _checkon(idx) {
+        var row = $("#whgdg").datagrid("getRows")[idx];
+        return row.state == 9;
+    }
     function _checkgo(idx) {
         var row = $("#whgdg").datagrid("getRows")[idx];
         return row.state == 1 || row.state == 5;
@@ -117,7 +121,9 @@
     /**
      * 添加
      */
-    function add(){ window.location.href = '${basePath}/admin/cultheritage/view/add'; }
+    function add(){
+        WhgComm.editDialog('${basePath}/admin/cultheritage/view/add');
+    }
 
     /**
      * 编辑

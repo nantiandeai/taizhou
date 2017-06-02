@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <% request.setAttribute("basePath", request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath());%>
 <% request.setAttribute("resourceid", request.getParameter("rsid")); %>
+<% String path = request.getContextPath();%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -62,7 +64,7 @@
 <div id="whgwin-add-btn" class="whgff-but" style="width: 400px; margin:20px 0px 50px 350px">
     <div style="display: inline-block; margin: 0 auto">
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" id="whgwin-add-btn-save">保 存</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-undo" onclick="WhgComm.editDialogClose()">返  回</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton whgff-but-clear" iconCls="icon-undo" onclick="WhgComm.editDialogClose()">返 回</a>
 </div>
 </div>
 
@@ -107,9 +109,7 @@ $(function () {
             $.messager.progress('close');
             var Json = eval('('+data+')');
             if(Json && Json.success == '1'){
-                if($('#whgff input[name="onlyshow"]').val() != "1") {
-                    window.parent.$('#whgdg').datagrid('reload');
-                }
+                window.parent.$('#whgdg').datagrid('reload');
                 WhgComm.editDialogClose();
             } else {
                 $.messager.alert('提示', '操作失败:'+Json.errormsg+'!', 'error');
@@ -121,13 +121,13 @@ $(function () {
     $('#whgwin-add-btn-save').off('click').one('click', function () { $('#whgff').submit(); });
 });
 
-function validateUE(){
-    if (!ue_catalog.hasContents()) {
-        $.messager.alert("错误", '文化遗产描述不能为空', 'error');
-        return false;
+    function validateUE(){
+        if (!ue_catalog.hasContents()) {
+            $.messager.alert("错误", '文化遗产描述不能为空', 'error');
+            return false;
+        }
+        return true;
     }
-    return true;
-}
 
 </script>
 <!-- script END -->

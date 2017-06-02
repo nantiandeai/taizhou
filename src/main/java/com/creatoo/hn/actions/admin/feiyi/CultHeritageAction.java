@@ -50,7 +50,7 @@ public class CultHeritageAction {
                 if (id != null) {
                     view.addObject("id", id);
                     view.addObject("targetShow", targetShow);
-                    view.addObject("id", cultHeritageService.t_srchOne(id));
+                    view.addObject("cult", cultHeritageService.t_srchOne(id));
                     view.setViewName("admin/feiyi/cultheritage/view_edit");
                 } else {
                     view.setViewName("admin/feiyi/cultheritage/view_add");

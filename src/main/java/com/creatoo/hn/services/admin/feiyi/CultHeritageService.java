@@ -80,7 +80,7 @@ public class CultHeritageService {
             c.andEqualTo("isdel", 0);
         }
         if(request.getParameter("state") != null){
-            int state = Integer.parseInt((String)request.getParameter("state"));
+            int state = Integer.parseInt(request.getParameter("state"));
             c.andEqualTo("state", state);
         }
 
