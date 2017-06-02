@@ -98,7 +98,7 @@ public class APIActivityAction {
 				res.setCode(101);
 				res.setMsg("该活动已下架！");
 			}
-			if(seatStr != null && "".equals(seatStr) ){
+			if(seatStr != null && !"".equals(seatStr) ){
 				String selectSeat[] = seatStr.split(",");
 				WhgActSeat whgActSeat =whhdService.getWhgActTicket4ActId(actId, selectSeat[0]);
 				if(whgActSeat.getSeatstatus() != 1){

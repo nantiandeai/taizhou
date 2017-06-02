@@ -78,10 +78,10 @@ public class APIVenueAction {
 		Map<String,Object> param = new HashMap<>();
 		//场馆信息
 		try {
-			if(itemId != null && "".equals(itemId)){
+			if(itemId != null && !"".equals(itemId)){
 				WhgVen whgVen = this.cgfwService.findWhgVen4Id(itemId);
 				param.put("venue", whgVen);
-				if(whgVen.getEtype() != null && "".equals(whgVen.getEtype()))
+				if(whgVen.getEtype() != null && !"".equals(whgVen.getEtype()))
 				{
 					String eType = whgVen.getEtype();
 					String[] types = eType.split(",");
@@ -147,14 +147,14 @@ public class APIVenueAction {
 			WhgVen whgVen = cgfwService.findWhgVen4Id(whgVenRoom.getVenid());
 			String facility = whgVenRoom.getFacility();
 			String facilityName = "";
-			if(facility !=null && "".equals(facility)){
+			if(facility !=null && !"".equals(facility)){
 				String[] facIds = facility.split(",");
 				for(int j=0;j<facIds.length;j++){
 					WhgYwiType whgYwiType =whgYunweiTypeService.findWhgYwiType4Id(facIds[j]);
 					if(whgYwiType != null)
 						facilityName += whgYwiType.getName()+",";
 				}
-				if( "".equals(facilityName) && facilityName != null)
+				if( !"".equals(facilityName) && facilityName != null)
 					facilityName = facilityName.substring(0,facilityName.length()-1);
 				rest.put("facilityName", facilityName);
 			}

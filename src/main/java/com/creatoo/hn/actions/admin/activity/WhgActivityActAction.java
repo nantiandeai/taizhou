@@ -62,23 +62,23 @@ public class WhgActivityActAction {
      */
     @Autowired
     private WhgActivityTimeService whgActivityTimeService;
-    
+
     @Autowired
     private WhgActivityOrderService whgActivityOrderService;
 
 
     @Autowired
     private SMSService smsService;
-    
+
     @Autowired
     private WhgVenueService whgVenueService;
-    
+
     /**
-	 * 公用服务类
-	 */
-	@Autowired
-	public CommService commservice;
-    
+     * 公用服务类
+     */
+    @Autowired
+    public CommService commservice;
+
     /**
      * 进入type(list|add|edit|view)视图
      * @param request 请求对象
@@ -158,7 +158,7 @@ public class WhgActivityActAction {
             }
             //删除列表
             if("del".equalsIgnoreCase(pageType)){
-            	param.put("delstate", 1);
+                param.put("delstate", 1);
             }
             PageInfo pageInfo = this.service.srchList4p(page, rows, param);
             res.setRows( (List)pageInfo.getList() );
@@ -181,13 +181,19 @@ public class WhgActivityActAction {
         Map<String,String> paramMap = CommUtil.getRequestParamByClass(request,whgActTime.getClass());
         whgActTime = this.whgActivityTimeService.findWhgActTime4Id(paramMap.get("id"));
         List<WhgActOrder> actOrderList = whgActivityOrderService.findWhgActOrder4EventId(paramMap.get("id"));
+        SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         if(actOrderList.size() < 1){
-        	try{
+            try{
                 whgActTime.setPlaydate(sdf1.parse(paramMap.get("playdate")));
+                Date playDate = sdfDateTime.parse(paramMap.get("playdate")+ " " + "00:00:00");
                 whgActTime.setPlaystime(paramMap.get("playstime"));
                 whgActTime.setPlayetime(paramMap.get("playetime"));
+                Date playStartTime = sdfDateTime.parse(paramMap.get("playdate") + " " + paramMap.get("playstime"));
+                Date playEndTime = sdfDateTime.parse(paramMap.get("playdate") + " " + paramMap.get("playetime"));
                 whgActTime.setSeats(Integer.valueOf(paramMap.get("seats")));
                 whgActTime.setState(Integer.valueOf(paramMap.get("state")));
+                whgActTime.setPlaystarttime(playStartTime);
+                whgActTime.setPlayendtime(playEndTime);
                 whgActivityTimeService.updateOne(whgActTime);
             }catch (Exception e){
                 log.error(e.toString());
@@ -195,12 +201,12 @@ public class WhgActivityActAction {
                 res.setSuccess(ResponseBean.FAIL);
             }
         }else{
-        	res.setSuccess(ResponseBean.FAIL);
-    		res.setErrormsg("该场次已经产生订单，不允许修改!");
+            res.setSuccess(ResponseBean.FAIL);
+            res.setErrormsg("该场次已经产生订单，不允许修改!");
         }
         return res;
     }
-    
+
     /**
      * 添加场次信息
      * @param request
@@ -210,46 +216,46 @@ public class WhgActivityActAction {
     @RequestMapping(value = "/addScreenings")
     @WhgOPT(optType = EnumOptType.ACT, optDesc = {"添加场次"})
     public Object addScreenings(HttpServletRequest request,String actId){
-    	SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         ResponseBean res = new ResponseBean();
         WhgActTime whgActTime = new WhgActTime();
         Map<String,String> paramMap = CommUtil.getRequestParamByClass(request,whgActTime.getClass());
         try{
-        	WhgActActivity act = service.t_srchOne(actId);
-        	Date playDate = sdfDateTime.parse(paramMap.get("playdate")+ " " + "00:00:00");
-        	Date startDate = act.getStarttime();//活动开始时间
-        	Date endDate = act.getEndtime();//活动结束时间
-        	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-        	Date nowDate = df.parse(df.format(new Date()));// new Date()为获取当前系统时间
-        	Date strDate = df.parse(df.format(act.getEnterstrtime()));
-        	if(strDate.getTime() < playDate.getTime() && playDate.getTime() > nowDate.getTime()  ){
-        		whgActTime.setId(commservice.getKey("whg_sys_act"));
-            	whgActTime.setActid(actId);
+            WhgActActivity act = service.t_srchOne(actId);
+            Date playDate = sdfDateTime.parse(paramMap.get("playdate")+ " " + "00:00:00");
+            Date startDate = act.getStarttime();//活动开始时间
+            Date endDate = act.getEndtime();//活动结束时间
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            Date nowDate = df.parse(df.format(new Date()));// new Date()为获取当前系统时间
+            Date strDate = df.parse(df.format(act.getEnterstrtime()));
+            if(strDate.getTime() < playDate.getTime() && playDate.getTime() > nowDate.getTime()  ){
+                whgActTime.setId(commservice.getKey("whg_sys_act"));
+                whgActTime.setActid(actId);
                 whgActTime.setPlaydate(sdf.parse(paramMap.get("playdate")));
                 whgActTime.setPlaystime(paramMap.get("playstime"));
                 whgActTime.setPlayetime(paramMap.get("playetime"));
                 whgActTime.setSeats(Integer.valueOf(paramMap.get("seats")));
                 Date playStartTime = sdfDateTime.parse(paramMap.get("playdate") + " " + paramMap.get("playstime"));
-    			Date playEndTime = sdfDateTime.parse(paramMap.get("playdate") + " " + paramMap.get("playetime"));
-    			whgActTime.setPlaystarttime(playStartTime);
-    			whgActTime.setPlayendtime(playEndTime);
-    			whgActTime.setState(1);
-                whgActivityTimeService.addOne(whgActTime); 
+                Date playEndTime = sdfDateTime.parse(paramMap.get("playdate") + " " + paramMap.get("playetime"));
+                whgActTime.setPlaystarttime(playStartTime);
+                whgActTime.setPlayendtime(playEndTime);
+                whgActTime.setState(1);
+                whgActivityTimeService.addOne(whgActTime);
                 //判断新增的场次时间是否小于活动开始时间
                 if(playDate.getTime() < startDate.getTime()){
-                	act.setStarttime(sdf.parse(paramMap.get("playdate")));
+                    act.setStarttime(sdf.parse(paramMap.get("playdate")));
                 }
                 //判断新增的场次时间是否大于活动结束时间
                 if(playDate.getTime() > endDate.getTime() ){
-                	act.setEndtime(sdf.parse(paramMap.get("playdate")));
+                    act.setEndtime(sdf.parse(paramMap.get("playdate")));
                 }
                 WhgSysUser whgSysUser =  (WhgSysUser) request.getSession().getAttribute("user");
                 service.t_edit(act, whgSysUser);
-        	}else{
-        		res.setSuccess(ResponseBean.FAIL);
-        		res.setErrormsg("新增日期需大于报名开始时间且小于当前时间!");
-        	}
+            }else{
+                res.setSuccess(ResponseBean.FAIL);
+                res.setErrormsg("新增日期需大于报名开始时间且小于当前时间!");
+            }
         }catch (Exception e){
             log.error(e.toString());
             res.setErrormsg("修改场次信息失败");
@@ -257,7 +263,7 @@ public class WhgActivityActAction {
         }
         return res;
     }
-    
+
 
     /**
      * 查询列表
@@ -381,25 +387,25 @@ public class WhgActivityActAction {
             if(seatJson !=null && act.getSellticket().equals(3)){
                 List<Map<String, String>>  seatList = whgActivitySeatService.setSeatList(seatJson);
                 whgActivitySeatService.t_add(seatList, (WhgSysUser) request.getSession().getAttribute("user"), act.getId());
-                
+
                 //计算座位数
                 ticketnum = 0;
                 for(Map<String, String> _set : seatList){
-                	if( "1".equals(_set.get("seatstatus") ) ){
-                		ticketnum++;
-                	}
+                    if( "1".equals(_set.get("seatstatus") ) ){
+                        ticketnum++;
+                    }
                 }
             }
-            
+
             //添加活动场次表
             int dayNum = this.dayCount(act.getStarttime(), act.getEndtime());
             int num = 0;
             Date time = act.getStarttime();
             Date endDate = act.getEndtime();
             if(ticketnum == 0){
-            	if(act.getTicketnum() != null){
-            		ticketnum = act.getTicketnum();
-            	}
+                if(act.getTicketnum() != null){
+                    ticketnum = act.getTicketnum();
+                }
             }
             while(!isAfter(time,endDate)){
                 whgActivityTimeService.t_add(timePlayList, act.getId(), time, ticketnum);
@@ -485,15 +491,15 @@ public class WhgActivityActAction {
     @RequestMapping(value = "/del")
     @WhgOPT(optType = EnumOptType.ACT, optDesc = {"删除活动"})
     public ResponseBean del(HttpServletRequest request, String ids,String delStatus){
-    	ResponseBean res = new ResponseBean();
-	     try {
-	         service.t_updDelstate(ids, delStatus, (WhgSysUser)request.getSession().getAttribute("user"));
-	     }catch (Exception e){
-	         res.setSuccess(ResponseBean.FAIL);
-	         res.setErrormsg(e.getMessage());
-	         log.error(e.getMessage(), e);
-	     }
-	     return res;
+        ResponseBean res = new ResponseBean();
+        try {
+            service.t_updDelstate(ids, delStatus, (WhgSysUser)request.getSession().getAttribute("user"));
+        }catch (Exception e){
+            res.setSuccess(ResponseBean.FAIL);
+            res.setErrormsg(e.getMessage());
+            log.error(e.getMessage(), e);
+        }
+        return res;
     }
 
     /**
@@ -517,7 +523,7 @@ public class WhgActivityActAction {
         }
         return res;
     }
-    
+
     /**
      * 推荐状态修改
      * @param request 请求对象
@@ -539,7 +545,7 @@ public class WhgActivityActAction {
         }
         return res;
     }
-    
+
     /**
      * 还原删除状态
      * @param request 请求对象
@@ -560,7 +566,7 @@ public class WhgActivityActAction {
         }
         return res;
     }
-    
+
 
     /**
      * 根据活动的开始时间和结束时间算出它们的时间差
@@ -577,7 +583,7 @@ public class WhgActivityActAction {
         int endNum = calendar.get(Calendar.DAY_OF_YEAR);
         return endNum - strNum;
     }
-    
+
     /**
      * 订单重新发送短信
      * @param request
@@ -586,29 +592,29 @@ public class WhgActivityActAction {
      */
     @RequestMapping(value = "/againSendSms")
     public ResponseBean againSendSms(HttpServletRequest request,String orderId){
-    	ResponseBean res = new ResponseBean();
-		try {
-			WhgActOrder actOrder = whgActivityOrderService.findWhgActOrder4Id(orderId);
-			WhgActActivity whgActActivity = service.t_srchOne(actOrder.getActivityid());
-			WhgActTime actTime = whgActivityTimeService.findWhgActTime4Id(actOrder.getEventid());
-			//发送短信
-			Map<String, String> smsData = new HashMap<String, String>();
-			smsData.put("userName", actOrder.getOrdername());
-			smsData.put("activityName", whgActActivity.getName());
-			smsData.put("ticketCode", actOrder.getOrdernumber());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date date = actTime.getPlaydate();
-			String dateStr = sdf.format(date);
-			smsData.put("beginTime", dateStr +" "+ actTime.getPlaystime());
-			int totalSeat = whgActivityOrderService.findWhgActTicket4OrderId(orderId);
-			smsData.put("number", String.valueOf(totalSeat));
-			smsService.t_sendSMS(actOrder.getOrderphoneno(), "ACT_DUE", smsData);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-    	 return res;
+        ResponseBean res = new ResponseBean();
+        try {
+            WhgActOrder actOrder = whgActivityOrderService.findWhgActOrder4Id(orderId);
+            WhgActActivity whgActActivity = service.t_srchOne(actOrder.getActivityid());
+            WhgActTime actTime = whgActivityTimeService.findWhgActTime4Id(actOrder.getEventid());
+            //发送短信
+            Map<String, String> smsData = new HashMap<String, String>();
+            smsData.put("userName", actOrder.getOrdername());
+            smsData.put("activityName", whgActActivity.getName());
+            smsData.put("ticketCode", actOrder.getOrdernumber());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = actTime.getPlaydate();
+            String dateStr = sdf.format(date);
+            smsData.put("beginTime", dateStr +" "+ actTime.getPlaystime());
+            int totalSeat = whgActivityOrderService.findWhgActTicket4OrderId(orderId);
+            smsData.put("number", String.valueOf(totalSeat));
+            smsService.t_sendSMS(actOrder.getOrderphoneno(), "ACT_DUE", smsData);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return res;
     }
 
     /**
@@ -620,30 +626,30 @@ public class WhgActivityActAction {
     @RequestMapping(value = "/cancelOrder")
     @WhgOPT(optType = EnumOptType.ACT, optDesc = {"取消订单"})
     public ResponseBean cancelOrder(HttpServletRequest request,String orderId){
-    	ResponseBean res = new ResponseBean();
-    	try {
-    		//更新订单信息
-			int upCount = whgActivityOrderService.updateActOrder(orderId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-    	return res;
+        ResponseBean res = new ResponseBean();
+        try {
+            //更新订单信息
+            int upCount = whgActivityOrderService.updateActOrder(orderId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
     }
-    
+
     @RequestMapping(value= "/changeVen")
     public Object changeVen(HttpServletRequest request,String venueId){
-    	Map<String,Object> res = new HashMap<String, Object>();
-    	try {
-			WhgVen whgVen = whgVenueService.srchOne(venueId);
-			res.put("address", whgVen.getAddress());
-			res.put("longitude", whgVen.getLongitude());//坐标经度
-			res.put("latitude", whgVen.getLatitude());//坐标纬度
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-    	return res;
+        Map<String,Object> res = new HashMap<String, Object>();
+        try {
+            WhgVen whgVen = whgVenueService.srchOne(venueId);
+            res.put("address", whgVen.getAddress());
+            res.put("longitude", whgVen.getLongitude());//坐标经度
+            res.put("latitude", whgVen.getLatitude());//坐标纬度
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
     }
-    
+
 
     public static void main(String[] args) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -656,6 +662,6 @@ public class WhgActivityActAction {
         int endNum = calendar.get(Calendar.DAY_OF_YEAR);
         System.out.println(endNum-strNum);
     }
-    
-    
+
+
 }

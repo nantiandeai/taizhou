@@ -101,6 +101,7 @@
                 <menu type="1" state="1" href="/admin/yunwei/comment/view/list/6" id="M_YWI_COMMENT_VEN" text="场馆评论管理" opts="view, add, edit, del, publish, publishoff"/>
                 <menu type="1" state="1" href="/admin/yunwei/comment/view/list/7" id="M_YWI_COMMENT_ROOM" text="场馆活动室评论管理" opts="view, add, edit, del, publish, publishoff"/>
             </menu>
+            <menu type="1" state="1" href="/admin/yunwei/rule/view" id="M_YWI_RULE" text="黑名单规则配置" opts=" view,add, edit"/>
             <menu type="1" state="1" href="/admin/yunwei/whpp/view/list" id="M_YWI_WHPP" text="文化品牌配置" opts="view, add, edit, del, on, off"/>
 
             <menu id="M_YWI_SMSTMP" type="1" state="1" href="/admin/yunwei/smstmp/view/list" text="短信模板管理" opts="view, add, edit, del"/>

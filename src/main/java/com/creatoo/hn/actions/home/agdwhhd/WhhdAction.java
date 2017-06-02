@@ -510,7 +510,8 @@ public class WhhdAction {
 			}
 		}else{
 			view.setViewName("home/agdwhhd/act_baoming_step3_err");
-			view.addObject("errorMsg", map.get("msg"));
+			map.put("actId", actId);
+			view.addObject("data", map);
 		}
 		return view;
 	}
