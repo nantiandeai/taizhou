@@ -3,7 +3,6 @@ package com.creatoo.hn.services.admin.activity;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.creatoo.hn.mapper.WhgActPalyMapper;
-import com.creatoo.hn.model.WhgActActivity;
 import com.creatoo.hn.model.WhgActPlay;
 import com.creatoo.hn.services.comm.CommService;
 import org.apache.log4j.Logger;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 @SuppressWarnings("all")
@@ -69,50 +67,6 @@ public class WhgActivityPalyService {
 		}
 		return timePlayList;
    }
-   
-   /**
-    * 添加活动场次
-    * @param act
-    * @return
-    * @throws Exception
-    */
-    public void t_add(List<Map<String, String>> timePlayList, WhgActActivity whgActActivity){
-		SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd");
-		SimpleDateFormat sdfDateTime = new SimpleDateFormat("yy/MM/dd HH:mm");
-		try {
-			Date myDate = whgActActivity.getStarttime();
-			Date myEndDate = whgActActivity.getEndtime();
-			while(isAfter(myDate,myEndDate)){
-				for (int i = 0; i < timePlayList.size(); i++) {
-					Map<String,String> map = timePlayList.get(i);
-					String playstrtime = String.valueOf(map.get("playstrtime"));
-					String playendtime = String.valueOf(map.get("playendtime"));
-					Date playStartTime = sdfDateTime.parse(sdf.format(myDate) + " " + playstrtime);
-					Date playEndTime = sdfDateTime.parse(sdf.format(myDate) + " " + playendtime);
-					WhgActPlay actPlay = new WhgActPlay();
-					try {
-						actPlay.setId(commService.getKey("whg_sys_act"));
-						//actPlay.setActid(actId);
-						actPlay.setPlayendtime(playendtime);
-						actPlay.setPlaystrtime(playstrtime);
-
-						this.whgActPalyMapper.insert(actPlay);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}catch(Exception e){
-			log.error(e.toString());
-		}
-    }
-
-    private boolean isAfter(Date date,Date end){
-		SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd");
-		LocalDate myDate = LocalDate.parse(sdf.format(date));
-		LocalDate endDate = LocalDate.parse(sdf.format(end));
-		return myDate.isAfter(endDate);
-	}
 
     private String getTomorrow(Date date){
 		Calendar calendar = new GregorianCalendar();
