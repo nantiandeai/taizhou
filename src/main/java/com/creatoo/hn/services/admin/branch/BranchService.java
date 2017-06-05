@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**分馆服务
  * Created by caiyong on 2017/6/2.
@@ -36,6 +37,19 @@ public class BranchService {
         PageHelper.startPage(page,rows);
         try {
             return new PageInfo(whBranchMapper.getBranchListAll());
+        }catch (Exception e){
+            logger.error(e.toString());
+            return null;
+        }
+    }
+
+    /**
+     * 获取所有分馆
+     * @return
+     */
+    public List<Map> getBranchListAll(){
+        try {
+            return whBranchMapper.getBranchListAll();
         }catch (Exception e){
             logger.error(e.toString());
             return null;

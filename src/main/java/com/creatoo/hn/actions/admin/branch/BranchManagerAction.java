@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**分馆管理控制器
  * Created by caiyong on 2017/6/1.
@@ -67,6 +68,22 @@ public class BranchManagerAction {
             logger.error(e.toString());
             responseBean.setSuccess(ResponseBean.FAIL);
             responseBean.setErrormsg("获取分馆列表失败");
+        }finally {
+            return responseBean;
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("/branchListAll")
+    public ResponseBean branchListAll(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        try {
+            List<Map> list = branchService.getBranchListAll();
+            responseBean.setRows(list);
+        }catch (Exception e){
+            logger.error(e.toString());
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("获取分馆信息失败");
         }finally {
             return responseBean;
         }
