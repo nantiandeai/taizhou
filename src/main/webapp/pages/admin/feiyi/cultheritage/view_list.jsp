@@ -106,7 +106,7 @@
     }
     function _undel(idx) {
         var row = $("#whgdg").datagrid("getRows")[idx];
-        return row.delstate == 1;
+        return row.isdel == 1;
     }
     function _edit(idx) {
         var row = $("#whgdg").datagrid("getRows")[idx];
@@ -202,14 +202,14 @@
     }
 
     /**
-     * 取消发布 [6]->4
+     * 取消发布 [6]->1
      * @param idx
      */
     function publishoff(idx){
         var row = $("#whgdg").datagrid("getRows")[idx];
         $.messager.confirm("确认信息", "确定要取消发布选中的项吗？", function(r){
             if (r){
-                __updStateSend(row.id, 6, 4);
+                __updStateSend(row.id, 6, 1);
             }
         })
     }
