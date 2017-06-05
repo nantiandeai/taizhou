@@ -18,4 +18,12 @@
             wr.userid = #{userId}
         </where>
     </select>
+
+    <delete id="clearBranch">
+        DELETE FROM wh_user_branch_rel
+        <where>
+            userid = #{userId}
+        </where>
+    </delete>
+
 </mapper>

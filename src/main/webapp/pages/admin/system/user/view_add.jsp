@@ -184,7 +184,7 @@
         debugger;
         var _data = [];
         $.ajaxSettings.async = false;
-        $.getJSON('${basePath}/admin/branch/branchListAll',function (data) {
+        $.getJSON('${basePath}/admin/branch/branchListStarted',function (data) {
             if("1" == data.success){
                 var list = data.rows;
                 for(var i=0; i<list.length; i++){

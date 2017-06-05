@@ -2,6 +2,7 @@ package com.creatoo.hn.services.admin.branch;
 
 import com.creatoo.hn.mapper.WhBranchMapper;
 import com.creatoo.hn.mapper.WhTypMapper;
+import com.creatoo.hn.mapper.WhUserBranchRelMapper;
 import com.creatoo.hn.model.WhBranch;
 import com.creatoo.hn.model.WhTyp;
 import com.github.pagehelper.PageHelper;
@@ -10,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +29,10 @@ public class BranchService {
     @Autowired
     private WhTypMapper whTypMapper;
 
+    @Autowired
+    private WhUserBranchRelMapper whUserBranchRelMapper;
+
+
     /**
      * 获取分馆列表
      * @param page
@@ -36,7 +42,7 @@ public class BranchService {
     public PageInfo getBranchList(Integer page,Integer rows){
         PageHelper.startPage(page,rows);
         try {
-            return new PageInfo(whBranchMapper.getBranchListAll());
+            return new PageInfo(whBranchMapper.getBranchListAll(new HashMap()));
         }catch (Exception e){
             logger.error(e.toString());
             return null;
@@ -47,9 +53,26 @@ public class BranchService {
      * 获取所有分馆
      * @return
      */
-    public List<Map> getBranchListAll(){
+    public List<Map> getBranchListAll(Map map){
         try {
-            return whBranchMapper.getBranchListAll();
+            return whBranchMapper.getBranchListAll(map);
+        }catch (Exception e){
+            logger.error(e.toString());
+            return null;
+        }
+    }
+
+    /**
+     * 获取用户的所有分馆
+     * @param userId
+     * @return
+     */
+    public List<Map> getUserBranchInfo(String  userId){
+        try {
+            if(null == userId){
+                return null;
+            }
+            return whUserBranchRelMapper.getUserBranchInfo(userId);
         }catch (Exception e){
             logger.error(e.toString());
             return null;

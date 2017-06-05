@@ -1,14 +1,16 @@
 package com.creatoo.hn.mapper;
 
 import com.creatoo.hn.model.WhUserBranchRel;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
-import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
+import java.util.List;
+import java.util.Map;
+
 public interface WhUserBranchRelMapper extends Mapper<WhUserBranchRel> {
+
+    public List<Map> getUserBranchInfo(@Param("userId") String userId);
+
+    public void clearBranch(@Param("userId") String userId);
+
 }
