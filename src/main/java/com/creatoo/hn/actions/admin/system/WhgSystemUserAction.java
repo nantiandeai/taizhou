@@ -4,7 +4,6 @@ import com.creatoo.hn.ext.annotation.WhgOPT;
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.ext.emun.EnumOptType;
 import com.creatoo.hn.model.WhgSysUser;
-import com.creatoo.hn.model.WhgSysUser;
 import com.creatoo.hn.services.admin.system.WhgSystemUserService;
 import com.creatoo.hn.utils.MD5Util;
 import com.github.pagehelper.PageInfo;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -134,12 +132,14 @@ public class WhgSystemUserAction {
         try {
             String[] roleids = request.getParameterValues("roleids");//岗位
             String[] cultids = request.getParameterValues("cultids");//权限分馆
+            String[] branchSelect = request.getParameterValues("branchSelect");
 
             //保存密码到emps-此字段现在存密码明文base64加密后的字符串
             String password_user = request.getParameter("password2");
             user.setEpms(MD5Util.encode4Base64(password_user));
 
-            service.t_add(user, roleids, cultids, (WhgSysUser) request.getSession().getAttribute("user"));
+            WhgSysUser whgSysUser = service.t_add(user, roleids, cultids, (WhgSysUser) request.getSession().getAttribute("user"));
+            service.addBranchInfo(whgSysUser,branchSelect);
         }catch (Exception e){
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg(e.getMessage());

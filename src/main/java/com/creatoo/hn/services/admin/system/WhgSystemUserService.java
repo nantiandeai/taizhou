@@ -2,9 +2,7 @@ package com.creatoo.hn.services.admin.system;
 
 import com.creatoo.hn.ext.emun.EnumDelState;
 import com.creatoo.hn.ext.emun.EnumState;
-import com.creatoo.hn.mapper.WhgSysUserCultMapper;
-import com.creatoo.hn.mapper.WhgSysUserMapper;
-import com.creatoo.hn.mapper.WhgSysUserRoleMapper;
+import com.creatoo.hn.mapper.*;
 import com.creatoo.hn.model.*;
 import com.creatoo.hn.model.WhgSysUser;
 import com.creatoo.hn.services.comm.CommService;
@@ -48,6 +46,15 @@ public class WhgSystemUserService {
 
     @Autowired
     private WhgSysUserCultMapper whgSysUserCultMapper;
+
+    /**
+     * 分馆DAO
+     */
+    @Autowired
+    private WhBranchMapper whBranchMapper;
+
+    @Autowired
+    private WhUserBranchRelMapper whUserBranchRelMapper;
 
     /**
      * 分页查询文化馆信息
@@ -251,6 +258,25 @@ public class WhgSystemUserService {
         }
 
         return cult;
+    }
+
+    public int addBranchInfo(WhgSysUser whgSysUser,String[] branchList){
+        try {
+            if(null == whgSysUser || null == branchList || 0 == branchList.length){
+                return 0;
+            }
+            for(String brachId : branchList){
+                WhUserBranchRel whUserBranchRel = new WhUserBranchRel();
+                whUserBranchRel.setId(commService.getKey("wh_user_branch_rel"));
+                whUserBranchRel.setUserid(whgSysUser.getId());
+                whUserBranchRel.setBranchid(brachId);
+                whUserBranchRelMapper.insert(whUserBranchRel);
+            }
+            return 0;
+        }catch (Exception e){
+            log.error(e.toString());
+            return 1;
+        }
     }
 
     /**
