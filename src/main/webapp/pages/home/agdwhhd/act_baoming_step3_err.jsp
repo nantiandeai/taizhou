@@ -5,19 +5,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<%@include file="/pages/comm/agdhead.jsp"%>
-<title>广东省文化馆-活动报名</title>
-<link href="${basePath }/static/assets/css/activity/activityDetaiil.css" rel="stylesheet">
-<link href="${basePath }/static/assets/js/plugins/oiplayer-master/css/oiplayer.css" rel="stylesheet">
-<link href="${basePath }/static/assets/css/activity/baoming.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <%@include file="/pages/comm/agdhead.jsp"%>
+    <title>广东省文化馆-活动报名</title>
+    <link href="${basePath }/static/assets/css/activity/activityDetaiil.css" rel="stylesheet">
+    <link href="${basePath }/static/assets/js/plugins/oiplayer-master/css/oiplayer.css" rel="stylesheet">
+    <link href="${basePath }/static/assets/css/activity/baoming.css" rel="stylesheet">
 
-<script src="${basePath }/static/assets/js/plugins/sidebar/stickySidebar.js"></script>
-<script src="${basePath }/static/assets/js/activity/activityDetail.js"></script>
-<script src="${basePath }/static/assets/js/plugins/oiplayer-master/plugins/flowplayer-3.2.6.min.js"></script>
-<script src="${basePath }/static/assets/js/plugins/oiplayer-master/js/jquery.oiplayer.js"></script>
-<script src="${basePath }/static/assets/js/activity/seatOrder.js"></script>
-<script src="${basePath }/static/assets/js/plugins/laydate.dev.min.js"></script>
+    <script src="${basePath }/static/assets/js/plugins/sidebar/stickySidebar.js"></script>
+    <script src="${basePath }/static/assets/js/activity/activityDetail.js"></script>
+    <script src="${basePath }/static/assets/js/plugins/oiplayer-master/plugins/flowplayer-3.2.6.min.js"></script>
+    <script src="${basePath }/static/assets/js/plugins/oiplayer-master/js/jquery.oiplayer.js"></script>
+    <script src="${basePath }/static/assets/js/activity/seatOrder.js"></script>
+    <script src="${basePath }/static/assets/js/plugins/laydate.dev.min.js"></script>
 </head>
 <body class="oiplayer-example">
 <!-- 公共头部开始 -->
@@ -26,26 +26,26 @@
 
 <!--公共主头部开始-->
 <div id="header-fix">
-	<div class="header-nav-bg">
-		<div class="header-nav">
-			<div class="logo-small">
-				<a href="${basePath }/index"><img src="${basePath }/static/assets/img/public/logoSmall.png"></a>
-			</div>
-			<ul>
-				<%-- <li><a href="${basePath }/agdwhhd/index">文化活动</a></li> --%>
-				<li class="active"><a href="${basePath }/agdwhhd/activitylist">活动预约</a></li>
-				<li><a href="${basePath }/agdwhhd/notice">活动公告</a></li> 
-				<li><a href="${basePath }/agdwhhd/news">活动资讯</a></li>
-				<li class="last"><a href="${basePath }/agdwhhd/brandlist">品牌活动</a></li>
-			</ul>
-		</div>
-	</div>
+    <div class="header-nav-bg">
+        <div class="header-nav">
+            <div class="logo-small">
+                <a href="${basePath }/index"><img src="${basePath }/static/assets/img/public/logoSmall.png"></a>
+            </div>
+            <ul>
+                <%-- <li><a href="${basePath }/agdwhhd/index">文化活动</a></li> --%>
+                <li class="active"><a href="${basePath }/agdwhhd/activitylist">活动预约</a></li>
+                <li><a href="${basePath }/agdwhhd/notice">活动公告</a></li>
+                <li><a href="${basePath }/agdwhhd/news">活动资讯</a></li>
+                <li class="last"><a href="${basePath }/agdwhhd/brandlist">品牌活动</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 <!--公共主头部结束-END-->
 
 <!--主体开始-->
 <div class="main-info-bg bg-color">
-   <ul class="crumbs crumbs-5 clearfix">
+    <ul class="crumbs crumbs-5 clearfix">
         <li class="step-1">1. 填写基本信息<em class="arrow"></em></li>
         <li class="step-2">2. 选择座位<em class="arrow"></em></li>
         <li class="step-3">3. 填写取票信息<em class="arrow"></em></li>
@@ -63,10 +63,10 @@
             </div>
             <div class="compltet-order-msg">
                 <p></p>
-                <span>报名失败: ${errorMsg}</span>
+                <span>报名失败: ${data.msg}</span>
             </div>
         </div>
-        <a href="${basePath}/agdwhhd/activityinfo?actvid=${order.actId}" class="submit">返回活动详情</a>
+        <a href="${basePath}/agdwhhd/activityinfo?actvid=${data.actId}" class="submit">返回活动详情</a>
     </div>
 </div>
 <!--主体结束-->

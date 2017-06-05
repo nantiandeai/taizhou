@@ -2,6 +2,7 @@ package com.creatoo.hn.services.home.agdwhhd;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.ext.bean.RetMobileEntity;
 import com.creatoo.hn.ext.bean.RetMobileEntity.Pager;
 import com.creatoo.hn.ext.emun.EnumOrderType;
@@ -892,17 +893,29 @@ public class WhhdService {
 
 	/**
 	 * 创建黑名单
-	 * @param usrBack
+	 * @param id
+	 * @param userId
+	 * @param phone
 	 */
-	public void addUserBack(WhgUsrBacklist usrBack){
-		whgUsrBacklistMapper.insert(usrBack);
+	public void addUserBack(String id,String userId,String phone){
+		WhgUsrBacklist userBack = new WhgUsrBacklist();
+		userBack.setId(id);
+		userBack.setState(1);
+		userBack.setJointime(new Date());
+		userBack.setType(1);
+		userBack.setUserid(userId);
+		userBack.setUserphone(phone);
+		whgUsrBacklistMapper.insert(userBack);
 	}
 
 	/**
 	 * 查询该用户是否已加入黑名单
 	 */
-	public List<WhgUsrBacklist> findWhgUsrBack4UserId(WhgUsrBacklist usrBack){
-		return whgUsrBacklistMapper.select(usrBack);
+	public List<WhgUsrBacklist> findWhgUsrBack4UserId(String userId){
+		WhgUsrBacklist userBack = new WhgUsrBacklist();
+		userBack.setUserid(userId);
+		userBack.setState(1);
+		return whgUsrBacklistMapper.select(userBack);
 	}
 
 	/**
@@ -1002,13 +1015,27 @@ public class WhhdService {
 		WhgActTime whgActTime = whgActTimeMapper.selectByPrimaryKey(eventId);
 		boolean flag = true;
 
-
-		//活动报名已结束
-		if(whgActTime != null && whgActTime.getPlayendtime().before(Calendar.getInstance().getTime())){
-			map.put("code", 110);
-			map.put("msg", "活动报名已结束!");
+		if(whgActTime != null &&  whgActActivity.getState() != 6){
+			map.put("code", 112);
+			map.put("msg", "活动已下架!");
 			flag = false;
 		}
+
+
+		//活动已结束
+		if(flag && whgActTime.getPlayendtime().before(Calendar.getInstance().getTime())){
+			map.put("code", 110);
+			map.put("msg", "当前活动场次已结束!");
+			flag = false;
+		}
+
+		//活动已开始
+		if(flag && whgActTime.getPlaystarttime().before(Calendar.getInstance().getTime())){
+			map.put("code", 110);
+			map.put("msg", "当前活动场次已开始!");
+			flag = false;
+		}
+
 
 		//实名制验证
 		if(flag && whgActActivity.getIsrealname() == 1){
@@ -1047,15 +1074,19 @@ public class WhhdService {
 			flag = false;
 		}
 		String selectSeat[] = null;
-		if(flag && (seatStr != null && !"".equals(seatStr))){
+		if(seatStr != null && !"".equals(seatStr)){
 			selectSeat = seatStr.split(",");
-			WhgActSeat whgActSeat =this.getWhgActTicket4ActId(actId, selectSeat[0]);
-			Map map_ = this.getTicketList4SeatId(whgActSeat.getId(),eventId);
-			if(map_ !=null){
-				map.put("code", 106);
-				map.put("msg", "该座位已被预定！");
-				flag = false;
+			for (int i = 0; i < selectSeat.length; i++) {
+				WhgActSeat whgActSeat =this.getWhgActTicket4ActId(actId, selectSeat[i]);
+				Map map_ = this.getTicketList4SeatId(whgActSeat.getId(),eventId);
+				if(map_ !=null){
+					map.put("code", 106);
+					map.put("msg", "该座位已被预定！");
+					flag = false;
+					break;
+				}
 			}
+
 		}
 		JSONObject seatJson = this.getSeat4ActId(actId,eventId,userId);
 		int userSeatNum = seatJson.getIntValue("seatSizeUser");//当前用户订票数
@@ -1076,7 +1107,7 @@ public class WhhdService {
 		}
 		if(flag && userSeatNum + seatNum > whgActActivity.getSeats() ){
 			map.put("code", 108);
-			map.put("msg", "每位用户最多可以预定"+whgActActivity.getSeats()+"座位！");
+			map.put("msg", "每位用户最多可以预定"+whgActActivity.getSeats()+"个座位！");
 			flag = false;
 		}
 		if(flag && seatSize + seatNum > seatCount ){
