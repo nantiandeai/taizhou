@@ -46,6 +46,22 @@
                 message: '活动结束日期必须大于活动开始日期.'
             }
         })
+
+		function setBranch() {
+            $.getJSON("${basePath}/admin/branch/branchListUser",function (data) {
+                debugger;
+                if("1" != data.success){
+                    $.messager.alert("错误", data.errormsg, 'error');
+                    return;
+				}
+				var rows = data.rows;
+                $("#branch").combobox("loadData",rows);
+
+                if(0 < rows.length){
+                    $("#branch").combobox("setValue",rows[0].id);
+				}
+            });
+        }
     </script>
 </head>
 <body>
@@ -171,6 +187,16 @@
 			<div class="whgff-row-input">
 				<input class="easyui-textbox" name="speaker"
 					style="width: 500px; height: 32px" data-options="required:false,validType:['length[0,20]']" />
+			</div>
+		</div>
+
+		<div class="whgff-row">
+			<div class="whgff-row-label"><label style="color: red">*</label>所属单位：</div>
+			<div class="whgff-row-input">
+				<input class="easyui-combobox" name="branch" id="branch" panelHeight="auto" limitToList="true" style="width:500px; height:32px"
+					   data-options="required:false, editable:false,multiple:false, mode:'remote',
+                   valueField:'id', textField:'name'
+                   "/>
 			</div>
 		</div>
 
@@ -396,7 +422,9 @@
             } 
             $('#whgff').submit();
 		}
-		
+
+        setBranch();
+
 		//初始化表单
 		$('#whgff').form({
 			novalidate : true,
