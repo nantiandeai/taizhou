@@ -3,7 +3,7 @@ package com.creatoo.hn.actions.admin.feiyi;
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.model.WhgCultHeritage;
 import com.creatoo.hn.model.WhgSysUser;
-import com.creatoo.hn.services.admin.feiyi.CultHeritageService;
+import com.creatoo.hn.services.admin.feiyi.WhgCultHeritageService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
  */
 @RestController
 @RequestMapping("/admin/cultheritage")
-public class CultHeritageAction {
+public class WhgCultHeritageAction {
     /**
      * log
      */
@@ -30,7 +30,7 @@ public class CultHeritageAction {
      * 文化遗产管理service
      */
     @Autowired
-    private CultHeritageService cultHeritageService;
+    private WhgCultHeritageService whgCultHeritageService;
 
     /**
      * 进入type(list|add|edit|view)视图
@@ -50,7 +50,7 @@ public class CultHeritageAction {
                 if (id != null) {
                     view.addObject("id", id);
                     view.addObject("targetShow", targetShow);
-                    view.addObject("cult", cultHeritageService.t_srchOne(id));
+                    view.addObject("cult", whgCultHeritageService.t_srchOne(id));
                     view.setViewName("admin/feiyi/cultheritage/view_edit");
                 } else {
                     view.setViewName("admin/feiyi/cultheritage/view_add");
@@ -74,7 +74,7 @@ public class CultHeritageAction {
     public ResponseBean srchList4p(HttpServletRequest request, WhgCultHeritage cultHeritage) {
         ResponseBean res = new ResponseBean();
         try {
-            PageInfo<WhgCultHeritage> pageInfo = cultHeritageService.t_srchList4p(request, cultHeritage);
+            PageInfo<WhgCultHeritage> pageInfo = whgCultHeritageService.t_srchList4p(request, cultHeritage);
             res.setRows(pageInfo.getList());
             res.setTotal(pageInfo.getTotal());
         } catch (Exception e) {
@@ -94,7 +94,7 @@ public class CultHeritageAction {
     public ResponseBean add(WhgCultHeritage cultHeritage, HttpServletRequest request) {
         ResponseBean res = new ResponseBean();
         try {
-            this.cultHeritageService.t_add(request, cultHeritage);
+            this.whgCultHeritageService.t_add(request, cultHeritage);
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg("保存失败");
@@ -113,7 +113,7 @@ public class CultHeritageAction {
     public ResponseBean edit(WhgCultHeritage cultHeritage) {
         ResponseBean res = new ResponseBean();
         try {
-            this.cultHeritageService.t_edit(cultHeritage);
+            this.whgCultHeritageService.t_edit(cultHeritage);
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg(e.getMessage());
@@ -131,7 +131,7 @@ public class CultHeritageAction {
     public ResponseBean del(String id) {
         ResponseBean res = new ResponseBean();
         try {
-            this.cultHeritageService.t_del(id);
+            this.whgCultHeritageService.t_del(id);
 
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
@@ -151,7 +151,7 @@ public class CultHeritageAction {
     public Object undel(String id) {
         ResponseBean rb = new ResponseBean();
         try {
-            this.cultHeritageService.t_undel(id);
+            this.whgCultHeritageService.t_undel(id);
         } catch (Exception e) {
             rb.setSuccess(ResponseBean.FAIL);
             rb.setErrormsg("还原失败");
@@ -174,7 +174,7 @@ public class CultHeritageAction {
         ResponseBean res = new ResponseBean();
         try {
             WhgSysUser sysUser = (WhgSysUser) session.getAttribute("user");
-            res = this.cultHeritageService.t_updstate(ids, formstates, tostate, sysUser);
+            res = this.whgCultHeritageService.t_updstate(ids, formstates, tostate, sysUser);
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg("状态更改失败");

@@ -3,8 +3,9 @@ package com.creatoo.hn.services.admin.feiyi;
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.ext.emun.EnumBizState;
 import com.creatoo.hn.ext.emun.EnumDelState;
-import com.creatoo.hn.mapper.WhgCultHeritageMapper;
+import com.creatoo.hn.mapper.WhgHistoricalMapper;
 import com.creatoo.hn.model.WhgCultHeritage;
+import com.creatoo.hn.model.WhgHistorical;
 import com.creatoo.hn.model.WhgSysUser;
 import com.creatoo.hn.model.WhgTra;
 import com.creatoo.hn.services.comm.CommService;
@@ -23,15 +24,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 文化遗产管理service
- * Created by luzhihuai on 2017/6/1.
+ * 重点文物管理service
+ * Created by luzhihuai on 2017/6/5.
  */
 @Service
-public class CultHeritageService {
+public class WhgHistoricalService {
     private static Logger logger = Logger.getLogger(WhgCultHeritage.class);
 
     @Autowired
-    private WhgCultHeritageMapper whgCultHeritageMapper;
+    private WhgHistoricalMapper whgHistoricalMapper;
 
     /**
      * 公共服务
@@ -44,7 +45,7 @@ public class CultHeritageService {
      *
      * @param request。
      */
-    public PageInfo<WhgCultHeritage> t_srchList4p(HttpServletRequest request, WhgCultHeritage cult) throws Exception {
+    public PageInfo<WhgHistorical> t_srchList4p(HttpServletRequest request, WhgHistorical historical) throws Exception {
         Map<String, Object> paramMap = ReqParamsUtil.parseRequest(request);
         //分页信息
         int page = Integer.parseInt((String) paramMap.get("page"));
@@ -55,9 +56,9 @@ public class CultHeritageService {
         Example.Criteria c = example.createCriteria();
 
         //名称条件
-        if (cult != null && cult.getName() != null) {
-            c.andLike("name", "%" + cult.getName() + "%");
-            cult.setName(null);
+        if (historical != null && historical.getName() != null) {
+            c.andLike("name", "%" + historical.getName() + "%");
+            historical.setName(null);
         }
 
         String pageType = request.getParameter("type");
@@ -88,7 +89,7 @@ public class CultHeritageService {
 
         //分页查询
         PageHelper.startPage(page, rows);
-            List<WhgCultHeritage> typeList = this.whgCultHeritageMapper.selectByExample(example);
+            List<WhgHistorical> typeList = this.whgHistoricalMapper.selectByExample(example);
         return new PageInfo<>(typeList);
     }
 
@@ -99,26 +100,26 @@ public class CultHeritageService {
      * @return 对象
      * @throws Exception
      */
-    public WhgCultHeritage t_srchOne(String id) throws Exception {
-        return this.whgCultHeritageMapper.selectByPrimaryKey(id);
+    public WhgHistorical t_srchOne(String id) throws Exception {
+        return this.whgHistoricalMapper.selectByPrimaryKey(id);
     }
 
     /**
      * 添加
      *
-     * @param cultHeritage .
+     * @param historical .
      */
-    public void t_add(HttpServletRequest request, WhgCultHeritage cultHeritage) throws Exception {
+    public void t_add(HttpServletRequest request, WhgHistorical historical) throws Exception {
         WhgSysUser user = (WhgSysUser) request.getSession().getAttribute("user");
 
-        cultHeritage.setId(commService.getKey("whg_cult_heritage"));
-        cultHeritage.setCrtdate(new Date());
-        cultHeritage.setIsrecommend(0);
-        cultHeritage.setIsdel(EnumDelState.STATE_DEL_NO.getValue());
-        cultHeritage.setStatemdfdate(new Date());
-        cultHeritage.setStatemdfuser(user.getId());
-        cultHeritage.setState(EnumBizState.STATE_CAN_EDIT.getValue());
-        int result = this.whgCultHeritageMapper.insertSelective(cultHeritage);
+        historical.setId(commService.getKey("whg_historical"));
+        historical.setCrtdate(new Date());
+        historical.setIsrecommend(0);
+        historical.setIsdel(EnumDelState.STATE_DEL_NO.getValue());
+        historical.setStatemdfdate(new Date());
+        historical.setStatemdfuser(user.getId());
+        historical.setState(EnumBizState.STATE_CAN_EDIT.getValue());
+        int result = this.whgHistoricalMapper.insertSelective(historical);
         if (result != 1) {
             throw new Exception("添加数据失败！");
         }
@@ -129,9 +130,9 @@ public class CultHeritageService {
      *
      * @param
      */
-    public void t_edit(WhgCultHeritage cultHeritage) throws Exception {
-        cultHeritage.setStatemdfdate(new Date());
-        int result = this.whgCultHeritageMapper.updateByPrimaryKeySelective(cultHeritage);
+    public void t_edit(WhgHistorical historical) throws Exception {
+        historical.setStatemdfdate(new Date());
+        int result = this.whgHistoricalMapper.updateByPrimaryKeySelective(historical);
         if (result != 1) {
             throw new Exception("编辑数据失败！");
         }
@@ -143,17 +144,17 @@ public class CultHeritageService {
      * @param id
      */
     public void t_del(String id) throws Exception {
-        WhgCultHeritage cultHeritage = whgCultHeritageMapper.selectByPrimaryKey(id);
-        if (cultHeritage == null) {
+        WhgHistorical historical = whgHistoricalMapper.selectByPrimaryKey(id);
+        if (historical == null) {
             return;
         }
-        if (cultHeritage.getIsdel() != null && cultHeritage.getIsdel().compareTo(1) == 0) {
-            this.whgCultHeritageMapper.deleteByPrimaryKey(id);
+        if (historical.getIsdel() != null && historical.getIsdel().compareTo(1) == 0) {
+            this.whgHistoricalMapper.deleteByPrimaryKey(id);
         } else {
-            cultHeritage = new WhgCultHeritage();
-            cultHeritage.setId(id);
-            cultHeritage.setIsdel(1);
-            this.whgCultHeritageMapper.updateByPrimaryKeySelective(cultHeritage);
+            historical = new WhgHistorical();
+            historical.setId(id);
+            historical.setIsdel(1);
+            this.whgHistoricalMapper.updateByPrimaryKeySelective(historical);
         }
     }
 
@@ -163,14 +164,14 @@ public class CultHeritageService {
      * @param id
      */
     public void t_undel(String id) {
-        WhgCultHeritage cultHeritage = whgCultHeritageMapper.selectByPrimaryKey(id);
-        if (cultHeritage == null) {
+        WhgHistorical historical = whgHistoricalMapper.selectByPrimaryKey(id);
+        if (historical == null) {
             return;
         }
-        cultHeritage = new WhgCultHeritage();
-        cultHeritage.setId(id);
-        cultHeritage.setIsdel(0);
-        this.whgCultHeritageMapper.updateByPrimaryKeySelective(cultHeritage);
+        historical = new WhgHistorical();
+        historical.setId(id);
+        historical.setIsdel(0);
+        this.whgHistoricalMapper.updateByPrimaryKeySelective(historical);
     }
 
     /**
@@ -192,11 +193,11 @@ public class CultHeritageService {
         example.createCriteria()
                 .andIn("state", Arrays.asList(formstates.split("\\s*,\\s*")))
                 .andIn("id", Arrays.asList(ids.split("\\s*,\\s*")));
-        WhgCultHeritage cultHeritage = new WhgCultHeritage();
-        cultHeritage.setState(tostate);
-        cultHeritage.setStatemdfdate(new Date());
-        cultHeritage.setStatemdfuser(user.getId());
-        this.whgCultHeritageMapper.updateByExampleSelective(cultHeritage, example);
+        WhgHistorical historical = new WhgHistorical();
+        historical.setState(tostate);
+        historical.setStatemdfdate(new Date());
+        historical.setStatemdfuser(user.getId());
+        this.whgHistoricalMapper.updateByExampleSelective(historical, example);
         return rb;
     }
 }
