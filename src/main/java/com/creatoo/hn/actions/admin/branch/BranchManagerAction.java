@@ -128,7 +128,34 @@ public class BranchManagerAction {
         }
     }
 
+    /**
+     * 获取系统用户的已启用的分馆
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/branchListUser")
+    public Object branchListUser(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        try {
+            Map param = new HashMap();
+            WhgSysUser whgSysUser = (WhgSysUser)request.getSession().getAttribute("user");
+            List<Map> list = branchService.getUserBranchInfo(whgSysUser.getId());
+            responseBean.setRows(list);
+            return responseBean;
+        }catch (Exception e){
+            logger.error(e.toString());
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("获取分馆信息失败");
+            return responseBean;
+        }
+    }
 
+    /**
+     * 修改分馆表
+     * @param request
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/saveBranch")
     public ResponseBean saveBranch(HttpServletRequest request){
@@ -227,6 +254,13 @@ public class BranchManagerAction {
         return responseBean;
     }
 
+    /**
+     * 获取参数
+     * @param request
+     * @param paramName
+     * @param defaultValue
+     * @return
+     */
     private String getParam(HttpServletRequest request,String paramName,String defaultValue){
         String value = request.getParameter(paramName);
         if(null == value || value.trim().isEmpty()){
