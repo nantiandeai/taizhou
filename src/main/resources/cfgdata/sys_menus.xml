@@ -133,6 +133,18 @@
         </menu>
         <!-- 文化活动 END -->
 
+        <!-- 培训驿站 -->
+        <menu id="M_TRA" type="0" state="1" text="培训驿站" iconcls="p-6">
+            <menu id="M_TRA_MGE" type="0" state="1" text="培训管理">
+                <menu id="M_TRA_MGE_ADD" type="1" state="1" text="添加培训"  href="/admin/train/view/add" opts="view"/>
+                <menu id="M_TRA_MGE_EDIT" type="1" state="1" text="培训编辑列表"  href="/admin/train/view/edit" opts="view, edit, checkgo, del, kecheng"/>
+                <menu id="M_TRA_MGE_CHK" type="1" state="1" text="培训审核列表"  href="/admin/train/view/check" opts="view, edit, checkon, del, back, kecheng"/>
+                <menu id="M_TRA_MGE_PUB" type="1" state="1" text="培训发布列表"  href="/admin/train/view/publish" opts="view, edit, del, publish, publishoff, back, baoming,kecheng"/>
+                <menu id="M_TRA_MGE_REC" type="1" state="1" text="回收站"  href="/admin/train/view/del" opts="view, undel, del"/>
+            </menu>
+        </menu>
+        <!-- 培训驿站 END -->
+
         <!-- 场馆服务 -->
         <menu id="M_VEN" type="0" state="1" text="场馆服务" iconcls="p-10">
             <menu id="M_VEN_SERVICE" type="0" state="1" text="场馆管理">

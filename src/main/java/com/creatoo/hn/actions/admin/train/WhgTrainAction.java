@@ -75,8 +75,11 @@ public class WhgTrainAction {
                     mmp.addAttribute("whgTra",this.whgTrainService.srchOne(id));
                     mmp.addAttribute("state",this.whgTrainService.srchOne(id).getState());
                     mmp.addAttribute("course",this.whgTrainCourseService.srchList(id));
+                    view.setViewName("admin/train/base/view_edit");
+                }else{
+                    view.setViewName("admin/train/base/view_add");
                 }
-                view.setViewName("admin/train/base/view_add");
+
             }else{
                 view.setViewName("admin/train/base/view_list");
             }
@@ -128,7 +131,7 @@ public class WhgTrainAction {
         ResponseBean res = new ResponseBean();
         WhgSysUser user = (WhgSysUser) session.getAttribute("user");
         try {
-            this.whgTrainService.t_add(tra,user,request);
+            res = this.whgTrainService.t_add(tra,user,request);
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg("培训保存失败");
@@ -173,7 +176,7 @@ public class WhgTrainAction {
             if(tra.getVenroom() == null ){
                 tra.setVenroom("");
             }
-            this.whgTrainService.t_edit(tra, sysUser, request);
+            res = this.whgTrainService.t_edit(tra, sysUser, request);
         }catch (Exception e){
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg("培训信息保存失败");
@@ -232,7 +235,7 @@ public class WhgTrainAction {
      * @return
      */
     @RequestMapping("/updstate")
-    @WhgOPT(optType = EnumOptType.TRA, optDesc = {"送审","审核","打回","发布","取消发布"}, valid = {"state=9","state=2","state=1","state=6","state=4"})
+    @WhgOPT(optType = EnumOptType.TRA, optDesc = {"送审","审核","打回","发布","取消发布"}, valid = {"tostate=9","tostate=2","tostate=1","tostate=6","tostate=4"})
     public ResponseBean updstate(String statemdfdate, String ids, String formstates, int tostate, HttpSession session){
         ResponseBean res = new ResponseBean();
         try {

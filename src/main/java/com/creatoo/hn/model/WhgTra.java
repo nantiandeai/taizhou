@@ -237,6 +237,16 @@ public class WhgTra {
     private String age;
 
     /**
+     * 是否普通培训
+     */
+    private Integer isbasictra;
+
+    /**
+     * 录取几率
+     */
+    private Integer enrollodds;
+
+    /**
      * 是否收费
      */
     private Integer ismoney;
@@ -1025,5 +1035,21 @@ public class WhgTra {
 
     public void setIsmoney(Integer ismoney) {
         this.ismoney = ismoney;
+    }
+
+    public Integer getIsbasictra() {
+        return isbasictra;
+    }
+
+    public void setIsbasictra(Integer isbasictra) {
+        this.isbasictra = isbasictra;
+    }
+
+    public Integer getEnrollodds() {
+        return enrollodds;
+    }
+
+    public void setEnrollodds(Integer enrollodds) {
+        this.enrollodds = enrollodds;
     }
 }

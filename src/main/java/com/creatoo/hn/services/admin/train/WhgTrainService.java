@@ -113,7 +113,8 @@ public class WhgTrainService {
      * @param tra
      * @param user
      */
-    public void t_add(WhgTra tra, WhgSysUser user, HttpServletRequest request) throws Exception {
+    public ResponseBean t_add(WhgTra tra, WhgSysUser user, HttpServletRequest request) throws Exception {
+        ResponseBean res = new ResponseBean();
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         if(!"".equals(request.getParameter("age1")) && !"".equals(request.getParameter("age2"))){
@@ -158,15 +159,23 @@ public class WhgTrainService {
                     List<Integer> daysOfOneWeek = new ArrayList<Integer>();
                     daysOfOneWeek.add(Integer.parseInt(request.getParameterValues("fixedweek")[i]));
                     List<String> daysNeedBookList = WeekDayUtil.getDates(sdf.format(tra.getStarttime()), sdf.format(tra.getEndtime()), daysOfOneWeek);
-                    for (String s : daysNeedBookList) {
-                        if(!"".equals(request.getParameter("fixedstarttime")) && !"".equals(request.getParameter("fixedendtime"))){
-                            String a = s+" "+request.getParameter("fixedstarttime")+":00";
-                            String b = s+" "+request.getParameter("fixedendtime")+":00";
-                            traCourse.setStarttime(sdf.parse(a));
-                            traCourse.setEndtime(sdf.parse(b));
-                            saveCourse(tra, user, traCourse);
+                    if(daysNeedBookList.size() > 0){
+                        for (String s : daysNeedBookList) {
+                            if(!"".equals(request.getParameter("fixedstarttime")) && !"".equals(request.getParameter("fixedendtime"))){
+                                String a = s+" "+request.getParameter("fixedstarttime")+":00";
+                                String b = s+" "+request.getParameter("fixedendtime")+":00";
+                                traCourse.setStarttime(sdf.parse(a));
+                                traCourse.setEndtime(sdf.parse(b));
+                                saveCourse(tra, user, traCourse);
+                            }
                         }
+                    }else{
+                        res.setSuccess(ResponseBean.FAIL);
+                        res.setErrormsg("您选择的周几在时段内没有,请重新选择.");
+                        this.whgTraMapper.deleteByPrimaryKey(tra.getId());
+                        return res;
                     }
+
                 }
 
             }
@@ -176,6 +185,7 @@ public class WhgTrainService {
             traCourse.setEndtime(sdf.parse(request.getParameter("sin_endtime")));
             saveCourse(tra, user, traCourse);
         }
+        return res;
     }
 
 
@@ -205,7 +215,8 @@ public class WhgTrainService {
      * @param tra
      * @param sysUser
      */
-    public void t_edit(WhgTra tra, WhgSysUser sysUser, HttpServletRequest request) throws Exception {
+    public ResponseBean t_edit(WhgTra tra, WhgSysUser sysUser, HttpServletRequest request) throws Exception {
+        ResponseBean res = new ResponseBean();
         if(!"".equals(request.getParameter("age1")) && !"".equals(request.getParameter("age2"))){
             String _age1 = request.getParameter("age1");
             String _age2 = request.getParameter("age2");
@@ -249,20 +260,26 @@ public class WhgTrainService {
                     List<Integer> daysOfOneWeek = new ArrayList<Integer>();
                     daysOfOneWeek.add(Integer.parseInt(request.getParameterValues("fixedweek")[i]));
                     List<String> daysNeedBookList = WeekDayUtil.getDates(starttime, endtime, daysOfOneWeek);
-                    for (String s : daysNeedBookList) {
-                        if(!"".equals(request.getParameter("fixedstarttime")) && !"".equals(request.getParameter("fixedendtime"))){
-                            String a = s+" "+request.getParameter("fixedstarttime")+":00";;
-                            String b = s+" "+request.getParameter("fixedendtime")+":00";;
-                            traCourse.setStarttime(sdf.parse(a));
-                            traCourse.setEndtime(sdf.parse(b));
-                            saveCourse(tra, sysUser, traCourse);
+                    if(daysNeedBookList.size() > 0) {
+                        for (String s : daysNeedBookList) {
+                            if (!"".equals(request.getParameter("fixedstarttime")) && !"".equals(request.getParameter("fixedendtime"))) {
+                                String a = s + " " + request.getParameter("fixedstarttime") + ":00";
+                                String b = s + " " + request.getParameter("fixedendtime") + ":00";
+                                traCourse.setStarttime(sdf.parse(a));
+                                traCourse.setEndtime(sdf.parse(b));
+                                saveCourse(tra, sysUser, traCourse);
+                            }
                         }
+                    }else{
+                        res.setSuccess(ResponseBean.FAIL);
+                        res.setErrormsg("您选择的周几在时段内没有,请重新选择.");
+                        return res;
                     }
                 }
 
             }
         }
-
+        return res;
     }
 
     /**

@@ -2,6 +2,7 @@
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <% request.setAttribute("basePath", request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath());%>
 <% request.setAttribute("resourceid", request.getParameter("rsid")); %>
 <!DOCTYPE html>
@@ -15,9 +16,6 @@
         <c:when test="${not empty id}">
             <c:set var="pageTitle" value="培训驿站-编辑培训"></c:set>
         </c:when>
-        <c:otherwise>
-            <c:set var="pageTitle" value="培训驿站-添加培训"></c:set>
-        </c:otherwise>
     </c:choose>
     <title>${pageTitle}</title>
     <%@include file="/pages/comm/admin/header.jsp"%>
@@ -59,28 +57,31 @@
         })();
 
         $.extend($.fn.validatebox.defaults.rules, {
-            traTime: {
+
+            edittraTime: {
                 validator: function(value, param){
+                    var mutle = $('input[name="ismultisite"]:checked').val();
                     var _valid = false;
                     var _type = param[0];//0-starttime 1-endtime
                     var _refid = param[1];//0-starttime 1-endtime
                     var _stime = $('#starttime').datebox('getValue');
                     var _etime = $('#endtime').datebox('getValue');
                     var _ptime = false;
-
+                    if(parseInt(mutle) != 1){
+                        _valid = true;
+                        return _valid;
+                    }
                     if(_type === 0){//0-starttime
                         var pDiv = $('#'+_refid).parents('div[name="multiContent"]');
                         var preDiv = pDiv.prev();
                         if(preDiv.is('[name="multiContent"]')){
-                            var preEndTimeEl = preDiv.find('._endtime');
+                            var preEndTimeEl = preDiv.find('.endtime_edit');
                             _ptime = preEndTimeEl.datetimebox('getValue');
                         }
                     }else if(_type === 1){//1-endtime
                         _ptime = $('#'+_refid).datetimebox('getValue');
                     }
 
-                    //value in _stime,_etime
-                    //value > _ptime
                     var t_value = WhgComm.parseDateTime(value);
                     var t__stime = WhgComm.parseDate(_stime);
                     var t__etime = WhgComm.parseDateTime(_etime+" 23:59:59");
@@ -139,7 +140,7 @@
         <div class="whgff-row-label"><label style="color: red"></label>所在场馆：</div>
         <div class="whgff-row-input">
             <input class="easyui-combobox" name="venue" style="width:500px; height:32px" value="${whgTra.venue}"
-                   data-options="editable:true, multiple:false,limitToList:true, mode:'remote', valueField:'id', textField:'title', url:'${basePath}/admin/venue/srchList?state=6&delstate=0',
+                   data-options="editable:true, multiple:false, limitToList:true, mode:'remote', valueField:'id', textField:'title', url:'${basePath}/admin/venue/srchList?state=6&delstate=0',
                     prompt:'请选择所属场馆',
                      onChange:function(venue){
                         $('#venroom').combobox({
@@ -159,7 +160,7 @@
         <div class="whgff-row-label"><label style="color: red"></label>所在活动室：</div>
         <div class="whgff-row-input">
             <input class="easyui-combobox" id="venroom" name="venroom" value="${whgTra.venroom}" style="width:500px; height:32px"
-                   data-options="editable:true, multiple:false,limitToList:true, valueField:'id', textField:'title', url:'${basePath}/admin/venue/room/srchList?state=6&delstate=0&venid=${whgTra.venue}',
+                   data-options="editable:true, multiple:false,limitToList:true,valueField:'id', textField:'title', url:'${basePath}/admin/venue/room/srchList?state=6&delstate=0&venid=${whgTra.venue}',
                         prompt:'请选择活动室',
                         panelHeight:'auto',
                         editable:false
@@ -187,8 +188,6 @@
             <div class="radio radio-primary whg-js-data" name="area" value="${whgTra.area}"
                  js-data="WhgComm.getAreaType">
             </div>
-            <%--<select class="easyui-combobox" name="area" style="width:500px; height:32px"
-                    data-options="editable:false, required:true, valueField:'id', textField:'text', value:'${whgTra.area}', data:WhgComm.getAreaType(),prompt:'请选择区域'"></select>--%>
         </div>
     </div>
 
@@ -212,7 +211,7 @@
         <div class="whgff-row-label"><label style="color: red"></label>关键字：</div>
         <div class="whgff-row-input">
             <%--<div class="checkbox checkbox-primary whg-js-data" value="${whgTra.ekey}" name="ekey" js-data="WhgComm.getTrainKey"></div>--%>
-            <input class="easyui-combobox" id="ekey" style="width:500px; height:32px" validType="notQuotes" data-options="multiple:true,editable:true,valueField:'text',textField:'text', data:WhgComm.getTrainKey(),prompt:'请填写关键字'"/>
+            <input class="easyui-combobox" id="ekey" style="width:500px; height:32px" validType="notQuotes" data-options="multiple:true,editable:true,valueField:'text',textField:'text', data:WhgComm.getTrainKey()"/>
             <span>（如需手动输入，请用英文逗号隔开！）</span>
         </div>
     </div>
@@ -274,7 +273,7 @@
         <div class="whgff-row-label"><label style="color: red"></label>适合年龄：</div>
         <div class="whgff-row-input">
             <input class="easyui-numberspinner" id="age1" name="age1" value="${age1}" style="width:80px;" data-options="min:1,max:100, editable:true">&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;
-            <input class="easyui-numberspinner" id="age2" name="age2" value="${age2}" style="width:80px;" data-options="min:1,max:100, editable:true, validType:'_validage[\'age1\']'">岁
+            <input class="easyui-numberspinner" id="age2" name="age2" value="${age2}" style="width:80px;" data-options="min:1,max:100, editable:true">岁
         </div>
     </div>
     <div class="whgff-row">
@@ -293,16 +292,10 @@
         <div class="whgff-row-label"><label style="color: red">*</label>是否普通培训：</div>
         <div class="whgff-row-input">
             <div class="radio radio-primary whg-js-data" onclick="showEnrollOdds()" value="${whgTra.isbasictra}"  name="isbasictra" js-data='[{"id":"0","text":"普通培训"},{"id":"1","text":"文化超市"}]'></div>
-            <span id="enrollodds" style="display:none">录取几率:百分之<input class="easyui-numberspinner" name="enrollodds" style="width: 50px; height: 25px" data-options="required:false,min:0,max:100"></span>
+            <span id="enrollodds" style="display:none">录取几率:百分之<input class="easyui-numberspinner" name="enrollodds" value="${whgTra.enrollodds}" style="width: 50px; height: 25px" data-options="required:false,min:0,max:100"></span>
         </div>
     </div>
-    <%--<div class="whgff-row" style="display: none">
-        <div class="whgff-row-label"><label style="color: red"></label>录取几率：</div>
-        <div class="whgff-row-input">
-            百分之
-            <input class="easyui-numberspinner" id="enrollodds" name="enrollodds" style="width:80px;" data-options="min:1,max:100, editable:true">
-        </div>
-    </div>--%>
+
     <div class="whgff-row">
         <div class="whgff-row-label"><label style="color: red">*</label>录取规则：</div>
         <div class="whgff-row-input">
@@ -319,41 +312,52 @@
     <div class="whgff-row">
         <div class="whgff-row-label"><label style="color: red">*</label>报名时间周期：</div>
         <div class="whgff-row-input">
-            <input class="easyui-datetimebox enrollstarttime" id="enrollstarttime" name="enrollstarttime" value="<fmt:formatDate value="${whgTra.enrollstarttime}" pattern="yyyy-MM-dd HH:mm:ss"/>" style="width:200px; height:32px" data-options="required:true"/>至
-            <input class="easyui-datetimebox enrollendtime" id="enrollendtime" name="enrollendtime" value="<fmt:formatDate value="${whgTra.enrollendtime}" pattern="yyyy-MM-dd HH:mm:ss"/>" style="width:200px; height:32px" data-options="required:true, validType:'bmEndTime[\'enrollstarttime\']'"/>
+            <input class="easyui-datetimebox enrollstarttime" id="enrollstarttime" name="enrollstarttime" value="<fmt:formatDate value="${whgTra.enrollstarttime}" pattern="yyyy-MM-dd HH:mm:ss"/>" style="width:200px; height:32px" data-options=""/>至
+            <input class="easyui-datetimebox enrollendtime" id="enrollendtime" name="enrollendtime" value="<fmt:formatDate value="${whgTra.enrollendtime}" pattern="yyyy-MM-dd HH:mm:ss"/>" style="width:200px; height:32px" data-options=" validType:'bmEndTime[\'enrollstarttime\']'"/>
         </div>
     </div>
+
+
     <div class="whgff-row train">
         <div class="whgff-row-label "><label style="color: red">*</label>培训时间周期：</div>
         <div class="whgff-row-input">
-            <input class="easyui-datebox starttime" id="starttime" name="starttime" value="<fmt:formatDate value="${whgTra.starttime}" pattern="yyyy-MM-dd"/>" style="width:200px; height:32px" data-options="required:true, validType:'traEndTime[0,\'enrollendtime\']'" />至
-            <input class="easyui-datebox endtime" id="endtime" name="endtime" value="<fmt:formatDate value="${whgTra.endtime}" pattern="yyyy-MM-dd"/>" style="width:200px; height:32px" data-options="required:true, validType:'traEndTime[1,\'starttime\']'"/>
-        </div>
-    </div>
-
-    <!--添加时单场的培训上课时间-->
-    <div class="whgff-row single" >
-        <div class="whgff-row-label"><label style="color: red">*</label>培训上课时间：</div>
-        <div class="whgff-row-input">
-            <input class="easyui-datetimebox sin_starttime" id="sin_starttime" name="sin_starttime" style="width:200px; height:32px" data-options="validType:'sinTime[\'enrollendtime\']'"/>至
-            <input class="easyui-datetimebox sin_endtime" id="sin_endtime" name="sin_endtime" style="width:200px; height:32px" data-options="validType:'sinTime[\'sin_starttime\']'"/>
+            <input class="easyui-datebox starttime" id="starttime" name="starttime" value="<fmt:formatDate value="${ whgTra.starttime}" pattern="yyyy-MM-dd"/>" style="width:200px; height:32px" data-options="validType:'traEndTime[0,\'enrollendtime\']'"/>至
+            <input class="easyui-datebox endtime" id="endtime" name="endtime" value="<fmt:formatDate value="${whgTra.endtime}" pattern="yyyy-MM-dd"/>" style="width:200px; height:32px" data-options="validType:'traEndTime[1,\'starttime\']'"/>
         </div>
     </div>
 
 
-    <!--添加时多场的培训上课时间-->
-    <c:if test="${empty course}">
-        <div class="whgff-row multi" name="multiContent">
-            <div class="whgff-row-label"><label style="color: red">*</label>培训上课时间：</div>
-            <div class="whgff-row-input">
-                <input class="easyui-datetimebox _starttime" name="_starttime" id="_starttime_1"  style="width:200px; height:32px" data-options="required:true,validType:'traTime[0, \'_starttime_1\']'"/>至
-                <input class="easyui-datetimebox _endtime" name="_endtime" id="_starttime_2" style="width:200px; height:32px" data-options="required:true,validType:'traTime[1,\'_starttime_1\']'"/>
-                <a href="javascript:void(0)" class="timeico add">添加</a>
-                    <%-- <a href="javascript:void(0)" class="timeico del">删除</a>--%>
+    <!--编辑时单场的培训上课时间-->
+    <c:if test="${not empty course }">
+        <c:forEach items="${course}" var="item" varStatus="s" end="0">
+            <div class="whgff-row single_edit" >
+                <div class="whgff-row-label"><label style="color: red">*</label>培训上课时间：</div>
+                <div class="whgff-row-input">
+                    <input class="easyui-datetimebox sin_starttime_edit" id="sin_starttime_edit" name="sin_starttime" value='<fmt:formatDate value="${item.starttime}" pattern="yyyy-MM-dd HH:mm:ss"/>' style="width:200px; height:32px" data-options="validType:'sinedit_Time[\'enrollendtime\']'"/>至
+                    <input class="easyui-datetimebox sin_endtime_edit" id="sin_endtime_edit" name="sin_endtime" value='<fmt:formatDate value="${item.endtime}" pattern="yyyy-MM-dd HH:mm:ss"/>' style="width:200px; height:32px" data-options="validType:'sinedit_Time[\'sin_starttime_edit\']'"/>
+                </div>
             </div>
-        </div>
+        </c:forEach>
     </c:if>
 
+    <!--编辑时多场的培训上课时间-->
+    <c:if test="${not empty course }">
+        <c:forEach items="${course}" var="item" varStatus="s" >
+            <div class="whgff-row multi_edit" name="multiContent">
+                <div class="whgff-row-label"><label style="color: red">*</label>培训上课时间：</div>
+                <div class="whgff-row-input">
+                    <input class="easyui-datetimebox starttime_edit" id="_starttime_${s.count}" style="width:200px; height:32px" name="_starttime" value='<fmt:formatDate value="${whgTra.ismultisite == 1?item.starttime:''}" pattern="yyyy-MM-dd HH:mm:ss"/>' data-options="validType:'edittraTime[0,\'_starttime_${s.count}\']'"/>至
+                    <input class="easyui-datetimebox endtime_edit" id="_endtime_${s.count}" style="width:200px; height:32px" name="_endtime" value='<fmt:formatDate value="${whgTra.ismultisite == 1?item.endtime:''}" pattern="yyyy-MM-dd HH:mm:ss"/>' data-options="validType:'edittraTime[1,\'_starttime_${s.count}\']'"/>
+                    <c:if test="${whgTra.state != 4}">
+                        <a href="javascript:void(0)" class="timeico add">添加</a>
+                    </c:if>
+                    <c:if test="${s.count >1}">
+                        <a href="javascript:void(0)" class="timeico del">删除</a>
+                    </c:if>
+                </div>
+            </div>
+        </c:forEach>
+    </c:if>
 
     <div class="whgff-row fixed">
         <div class="whgff-row-label"><label style="color: red">*</label>固定周几：</div>
@@ -398,6 +402,7 @@
 </div>
 
 <script>
+    //
     $.extend($.fn.validatebox.defaults.rules, {
         bmEndTime: {
             validator: function(value, param){
@@ -413,19 +418,23 @@
             validator: function(value, param){
                 var _type = param[0];
                 var _refid = param[1];
+                var mutle = $('input[name="ismultisite"]:checked').val();
 
-                if(_type === 0){
-                    var sdVal = $("#enrollendtime").datetimebox('getValue');
-                    var d1 = WhgComm.parseDateTime(sdVal);
-                    var d2 = WhgComm.parseDateTime(value+" 23:59:59");
-                    return d2.getTime() > d1.getTime();
-                }else if(_type === 1){
-                    var sdVal = $('#'+param[1]).datebox('getValue');
-                    var d1 = WhgComm.parseDateTime(sdVal);
-                    var d2 = WhgComm.parseDateTime(value+" 23:59:59");
-                    return d2.getTime() > d1.getTime();
+                if(parseInt(mutle) === 0){
+                    return true;
+                }else{
+                    if(_type === 0){
+                        var sdVal = $("#whgff").find("input[name='enrollendtime']").val();
+                        var d1 = WhgComm.parseDateTime(sdVal);
+                        var d2 = WhgComm.parseDateTime(value+" 23:59:59");
+                        return d2.getTime() > d1.getTime();
+                    }else if(_type === 1){
+                        var sdVal = $('#'+param[1]).datebox('getValue');
+                        var d1 = WhgComm.parseDateTime(sdVal);
+                        var d2 = WhgComm.parseDateTime(value+" 23:59:59");
+                        return d2.getTime() > d1.getTime();
+                    }
                 }
-
             },
             message: '培训时间必须晚于培训报名时间.'
         },
@@ -436,13 +445,18 @@
             },
             message: '培训适合年龄后面的必须大于前面的.'
         },
-        sinTime:{
+        sinedit_Time:{
             validator: function(value, param){
                 var sdVal = $('#'+param[0]).datetimebox('getValue');
                 var d1 = WhgComm.parseDateTime(sdVal);
                 var d2 = WhgComm.parseDateTime(value);
-                //var _enrollendtime = WhgComm.parseDateTime($("#enrollendtime").datetimebox('getValue'));
-                return d2.getTime()>=d1.getTime();
+                var mutle = $('input[name="ismultisite"]:checked').val();
+                if(parseInt(mutle) == 0){
+                    return d1.getTime() < d2.getTime();
+
+                }else{
+                    return true;
+                }
             },
             message: '培训时间必须晚于培训报名时间.'
         }
@@ -463,72 +477,84 @@
     function showTrainTime(isMulti){
         var id = '${id}';
         var state = '${state}';
-        //添加的时候
-        if(!id){
+
+        //编辑的时候
+        if(id){
             //单场
             if(0 == isMulti){
-                $(".single").css("display","");
-                //  $(".single_edit").css("display","none");
-
-                // $(".sin_starttime_edit").datetimebox("destroy");
-                // $(".sin_endtime_edit").datetimebox("destroy");
-
-                $(".sin_starttime").datetimebox({required:true});
-                $(".sin_endtime").datetimebox({required:true});
-
-                $(".multi").css("display","none");
-                //   $(".multi_edit").css("display","none");
-                $("._starttime").datetimebox({required:false});
-                $("._endtime").datetimebox({required:false});
-                $(".fixed").css("display","none");
-                $("._coursestarttime").timespinner({required:false});
-                $("._courseendtime").timespinner({required:false});
                 $(".train").css("display","none");
                 $(".starttime").datebox({required:false});
                 $(".endtime").datebox({required:false});
+                $(".single_edit").css("display","");
+                $(".multi_edit").css("display","none");
+                $(".fixed").css("display","none");
+                //单场编辑用的上课时间表单
+                $(".sin_starttime_edit").datetimebox("enable");
+                $(".sin_endtime_edit").datetimebox("enable");
+                //多场添加用的上课时间表单
+                $("._starttime").datetimebox("disable");
+                $("._endtime").datetimebox("disable");
+                if(state == 4){
+                    $('input[name="isbasicclass"]').attr('disabled', true);
+                    $('input[name="ismultisite"]').attr('disabled', true);
+                    $(".enrollstarttime").datetimebox('readonly');
+                    $(".enrollendtime").datetimebox('readonly');
+                    $(".sin_starttime_edit").datetimebox("readonly");
+                    $(".sin_endtime_edit").datetimebox("readonly");
+                }
             }
             //多场
             if(1 == isMulti){
-                $(".single").css("display","none");
-                //   $(".single_edit").css("display","none");
-                $(".sin_starttime").datetimebox({required:false});
-                $(".sin_endtime").datetimebox({required:false});
-
-                $(".multi").css("display","");
-                $("._starttime").datetimebox({required:true});
-                $("._endtime").datetimebox({required:true});
-
-                //    $(".multi_edit").css("display","");
-                //  $(".starttime_edit").datetimebox("destroy");
-                //  $(".endtime_edit").datetimebox("destroy");
-
+                $(".single_edit").css("display","none");
+                $(".multi_edit").css("display","");
                 $(".fixed").css("display","none");
-                $("._coursestarttime").timespinner({required:false});
-                $("._courseendtime").timespinner({required:false});
                 $(".train").css("display","");
                 $(".starttime").datebox({required:true});
                 $(".endtime").datebox({required:true});
+                if(state == 4){
+                    $('input[name="isbasicclass"]').attr('disabled', true);
+                    $('input[name="ismultisite"]').attr('disabled', true);
+                    $(".enrollstarttime").datetimebox('readonly');
+                    $(".enrollendtime").datetimebox('readonly');
+                    $(".starttime").datetimebox("readonly");
+                    $(".endtime").datetimebox("readonly");
+                }
+                $("._starttime").datetimebox("disable");
+                $("._endtime").datetimebox("disable");
+                $(".sin_starttime").datetimebox("disable");
+                $(".sin_endtime").datetimebox("disable");
             }
             //固定场
             if(2 == isMulti){
-                $(".single").css("display","none");
-                // $(".single_edit").css("display","none");
-                $(".sin_starttime").datetimebox({required:false});
-                $(".sin_endtime").datetimebox({required:false});
-
-                $(".multi").css("display","none");
-                // $(".multi_edit").css("display","none");
-                $("._starttime").datetimebox({required:false});
-                $("._endtime").datetimebox({required:false});
-                $(".fixed").css("display","");
-                $("._coursestarttime").timespinner({required:true});
-                $("._courseendtime").timespinner({required:true});
                 $(".train").css("display","");
                 $(".starttime").datebox({required:true});
                 $(".endtime").datebox({required:true});
+                //   $('input[name="ismultisite"]').on('click', function(){return false});
+                $(".single_edit").css("display","none");
+                $(".multi_edit").css("display","none");
+
+                $(".fixed").css("display","");
+                $("._coursestarttime").timespinner("enable");
+                $("._courseendtime").timespinner("enable");
+                if(state == 4){
+                    $('input[name="isbasicclass"]').attr('disabled', true);
+                    $('input[name="ismultisite"]').attr('disabled', true);
+                    $(".enrollstarttime").datetimebox('readonly');
+                    $(".enrollendtime").datetimebox('readonly');
+                    $(".starttime").datetimebox("readonly");
+                    $(".endtime").datetimebox("readonly");
+                    $('input[name="fixedweek"]').on('click', function(){return false});
+                    $("._coursestarttime").timespinner("readonly");
+                    $("._courseendtime").timespinner("readonly");
+                }
+                //禁用单场添加时的日期框
+                $(".sin_starttime").datetimebox("disable");
+                $(".sin_endtime").datetimebox("disable");
+                $("._starttime").datetimebox("disable");
+                $("._endtime").datetimebox("disable");
+
             }
         }
-
     }
 
 
@@ -551,6 +577,9 @@
 
 
     $(function () {
+        showEnrollOdds();
+        $("#ekey").combobox("setValue","${whgTra.ekey}");
+
         //根据地址取坐标
         WhgMap.init({basePath:'${basePath}', addrFieldId:'address', xpointFieldId:'longitude', ypointFieldId:'latitude', getPointBtnId:'getXYPointBtn'});
         //图片初始化
@@ -564,27 +593,16 @@
             if(length >= 1){
                 for(var i=0;i<length;i++){
                     if(i<1){
-                        if(!id) {
 
-                            var _sid = IDUtil.getId();
-                            var _eid = IDUtil.getId();
-                            var addHtmlContent = '<div class="whgff-row-label"><label style="color: red">*</label>培训上课时间：</div>'
-                                    + '<div class="whgff-row-input">'
-                                    + '<input class="easyui-datetimebox _starttime" name="_starttime" id="_starttime_' + _sid + '" style="width:200px; height:32px" data-options="required:true, validType:\'traTime[0, \\\'_starttime_' + _sid + '\\\']\'">至'
-                                    + '&nbsp;<input class="easyui-datetimebox _endtime" name="_endtime" id="_endtime_' + _eid + '" style="width:200px; height:32px" data-options="required:true, validType:\'traTime[1, \\\'_starttime_' + _sid + '\\\']\'" >'
-                                    + '&nbsp;<a href="javascript:void(0)" class="timeico add">添加</a>'
-                                    + '&nbsp;&nbsp;<a href="javascript:void(0)" class="timeico del">删除</a>'
-                                    + '</div>';
-                        }else{
-                            var _sid = IDUtil.getId(); var _eid = IDUtil.getId();
-                            var addHtmlContent = '<div class="whgff-row-label"><label style="color: red">*</label>培训上课时间：</div>'
-                                    +'<div class="whgff-row-input">'
-                                    +'<input class="easyui-datetimebox starttime_edit" name="_starttime" id="_starttime_'+_sid+'" style="width:200px; height:32px" data-options="required:true, validType:\'edittraTime[0, \\\'_starttime_'+_sid+'\\\']\'">至'
-                                    +'&nbsp;<input class="easyui-datetimebox endtime_edit" name="_endtime" id="_endtime_'+_eid+'" style="width:200px; height:32px" data-options="required:true, validType:\'edittraTime[1, \\\'_starttime_'+_sid+'\\\']\'" >'
-                                    +'&nbsp;<a href="javascript:void(0)" class="timeico add">添加</a>'
-                                    +'&nbsp;&nbsp;<a href="javascript:void(0)" class="timeico del">删除</a>'
-                                    +'</div>';
-                        }
+                        var _sid = IDUtil.getId(); var _eid = IDUtil.getId();
+                        var addHtmlContent = '<div class="whgff-row-label"><label style="color: red">*</label>培训上课时间：</div>'
+                                +'<div class="whgff-row-input">'
+                                +'<input class="easyui-datetimebox starttime_edit" name="_starttime" id="_starttime_'+_sid+'" style="width:200px; height:32px" data-options="required:true, validType:\'edittraTime[0, \\\'_starttime_'+_sid+'\\\']\'">至'
+                                +'&nbsp;<input class="easyui-datetimebox endtime_edit" name="_endtime" id="_endtime_'+_eid+'" style="width:200px; height:32px" data-options="required:true, validType:\'edittraTime[1, \\\'_starttime_'+_sid+'\\\']\'" >'
+                                +'&nbsp;<a href="javascript:void(0)" class="timeico add">添加</a>'
+                                +'&nbsp;&nbsp;<a href="javascript:void(0)" class="timeico del">删除</a>'
+                                +'</div>';
+
                         content += '<div class="whgff-row multi js-temp-addnow" name="multiContent">' + addHtmlContent + '</div>';
                     }
                 }
@@ -614,7 +632,8 @@
 
         //
         var isMulti = $('input[name="ismultisite"]:checked').val();
-        showTrainTime(isMulti);
+
+        showTrainTime(parseInt(isMulti));
 
         //单场培训、多场、固定场
         $('.whg-js-data').on('click','input[name="ismultisite"]',function(){
@@ -631,31 +650,19 @@
         var id = '${id}';
         var targetShow = '${targetShow}';
         var frm = $("#whgff");
-        //添加时开启清除 ，其它为返回
-        if (!id){
-            buts.find("a.whgff-but-clear").on('click', function(){
-                frm.form('disableValidation');
-                frm.form('clear');
-                frm.find("div.radio").find(':radio:eq(0)').click();
-                teacherIntro.setContent('');
-                catalog.setContent('');
-                detail.setContent('');
-                //
-                __WhgUploadImg.clear();
-            });
-        }else{
-            //处理返回
-            buts.find("a.whgff-but-clear").linkbutton({
-                text: '返 回',
-                iconCls: 'icon-undo',
-                onClick: function(){
-                    if (!targetShow){
-                        window.parent.$('#whgdg').datagrid('reload');
-                    }
-                    WhgComm.editDialogClose();
+
+        //处理返回
+        buts.find("a.whgff-but-clear").linkbutton({
+            text: '返 回',
+            iconCls: 'icon-undo',
+            onClick: function(){
+                if (!targetShow){
+                    window.parent.$('#whgdg').datagrid('reload');
                 }
-            });
-        }
+                WhgComm.editDialogClose();
+            }
+        });
+
 
 
         //查看时的处理
@@ -680,16 +687,18 @@
         }
 
         //定义表单提交
-        var url = id ? "${basePath}/admin/train/edit" : "${basePath}/admin/train/add";
+        var url = "${basePath}/admin/train/edit";
         frm.form({
             url: url,
             novalidate: true,
             onSubmit: function (param) {
-                if (id){
-                    param.id = id;
-                }
+
+
+                param.id = id;
+
                 $(this).form("enableValidation");
                 var isValid = $(this).form('validate');
+
                 if (isValid){
                     //富文本验证
                     var isUEvalid = validateUE();
@@ -731,7 +740,6 @@
                         }
 
                     }//固定班周几验证 --END
-
                 }
                 if (!isValid){
                     $.messager.progress('close');
@@ -753,26 +761,9 @@
                     $.messager.alert("错误", data.errormsg||'操作失败', 'error');
                     return;
                 }
-                if (!id){
-                    $(this).form("disableValidation");
-                    buts.find("a.whgff-but-clear").click();
-                    /*$(this).form('clear');
-                     frm.find("div.radio").find(':radio:eq(0)').click();
-                     teacherIntro.setContent('');
-                     catalog.setContent('');
-                     detail.setContent('');*/
-                    $.messager.show({
-                        title:'提示消息',
-                        msg:'培训信息提交成功',
-                        showType:'slide',
-                        timeout:1000,
-                        width: 300,
-                        height: 200
-                    });
-                }else{
-                    WhgComm.editDialogClose();
-                    window.parent.$('#whgdg').datagrid('reload');
-                }
+
+                WhgComm.editDialogClose();
+                window.parent.$('#whgdg').datagrid('reload');
             }
         });
         buts.find("a.whgff-but-submit").off('click').one('click', function () {
