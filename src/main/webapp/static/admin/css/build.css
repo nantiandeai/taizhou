@@ -200,3 +200,21 @@ input[type="radio"] .styled:checked + label::before {
 input[type="checkbox"] .styled:checked + label::after,
 input[type="radio"] .styled:checked + label::after {
   color: #fff; }
+
+.previewImgsWrap {
+  display: inline-block;
+  width: 170px;
+  position: relative;
+  height: 100px;
+
+}
+.cancelImgBtn {
+  position: absolute;
+  right: 22px;
+  color: red;
+  display: inline-block;
+  background: #fff;
+  padding: 0 6px;
+  cursor: pointer;
+  top: 2px;
+}

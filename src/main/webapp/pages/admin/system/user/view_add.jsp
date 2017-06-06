@@ -44,7 +44,7 @@
         });
 
         function branchSelect() {
-            debugger;
+//            debugger;
             var selectList = $("input[name='branchSelect']:checked").val();
             if(null == selectList || 0 == selectList.length){
                 $.messager.alert('提示', '操作失败: 至少选择一个分馆！', 'error');
