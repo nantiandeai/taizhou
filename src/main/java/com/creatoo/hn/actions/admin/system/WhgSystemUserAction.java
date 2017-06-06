@@ -53,6 +53,7 @@ public class WhgSystemUserAction {
                 Map<String, String> map = this.service.t_srchUserRole(id);
                 view.addObject("roles", map.get("_roles"));
                 view.addObject("cults", map.get("_cults"));
+                view.addObject("branch",map.get("branch"));
             }
         }catch (Exception e){
 
@@ -161,12 +162,12 @@ public class WhgSystemUserAction {
         try {
             String[] roleids = request.getParameterValues("roleids");//岗位
             String[] cultids = request.getParameterValues("cultids");//权限分馆
-
+            String[] branchSelect = request.getParameterValues("branchSelect");
             //保存密码到emps-此字段现在存密码明文base64加密后的字符串
             String password_user = request.getParameter("password2");
             user.setEpms(MD5Util.encode4Base64(password_user));
-
             service.t_edit(user, roleids, cultids, (WhgSysUser) request.getSession().getAttribute("user"));
+            service.updateBranchInfo(user,branchSelect);
         }catch (Exception e){
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg(e.getMessage());

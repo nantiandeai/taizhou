@@ -178,15 +178,27 @@ public class WhgSystemUserService {
         List<WhgSysUserCult> cults = this.whgSysUserCultMapper.selectByExample(examplex);
         String cultStr = "";
         String _sp = "";
+        String branch = "";
         if(cults != null){
             for (WhgSysUserCult cult : cults){
                 cultStr += _sp+cult.getSyscultid();
                 _sp = ",";
             }
         }
+
+        List<Map> branchList = this.whUserBranchRelMapper.getUserBranchInfo(roleid);
+        if(null != branchList && !branchList.isEmpty()){
+            for (Map map : branchList){
+                branch += (String) map.get("id");
+                branch += ",";
+            }
+            branch = branch.substring(0,branch.length() - 1);
+        }
         Map<String, String> map = new HashMap<String, String>();
         map.put("_roles", roleStr);
         map.put("_cults", cultStr);
+        map.put("branch", branch);
+
         return map;
     }
 
@@ -260,11 +272,37 @@ public class WhgSystemUserService {
         return cult;
     }
 
+    /**
+     * 添加用户的分馆信息
+     * @param whgSysUser
+     * @param branchList
+     * @return
+     */
     public int addBranchInfo(WhgSysUser whgSysUser,String[] branchList){
         try {
             if(null == whgSysUser || null == branchList || 0 == branchList.length){
                 return 0;
             }
+            for(String brachId : branchList){
+                WhUserBranchRel whUserBranchRel = new WhUserBranchRel();
+                whUserBranchRel.setId(commService.getKey("wh_user_branch_rel"));
+                whUserBranchRel.setUserid(whgSysUser.getId());
+                whUserBranchRel.setBranchid(brachId);
+                whUserBranchRelMapper.insert(whUserBranchRel);
+            }
+            return 0;
+        }catch (Exception e){
+            log.error(e.toString());
+            return 1;
+        }
+    }
+
+    public int updateBranchInfo(WhgSysUser whgSysUser,String[] branchList){
+        try {
+            if(null == whgSysUser || null == branchList || 0 == branchList.length){
+                return 0;
+            }
+            whUserBranchRelMapper.clearBranch(whgSysUser.getId());
             for(String brachId : branchList){
                 WhUserBranchRel whUserBranchRel = new WhUserBranchRel();
                 whUserBranchRel.setId(commService.getKey("wh_user_branch_rel"));

@@ -38,6 +38,17 @@
                 message: ''
             }
         });
+
+        function branchSelect() {
+            debugger;
+            var selectList = $("input[name='branchSelect']:checked").val();
+            if(null == selectList || 0 == selectList.length){
+                $.messager.alert('提示', '操作失败: 至少选择一个分馆！', 'error');
+                return false;
+            }
+            return true;
+        }
+
     </script>
 </head>
 <body>
@@ -75,6 +86,13 @@
         <div class="whgff-row-label"><i>*</i>所属部门：</div>
         <div class="whgff-row-input">
             <input class="easyui-combotree" id="deptid" name="deptid" style="width:300px; height:32px" data-options="prompt:'请选择部门', value:'', required:true, loadFilter:myFilter, url:'${basePath}/admin/system/dept/srchList?state=1&delstate=0'">
+        </div>
+    </div>
+
+    <div class="whgff-row">
+        <div class="whgff-row-label"><i>*</i>权限分管：</div>
+        <div class="whgff-row-input">
+            <div class="checkbox checkbox-primary whg-js-data" name="branchSelect" id="branchSelect" value="${branch}" js-data="getBranchData" data-options="prompt:'至少选择一个分馆',required:true,validType:['branchSelect']"></div>
         </div>
     </div>
 
@@ -160,10 +178,28 @@
             type: 'POST',
             data: {state: 1, delstate:0},
             success: function (data) {
+                debugger;
                 for(var i=0; i<data.length; i++){
                     _data.push( {"id":data[i].id, "text":data[i].name} );
                 }
             }
+        });
+        return _data;
+    }
+
+    /**获取分馆数据*/
+    function getBranchData() {
+        debugger;
+        var _data = [];
+        $.ajaxSettings.async = false;
+        $.getJSON('${basePath}/admin/branch/branchListStarted',function (data) {
+            if("1" == data.success){
+                var list = data.rows;
+                for(var i=0; i<list.length; i++){
+                    _data.push( {"id":list[i].id, "text":list[i].name} );
+                }
+            }
+            $.ajaxSettings.async = true;
         });
         return _data;
     }
@@ -197,6 +233,11 @@
                 if(_valid){
                     var pwd = $("#password1").passwordbox('getValue');
                     param.password = $.md5(pwd);
+                    if(!branchSelect()){
+                        _valid = false;
+                        $('#whgwin-add-btn-save').off('click').one('click', function () { $('#whgff').submit(); });
+                        return _valid;
+                    }
                     $.messager.progress();
                 }else{
                     //失败时再注册提交事件
