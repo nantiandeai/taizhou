@@ -1,10 +1,13 @@
 package com.creatoo.hn.services.admin.branch;
 
 import com.creatoo.hn.mapper.WhBranchMapper;
+import com.creatoo.hn.mapper.WhBranchRelMapper;
 import com.creatoo.hn.mapper.WhTypMapper;
 import com.creatoo.hn.mapper.WhUserBranchRelMapper;
 import com.creatoo.hn.model.WhBranch;
+import com.creatoo.hn.model.WhBranchRel;
 import com.creatoo.hn.model.WhTyp;
+import com.creatoo.hn.services.comm.CommService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -32,7 +35,11 @@ public class BranchService {
     @Autowired
     private WhUserBranchRelMapper whUserBranchRelMapper;
 
+    @Autowired
+    private WhBranchRelMapper whBranchRelMapper;
 
+    @Autowired
+    private CommService commService;
     /**
      * 获取分馆列表
      * @param page
@@ -117,6 +124,58 @@ public class BranchService {
             default:{
                 break;
             }
+        }
+    }
+
+    /**
+     * 设置分馆关联表
+     * @param relId
+     * @param relType
+     * @param branchId
+     * @return
+     */
+    public int setBranchRel(String relId,String relType,String branchId){
+        try {
+            WhBranchRel whBranchRel = new WhBranchRel();
+            whBranchRel.setId(commService.getKey("wh_branch_rel"));
+            whBranchRel.setRelid(relId);
+            whBranchRel.setReltype(relType);
+            whBranchRel.setBranchid(branchId);
+            whBranchRelMapper.insert(whBranchRel);
+            return 0;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return 1;
+        }
+    }
+
+    public void clearBranchRel(String relId,String relType){
+        try {
+            Map map = new HashMap();
+            map.put("relid",relId);
+            map.put("reltype",relType);
+            whBranchRelMapper.delByParam(map);
+        }catch (Exception e){
+            logger.error(e.toString());
+        }
+    }
+
+    /**
+     * 获取分管关联信息
+     * @param relId
+     * @param relType
+     * @return
+     */
+    public WhBranchRel getBranchRel(String relId,String relType){
+        try {
+            WhBranchRel whBranchRel = new WhBranchRel();
+            whBranchRel.setRelid(relId);
+            whBranchRel.setReltype(relType);
+            whBranchRel = whBranchRelMapper.selectOne(whBranchRel);
+            return whBranchRel;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return null;
         }
     }
 

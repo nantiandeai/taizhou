@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.creatoo.hn.ext.annotation.WhgOPT;
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.ext.emun.EnumOptType;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.model.*;
 import com.creatoo.hn.services.admin.activity.*;
+import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.venue.WhgVenueService;
 import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.services.comm.SMSService;
@@ -66,7 +68,6 @@ public class WhgActivityActAction {
     @Autowired
     private WhgActivityOrderService whgActivityOrderService;
 
-
     @Autowired
     private SMSService smsService;
 
@@ -77,7 +78,10 @@ public class WhgActivityActAction {
      * 公用服务类
      */
     @Autowired
-    public CommService commservice;
+    private CommService commservice;
+
+    @Autowired
+    private BranchService branchService;
 
     /**
      * 进入type(list|add|edit|view)视图
@@ -100,6 +104,10 @@ public class WhgActivityActAction {
                 view.addObject("actSeatList",whgActivityPalyService.srchList4actId(id));
                 JSONObject seatMap = whgActivitySeatService.getActivitySeatInfo(id);
                 view.addObject("whgSeat",seatMap);
+                WhBranchRel whBranchRel = branchService.getBranchRel(id,EnumTypeClazz.TYPE_ACTIVITY.getValue());
+                if(null != whBranchRel){
+                    view.addObject("whBranchRel",whBranchRel);
+                }
                 if(null != onlyShow){
                     view.setViewName("admin/activity/act/view_show");
                 }else{
@@ -379,6 +387,11 @@ public class WhgActivityActAction {
             String timeJson = request.getParameter("activityTimeList");
             //添加活动
             act = service.t_add(act, (WhgSysUser) request.getSession().getAttribute("user"));
+            //设置活动所属单位
+            String[] branch = request.getParameterValues("branch");
+            for(String branchId : branch){
+                branchService.setBranchRel(act.getId(), EnumTypeClazz.TYPE_ACTIVITY.getValue(),branchId);
+            }
             //添加时间段模板
             List<Map<String, String>>  timePlayList = whgActivityPalyService.setTimeTemp(timeJson);
 
@@ -465,6 +478,13 @@ public class WhgActivityActAction {
             }else {
                 log.info(JSON.toJSONString(act));
                 service.t_edit(act, whgSysUser);
+
+                branchService.clearBranchRel(act.getId(),EnumTypeClazz.TYPE_ACTIVITY.getValue());
+                //设置活动所属单位
+                String[] branch = request.getParameterValues("branch");
+                for(String branchId : branch){
+                    branchService.setBranchRel(act.getId(), EnumTypeClazz.TYPE_ACTIVITY.getValue(),branchId);
+                }
                 //删除座位信息
                 whgActivitySeatService.delActSeat4ActId(act.getId());
                 //修改座位

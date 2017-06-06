@@ -45,7 +45,25 @@
                 },
                 message: '活动结束日期必须大于活动开始日期.'
             }
-        })
+        });
+
+        function setBranch() {
+            $.getJSON("${basePath}/admin/branch/branchListUser",function (data) {
+
+                if("1" != data.success){
+                    $.messager.alert("错误", data.errormsg, 'error');
+                    return;
+                }
+                var rows = data.rows;
+                $("#branch").combobox("loadData",rows);
+                debugger;
+                var branchId = "${whBranchRel.branchid}";
+                if(0 < rows.length){
+                    branchId = branchId != ""?branchId:rows[0].id;
+                    $("#branch").combobox("setValue",branchId);
+                }
+            });
+        }
 	</script>
 </head>
 <body>
@@ -158,7 +176,17 @@
 				style="width: 500px; height: 32px" data-options="required:false,validType:['length[0,20]']" />
 		</div>
 	</div>
-    
+
+	<div class="whgff-row">
+		<div class="whgff-row-label"><label style="color: red">*</label>所属单位：</div>
+		<div class="whgff-row-input">
+			<input class="easyui-combobox" name="branch" id="branch" panelHeight="auto" limitToList="true" style="width:500px; height:32px"
+				   data-options="required:false, editable:false,multiple:false, mode:'remote',
+                   valueField:'id', textField:'name'
+                   "/>
+		</div>
+	</div>
+
     <div class="whgff-row">
 		 <div class="whgff-row-label"><i>*</i>活动分类：</div>
 		 <div class="whgff-row-input">
@@ -322,7 +350,7 @@
     		$('#whgff').find("input[type='radio'][name='sellticket']").attr('disabled', true);
     		$('#whgff').find("input[type='radio'][name='integral']").attr('disabled', true);
     	}
-    	
+        setBranch();
         //var seatmap = $("div.whgff-row-map");
        seatmap = $('.test-seatmaps').whgVenseatmaps({type: 'use'});
       	//图片初始化
