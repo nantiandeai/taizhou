@@ -22,6 +22,12 @@
                 #{item}
             </foreach>
         </if>
+        <if test="relList != null">
+           AND t.id IN 
+            <foreach item="item" index="index" collection="relList" open="(" separator="," close=")">
+                #{item.relid}
+            </foreach>
+        </if>
         <if test="delstate != null">
         	AND t.delstate = #{delstate}
         </if>

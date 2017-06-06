@@ -18,4 +18,22 @@
         </where>
     </delete>
 
+    <select id="getWhBranchRelByUserId" resultType="hashmap">
+        SELECT
+            wb.id,
+            wb.relid,
+            wb.reltype,
+            wb.branchid
+        FROM wh_user_branch_rel wu,wh_branch_rel wb
+        <where>
+            wu.branchid = wb.branchid
+            <if test="param.userId != null">
+                AND wu.userid = #{param.userId}
+            </if>
+            <if test="param.relType != null">
+                AND wb.reltype = #{param.relType}
+            </if>
+        </where>
+    </select>
+
 </mapper>
