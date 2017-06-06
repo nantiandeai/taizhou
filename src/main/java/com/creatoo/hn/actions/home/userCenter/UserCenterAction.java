@@ -781,7 +781,6 @@ public class UserCenterAction {
 		actOrder.setOrderisvalid(2);
 		userCenterService.upActOrder(actOrder);
 		return res;
-		
 	}
 
 	/**
