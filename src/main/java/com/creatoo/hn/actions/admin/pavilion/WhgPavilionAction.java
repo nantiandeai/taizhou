@@ -1,8 +1,11 @@
 package com.creatoo.hn.actions.admin.pavilion;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
+import com.creatoo.hn.model.WhBranchRel;
 import com.creatoo.hn.model.WhSzzgExhhall;
 import com.creatoo.hn.model.WhgSysUser;
+import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.pavilion.WhgPavilionInfoService;
 import com.creatoo.hn.services.comm.CommService;
 import com.github.pagehelper.PageInfo;
@@ -33,6 +36,9 @@ public class WhgPavilionAction {
 
     @Autowired
     private WhgPavilionInfoService whgPavilionInfoService;
+
+    @Autowired
+    private BranchService branchService;
 
     @Autowired
     private CommService commService;
@@ -69,6 +75,12 @@ public class WhgPavilionAction {
                         view.addObject("hallphone",whSzzgExhhall.getHallphone());
                     }
                 }
+                //分馆权限部分
+                WhBranchRel whBranchRel = branchService.getBranchRel(id, EnumTypeClazz.TYPE_HALL.getValue());
+                if(null != whBranchRel){
+                    view.addObject("whBranchRel",whBranchRel);
+                }
+                //分馆权限部分END
             }
             view.setViewName("admin/pavilion/edit");
         }catch (Exception e){
@@ -107,7 +119,9 @@ public class WhgPavilionAction {
         if(null == rows || !StringUtil.isNumeric(rows)){
             rows = "10";
         }
-        PageInfo myPage = whgPavilionInfoService.getInfoList(Integer.valueOf(page),Integer.valueOf(rows),zxstate);
+        WhgSysUser whgSysUser = (WhgSysUser) request.getSession().getAttribute("user");
+        List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_HALL.getValue());
+        PageInfo myPage = whgPavilionInfoService.getInfoList(Integer.valueOf(page),Integer.valueOf(rows),zxstate,relList);
         responseBean.setRows((List)myPage.getList());
         responseBean.setTotal(myPage.getTotal());
         return responseBean;
@@ -151,6 +165,12 @@ public class WhgPavilionAction {
                     responseBean.setSuccess(ResponseBean.FAIL);
                     responseBean.setErrormsg("修改数字展馆失败");
                 }
+                branchService.clearBranchRel(id,EnumTypeClazz.TYPE_HALL.getValue());
+                //设置活动所属单位
+                String[] branch = request.getParameterValues("branch");
+                for(String branchId : branch){
+                    branchService.setBranchRel(id, EnumTypeClazz.TYPE_HALL.getValue(),branchId);
+                }
             }else if("add".equalsIgnoreCase(type)){
                 String id = commService.getKey("wh_szzg_exhhall");
                 WhSzzgExhhall whSzzgExhhall = new WhSzzgExhhall();
@@ -171,6 +191,11 @@ public class WhgPavilionAction {
                     whSzzgExhhall.setHallstate(1);//送审
                 }
                 whgPavilionInfoService.addOnePavilion(whSzzgExhhall);
+                //设置活动所属单位
+                String[] branch = request.getParameterValues("branch");
+                for(String branchId : branch){
+                    branchService.setBranchRel(id, EnumTypeClazz.TYPE_HALL.getValue(),branchId);
+                }
             }
         }catch (Exception e){
             logger.error(e.toString());

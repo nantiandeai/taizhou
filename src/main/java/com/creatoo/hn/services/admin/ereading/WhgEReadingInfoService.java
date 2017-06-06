@@ -54,6 +54,33 @@ public class WhgEReadingInfoService {
         }
     }
 
+    /**
+     * 获取数字阅读资讯列表
+     * @param page 页数
+     * @param rows 行数
+     * @param zxstate 状态
+     * @return
+     */
+    public PageInfo getInfoList(Integer page,Integer rows,Integer zxstate,List relList){
+        if(null == page){
+            page = 1;
+        }
+        if(null == rows){
+            rows = 10;
+        }
+        if(null == zxstate){
+            return null;
+        }
+        try {
+            PageHelper.startPage(page,rows);
+            List<Map> list = crtWhgReadingMapper.getInfoListByStateEx(zxstate,relList);
+            return new PageInfo(list);
+        }catch (Exception e){
+            logger.error(e.toString());
+            return null;
+        }
+    }
+
     public PageInfo getActList(Integer page,Integer rows){
         if(null == page){
             page = 1;

@@ -39,6 +39,50 @@ public class WhgVenueService {
      * @param order
      * @return
      */
+    private Example getSrchListExample(WhgVen ven, List states, String sort, String order,List relList){
+        Example example = new Example(WhgVen.class);
+        Example.Criteria c = example.createCriteria();
+
+        //标题处理
+        if (ven.getTitle()!=null){
+            c.andLike("title", "%"+ven.getTitle()+"%");
+            ven.setTitle(null); //去除title等于条件
+        }
+
+        //指定状态集时
+        if (states!=null && states.size()>0){
+            c.andIn("state", states);
+        }
+
+        if(null != relList && !relList.isEmpty()){
+            c.andIn("id",relList);
+        }
+
+        //常规等于处理
+        c.andEqualTo(ven);
+
+        //排序
+        if (sort!=null && !sort.isEmpty()){
+            if (order!=null && "asc".equalsIgnoreCase(order)){
+                example.orderBy(sort).asc();
+            }else{
+                example.orderBy(sort).desc();
+            }
+        }else{
+            example.orderBy("crtdate").desc();
+        }
+
+        return example;
+    }
+
+    /**
+     * 组合列表查询条件
+     * @param ven
+     * @param states
+     * @param sort
+     * @param order
+     * @return
+     */
     private Example getSrchListExample(WhgVen ven, List states, String sort, String order){
         Example example = new Example(WhgVen.class);
         Example.Criteria c = example.createCriteria();
@@ -95,9 +139,9 @@ public class WhgVenueService {
      * @return
      * @throws Exception
      */
-    public PageInfo srchList4p(int page, int rows, WhgVen ven, List states, String sort, String order) throws Exception{
+    public PageInfo srchList4p(int page, int rows, WhgVen ven, List states, String sort, String order,List relList) throws Exception{
 
-        Example example = getSrchListExample(ven, states, sort, order);
+        Example example = getSrchListExample(ven, states, sort, order,relList);
 
         //分页查
         PageHelper.startPage(page, rows);
@@ -122,7 +166,7 @@ public class WhgVenueService {
      * @param user
      * @throws Exception
      */
-    public void t_add(WhgVen ven, WhgSysUser user) throws Exception{
+    public WhgVen t_add(WhgVen ven, WhgSysUser user) throws Exception{
         Date now = new Date();
 
         ven.setId(commService.getKey("whgven"));    //pk
@@ -137,6 +181,7 @@ public class WhgVenueService {
         ven.setRecommend(0);
 
         this.venMapper.insert(ven);
+        return ven;
     }
 
     /**

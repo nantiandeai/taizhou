@@ -156,12 +156,12 @@
         <!-- 场馆服务 END -->
 
         <!-- 数字阅读 -->
-        <menu id="DIR1000" type="0" state="1" text="数字阅读" iconcls="p-4">
-            <menu id="DIR1000_U001" type="0" state="1" text="数字阅读资讯">
-                <menu id="DIR1000_L001" type="1" state="1" text="资讯编辑列表"  href="/admin/reading/view/edit" opts="view,add,edit,checkgo,del"/>
-                <menu id="DIR1000_L002" type="1" state="1" text="资讯审核列表"  href="/admin/reading/view/check" opts="view,checkon,checkoff,del"/>
-                <menu id="DIR1000_L003" type="1" state="1" text="资讯发布列表"  href="/admin/reading/view/publish" opts="view,publish,publishoff,del"/>
-                <menu id="DIR1000_L004" type="1" state="1" text="回收站"  href="/admin/reading/view/recycle" opts="view,del,undel"/>
+        <menu id="M_READING" type="0" state="1" text="数字阅读" iconcls="p-4">
+            <menu id="M_READING_INFO" type="0" state="1" text="数字阅读资讯">
+                <menu id="M_READING_INFO_1" type="1" state="1" text="资讯编辑列表"  href="/admin/reading/view/edit" opts="view,add,edit,checkgo,del"/>
+                <menu id="M_READING_INFO_2" type="1" state="1" text="资讯审核列表"  href="/admin/reading/view/check" opts="view,checkon,checkoff,del"/>
+                <menu id="M_READING_INFO_3" type="1" state="1" text="资讯发布列表"  href="/admin/reading/view/publish" opts="view,publish,publishoff,del"/>
+                <menu id="M_READING_INFO_4" type="1" state="1" text="回收站"  href="/admin/reading/view/recycle" opts="view,del,undel"/>
             </menu>
         </menu>
         <!-- 数字阅读END -->

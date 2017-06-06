@@ -179,4 +179,15 @@ public class BranchService {
         }
     }
 
+    public List<Map> getBranchRelList(String userId,String relType){
+        try {
+            Map param = new HashMap();
+            param.put("userId",userId);
+            param.put("relType",relType);
+            return whBranchRelMapper.getWhBranchRelByUserId(param);
+        }catch (Exception e){
+            logger.error(e.toString());
+            return null;
+        }
+    }
 }

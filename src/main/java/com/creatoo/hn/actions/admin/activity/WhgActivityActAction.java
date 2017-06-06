@@ -20,7 +20,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -104,10 +103,12 @@ public class WhgActivityActAction {
                 view.addObject("actSeatList",whgActivityPalyService.srchList4actId(id));
                 JSONObject seatMap = whgActivitySeatService.getActivitySeatInfo(id);
                 view.addObject("whgSeat",seatMap);
+                //分馆权限部分
                 WhBranchRel whBranchRel = branchService.getBranchRel(id,EnumTypeClazz.TYPE_ACTIVITY.getValue());
                 if(null != whBranchRel){
                     view.addObject("whBranchRel",whBranchRel);
                 }
+                //分馆权限部分END
                 if(null != onlyShow){
                     view.setViewName("admin/activity/act/view_show");
                 }else{
@@ -138,7 +139,7 @@ public class WhgActivityActAction {
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @RequestMapping(value = "/srchList4p")
-    public Object srchList4p(int page, int rows, WebRequest request){
+    public Object srchList4p(int page, int rows, HttpServletRequest request){
         ResponseBean res = new ResponseBean();
         try {
             Map<String, String[]> pmap = request.getParameterMap();
@@ -167,6 +168,11 @@ public class WhgActivityActAction {
             //删除列表
             if("del".equalsIgnoreCase(pageType)){
                 param.put("delstate", 1);
+            }
+            WhgSysUser whgSysUser = (WhgSysUser) request.getSession().getAttribute("user");
+            List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_ACTIVITY.getValue());
+            if(null != relList){
+                param.put("relList",relList);
             }
             PageInfo pageInfo = this.service.srchList4p(page, rows, param);
             res.setRows( (List)pageInfo.getList() );
