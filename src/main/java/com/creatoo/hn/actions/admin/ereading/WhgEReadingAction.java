@@ -1,7 +1,10 @@
 package com.creatoo.hn.actions.admin.ereading;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
+import com.creatoo.hn.model.WhBranchRel;
 import com.creatoo.hn.model.WhSzydZx;
+import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.ereading.WhgEReadingInfoService;
 import com.creatoo.hn.services.comm.CommService;
 import com.github.pagehelper.PageInfo;
@@ -35,6 +38,9 @@ public class WhgEReadingAction {
 
     @Autowired
     private CommService commService;
+
+    @Autowired
+    private BranchService branchService;
     /**
      * 进入数字阅读资讯列表
      * @param request
@@ -69,6 +75,10 @@ public class WhgEReadingAction {
             	view.addObject("author", whSzydZx.getAuthor());
             	view.addObject("infosource", whSzydZx.getInfosource());
             	view.addObject("infolink", whSzydZx.getInfolink());
+                WhBranchRel whBranchRel = branchService.getBranchRel(id, EnumTypeClazz.TYPE_EREADING.getValue());
+                if(null != whBranchRel){
+                    view.addObject("whBranchRel",whBranchRel);
+                }
             }
             view.setViewName("admin/reading/edit");
         }catch (Exception e){
@@ -112,7 +122,12 @@ public class WhgEReadingAction {
                     responseBean.setSuccess(ResponseBean.FAIL);
                     responseBean.setErrormsg("修改数字阅读资讯失败");
                 }
-            	
+                branchService.clearBranchRel(id,EnumTypeClazz.TYPE_EREADING.getValue());
+                //设置活动所属单位
+                String[] branch = request.getParameterValues("branch");
+                for(String branchId : branch){
+                    branchService.setBranchRel(id, EnumTypeClazz.TYPE_EREADING.getValue(),branchId);
+                }
             }else if("add".equalsIgnoreCase(type)){
                 String id = commService.getKey("wh_zxinfo");
                 map.put("id",id);
@@ -138,6 +153,11 @@ public class WhgEReadingAction {
                 if(0 != whgEReadingInfoService.addOneReadingZx(map)){
                     responseBean.setSuccess(ResponseBean.FAIL);
                     responseBean.setErrormsg("添加数字阅读资讯失败");
+                }
+                //设置活动所属单位
+                String[] branch = request.getParameterValues("branch");
+                for(String branchId : branch){
+                    branchService.setBranchRel(id, EnumTypeClazz.TYPE_EREADING.getValue(),branchId);
                 }
             }
         }catch (Exception e){
