@@ -103,10 +103,12 @@ public class WhgActivityActAction {
                 view.addObject("actSeatList",whgActivityPalyService.srchList4actId(id));
                 JSONObject seatMap = whgActivitySeatService.getActivitySeatInfo(id);
                 view.addObject("whgSeat",seatMap);
+                //分馆权限部分
                 WhBranchRel whBranchRel = branchService.getBranchRel(id,EnumTypeClazz.TYPE_ACTIVITY.getValue());
                 if(null != whBranchRel){
                     view.addObject("whBranchRel",whBranchRel);
                 }
+                //分馆权限部分END
                 if(null != onlyShow){
                     view.setViewName("admin/activity/act/view_show");
                 }else{

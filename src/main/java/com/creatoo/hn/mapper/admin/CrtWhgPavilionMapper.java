@@ -19,6 +19,13 @@ public interface CrtWhgPavilionMapper {
     List<Map> getPavilionListByState(@Param("mystate") Integer zxstate);
 
     /**
+     * 根据状态获取展馆
+     * @param zxstate
+     * @return
+     */
+    List<Map> getPavilionListByStateEx(@Param("mystate") Integer zxstate,@Param("relList") List relList);
+
+    /**
      * 修改展馆状态
      * @param id
      * @param state
