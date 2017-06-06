@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>添加文化遗产</title>
+    <title>添加重点文物</title>
     <link rel="stylesheet" href="${basePath}/static/admin/css/bootstrap.css"/>
     <link rel="stylesheet" href="${basePath}/static/admin/Font-Awesome/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="${basePath}/static/admin/css/build.css"/>
@@ -28,7 +28,7 @@
 <body>
 
 <form id="whgff" class="whgff" method="post" action="${basePath}/admin/yunwei/whpp/add">
-    <h2>添加文化遗产</h2>
+    <h2>添加重点文物</h2>
     <div class="whgff-row">
         <div class="whgff-row-label"><label style="color: red">*</label>名称：</div>
         <div class="whgff-row-input"><input class="easyui-textbox" name="name" style="width:500px; height:32px" data-options="required:true, validType:'length[1,30]'"></div>
@@ -59,7 +59,7 @@
         <div class="whgff-row-input">
             <input type="hidden" id="whg_img_upload" name="showpicture">
             <div class="whgff-row-input-fileview" id="whg_img_pload_view"></div>
-            <div class="whgff-row-input-filefile">
+            <div class="whgff-row-input-filefile" >
                 <i><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" id="fileUploadBtn2">选择图片</a></i>
                 <i style="color: #999;font-size: 12px;font-style: normal;">图片格式为jpg、png、gif，大小为2MB以内</i>
             </div>
@@ -67,7 +67,7 @@
     </div>
 
     <div class="whgff-row">
-        <div class="whgff-row-label"><i>*</i>文化遗产描述：</div>
+        <div class="whgff-row-label"><i>*</i>重点文物描述：</div>
         <div class="whgff-row-input">
             <script id="catalog" type="text/plain" style="width:700px; height:250px;"></script>
         </div>
@@ -96,7 +96,7 @@ $(function () {
 
     $('#whgff').form({
         novalidate: true,
-        url: "${basePath}/admin/cultheritage/add",
+        url: "${basePath}/admin/historical/add",
         onSubmit : function(param) {
             var _valid = $(this).form('enableValidation').form('validate')
             if(_valid) {
@@ -141,7 +141,7 @@ $(function () {
 
     function validateUE(){
         if (!ue_catalog.hasContents()) {
-            $.messager.alert("错误", '文化遗产描述不能为空', 'error');
+            $.messager.alert("错误", '重点文物描述不能为空', 'error');
             return false;
         }
         return true;

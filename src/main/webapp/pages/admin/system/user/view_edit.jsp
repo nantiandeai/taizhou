@@ -40,7 +40,7 @@
         });
 
         function branchSelect() {
-            debugger;
+//            debugger;
             var selectList = $("input[name='branchSelect']:checked").val();
             if(null == selectList || 0 == selectList.length){
                 $.messager.alert('提示', '操作失败: 至少选择一个分馆！', 'error');
@@ -178,7 +178,7 @@
             type: 'POST',
             data: {state: 1, delstate:0},
             success: function (data) {
-                debugger;
+//                debugger;
                 for(var i=0; i<data.length; i++){
                     _data.push( {"id":data[i].id, "text":data[i].name} );
                 }
@@ -189,7 +189,7 @@
 
     /**获取分馆数据*/
     function getBranchData() {
-        debugger;
+//        debugger;
         var _data = [];
         $.ajaxSettings.async = false;
         $.getJSON('${basePath}/admin/branch/branchListStarted',function (data) {
