@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.creatoo.hn.mapper.WhBranchRelMapper" >
+
+    <delete id="delByParam">
+        DELETE FROM wh_branch_rel
+        <where>
+            1 = 1
+            <if test="param.relid != null">
+                AND relid = #{param.relid}
+            </if>
+            <if test="param.reltype != null">
+                AND reltype = #{param.reltype}
+            </if>
+            <if test="param.branchid != null">
+                AND branchid = #{param.branchid}
+            </if>
+        </where>
+    </delete>
+
+</mapper>

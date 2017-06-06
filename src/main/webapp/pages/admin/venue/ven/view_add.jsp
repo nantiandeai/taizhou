@@ -51,7 +51,7 @@
                    data-options="required:true,validType:['length[1,60]'], prompt:'请输入场馆名称'">
         </div>
     </div>
-
+    <input id="recommend" name="recommend" type="hidden" value="${whgVen.recommend}">
     <div class="whgff-row">
         <div class="whgff-row-label"><i>*</i>场馆级别：</div>
         <div class="whgff-row-input" style="height:60px;padding-left:10px;">
