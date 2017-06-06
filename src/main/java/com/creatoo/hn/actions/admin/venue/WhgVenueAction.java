@@ -3,8 +3,11 @@ package com.creatoo.hn.actions.admin.venue;
 import com.creatoo.hn.ext.annotation.WhgOPT;
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.ext.emun.EnumOptType;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
+import com.creatoo.hn.model.WhBranchRel;
 import com.creatoo.hn.model.WhgSysUser;
 import com.creatoo.hn.model.WhgVen;
+import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.venue.WhgVenueService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -18,11 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 场馆管理-场馆控制器
@@ -36,6 +37,9 @@ public class WhgVenueAction {
 
     @Autowired
     private WhgVenueService venueService;
+
+    @Autowired
+    private BranchService branchService;
 
     /**
      * 页面跳入处理
@@ -53,6 +57,10 @@ public class WhgVenueAction {
                 mmp.addAttribute("targetShow", targetShow);
                 try {
                     mmp.addAttribute("whgVen", this.venueService.srchOne(id));
+                    WhBranchRel whBranchRel = branchService.getBranchRel(id,EnumTypeClazz.TYPE_VENUE.getValue());
+                    if(null != whBranchRel){
+                        mmp.addAttribute("whBranchRel",whBranchRel);
+                    }
                 } catch (Exception e) {
                     log.error("加载指定ID的场馆信息失败", e);
                     throw e;
@@ -67,7 +75,7 @@ public class WhgVenueAction {
 
     @RequestMapping("/srchList4p")
     @ResponseBody
-    public Object srchList4p(int page, int rows, WhgVen ven, WebRequest request){
+    public Object srchList4p(int page, int rows, WhgVen ven, HttpServletRequest request){
         ResponseBean resb = new ResponseBean();
         try {
             String pageType = request.getParameter("__pageType");
@@ -95,7 +103,13 @@ public class WhgVenueAction {
                 ven.setDelstate(0);
             }
 
-            PageInfo pageInfo = this.venueService.srchList4p(page, rows, ven, states, sort, order);
+            WhgSysUser whgSysUser = (WhgSysUser) request.getSession().getAttribute("user");
+            List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_VENUE.getValue());
+            List myList = new ArrayList();
+            for(Map map : relList){
+                myList.add(map.get("relid"));
+            }
+            PageInfo pageInfo = this.venueService.srchList4p(page, rows, ven, states, sort, order,myList);
             resb.setRows( (List)pageInfo.getList() );
             resb.setTotal(pageInfo.getTotal());
         } catch (Exception e) {
@@ -139,14 +153,18 @@ public class WhgVenueAction {
     @WhgOPT(optType = EnumOptType.VEN, optDesc = {"添加场馆"})
     public Object add(WhgVen ven, HttpSession session,
                       @RequestParam(value = "datebuild_str", required = false)
-                      @DateTimeFormat(pattern="yyyy-MM-dd") Date datebuild_str){
+                      @DateTimeFormat(pattern="yyyy-MM-dd") Date datebuild_str, HttpServletRequest request){
         ResponseBean rb = new ResponseBean();
         try {
             WhgSysUser sysUser = (WhgSysUser) session.getAttribute("user");
             if (datebuild_str!=null){
                 ven.setDatebuild(datebuild_str);
             }
-            this.venueService.t_add(ven, sysUser);
+            WhgVen res = this.venueService.t_add(ven, sysUser);
+            String[] branch = request.getParameterValues("branch");
+            for(String branchId : branch){
+                branchService.setBranchRel(res.getId(), EnumTypeClazz.TYPE_VENUE.getValue(),branchId);
+            }
         }catch (Exception e){
             rb.setSuccess(ResponseBean.FAIL);
             rb.setErrormsg("场馆保存失败");
@@ -164,7 +182,8 @@ public class WhgVenueAction {
     @WhgOPT(optType = EnumOptType.VEN, optDesc = {"编辑场馆"})
     public Object edit(WhgVen ven, HttpSession session,
                        @RequestParam(value = "datebuild_str", required = false)
-                       @DateTimeFormat(pattern="yyyy-MM-dd") Date datebuild_str){
+                       @DateTimeFormat(pattern="yyyy-MM-dd") Date datebuild_str,
+                       HttpServletRequest request){
         ResponseBean rb = new ResponseBean();
         if (ven.getId() == null){
             rb.setSuccess(ResponseBean.FAIL);
@@ -183,6 +202,12 @@ public class WhgVenueAction {
             	ven.setStatemdfdate(new Date());
             }
             this.venueService.t_edit(ven, sysUser);
+            branchService.clearBranchRel(ven.getId(),EnumTypeClazz.TYPE_VENUE.getValue());
+            //设置活动所属单位
+            String[] branch = request.getParameterValues("branch");
+            for(String branchId : branch){
+                branchService.setBranchRel(ven.getId(), EnumTypeClazz.TYPE_VENUE.getValue(),branchId);
+            }
         }catch (Exception e){
             rb.setSuccess(ResponseBean.FAIL);
             rb.setErrormsg("场馆信息保存失败");

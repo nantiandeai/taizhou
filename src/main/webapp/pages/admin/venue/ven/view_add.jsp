@@ -116,6 +116,16 @@
     </div>
 
     <div class="whgff-row">
+        <div class="whgff-row-label"><label style="color: red">*</label>所属单位：</div>
+        <div class="whgff-row-input">
+            <input class="easyui-combobox" name="branch" id="branch" panelHeight="auto" limitToList="true" style="width:500px; height:32px"
+                   data-options="required:false, editable:false,multiple:false, mode:'remote',
+                   valueField:'id', textField:'name'
+                   "/>
+        </div>
+    </div>
+
+    <div class="whgff-row">
         <div class="whgff-row-label"><i>*</i>区域：</div>
         <div class="whgff-row-input">
             <div class="radio radio-primary whg-js-data" name="area" value="${whgVen.area}"
@@ -184,6 +194,24 @@
 
 <script>
 
+    function setBranch() {
+        $.getJSON("${basePath}/admin/branch/branchListUser",function (data) {
+            debugger;
+            if("1" != data.success){
+                $.messager.alert("错误", data.errormsg, 'error');
+                return;
+            }
+            var rows = data.rows;
+            $("#branch").combobox("loadData",rows);
+
+            debugger;
+            var branchId = "${whBranchRel.branchid}";
+            if(0 < rows.length){
+                branchId = branchId != ""?branchId:rows[0].id;
+                $("#branch").combobox("setValue",branchId);
+            }
+        });
+    }
 
     //处理UE
     var ueConfig = {
@@ -198,7 +226,7 @@
 
 
     $(function(){
-
+        setBranch();
         //根据地址取坐标
         WhgMap.init({basePath:'${basePath}', addrFieldId:'address', xpointFieldId:'longitude', ypointFieldId:'latitude', getPointBtnId:'getXYPointBtn'});
 
