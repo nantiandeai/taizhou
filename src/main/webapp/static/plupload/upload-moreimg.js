@@ -34,7 +34,7 @@ WhgUploadMoreImg = (function () {
             var filePaths = $('#'+thisObj._options.hiddenFieldId).val().split(",");
             var html = "";
             for (var i in filePaths) {
-                html += '<div class="previewImgsWrap"><img src="' + thisObj._options.imgServerAddr + filePaths[i] + '" style="width: 150px; height: 100px; margin-right: 20px;margin-bottom: 10px" /><span class="cancelImgBtn" fileurl="'+filePaths[i] +'">X</span></span></div>';
+                html += '<div class="previewImgsWrap"><img src="' + thisObj._options.imgServerAddr + filePaths[i] + '" style="width: 150px; height: 100px; margin-right: 20px;margin-bottom: 100px" /><span class="cancelImgBtn" fileurl="'+filePaths[i] +'">X</span></span></div>';
             }
             $("#"+thisObj._options.previewImgId).append(html);
         }
@@ -100,7 +100,7 @@ WhgUploadMoreImg = (function () {
                                 var img = $('#' + thisObj._options.hiddenFieldId).val().split(",");
                                 img.push(response.data.url);
                                 var html = "";
-                                html += '<div class="previewImgsWrap"><img src="' + thisObj._options.imgServerAddr + response.data.url + '" style="width: 150px; height: 100px; margin-right: 20px;margin-bottom: 10px" /><span class="cancelImgBtn" fileurl="' + response.data.url + '">X</span></span></div>';
+                                html += '<div class="previewImgsWrap"><img src="' + thisObj._options.imgServerAddr + response.data.url + '" style="width: 150px; height: 100px; margin-right: 20px;margin-bottom: 100px" /><span class="cancelImgBtn" fileurl="' + response.data.url + '">X</span></span></div>';
                                 $('#' + thisObj._options.previewImgId).append(html);
 
                                 //设置隐藏域的值

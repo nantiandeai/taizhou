@@ -68,9 +68,9 @@
         <div class="whgff-row-input">
             <input type="hidden" id="whg_img_upload" name="showpicture" value="${cult.showpicture}">
             <div class="whgff-row-input-fileview" id="whg_img_pload_view"></div>
-            <div class="whgff-row-input-filefile" style="margin-top: 10px">
+            <div class="whgff-row-input-filefile">
                 <i><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" id="fileUploadBtn2">选择图片</a></i>
-                <br><i>图片格式为jpg、png、gif，大小为2MB以内</i>
+                <i style="color: #999;font-size: 12px;font-style: normal;">图片格式为jpg、png、gif，大小为2MB以内</i>
             </div>
         </div>
     </div>
