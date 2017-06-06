@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>编辑文化遗产</title>
+    <title>编辑文化人才</title>
     <link rel="stylesheet" href="${basePath}/static/admin/css/bootstrap.css"/>
     <link rel="stylesheet" href="${basePath}/static/admin/Font-Awesome/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="${basePath}/static/admin/css/build.css"/>
@@ -22,8 +22,6 @@
     <!-- 图片上传相关 -->
     <script type="text/javascript" src="${basePath}/static/plupload/lib/plupload-2.1.2/js/plupload.full.min.js"></script>
     <script type="text/javascript" src="${basePath}/static/plupload/upload-img.js"></script>
-    <script type="text/javascript" src="${basePath}/static/plupload/upload-moreimg.js"></script>
-
     <!-- 图片上传相关-END -->
 </head>
 <body>
@@ -31,10 +29,10 @@
 <form id="whgff" class="whgff" method="post" action="${basePath}/admin/yunwei/whpp/add">
     <c:choose>
         <c:when test="${not empty targetShow}">
-            <h2>查看文化遗产</h2>
+            <h2>查看文化人才</h2>
         </c:when>
         <c:otherwise>
-            <h2>编辑文化遗产</h2>
+            <h2>编辑文化人才</h2>
         </c:otherwise>
     </c:choose>
     <input type="hidden" name="id" id="id" value="${id}"/>
@@ -64,19 +62,7 @@
     </div>
 
     <div class="whgff-row">
-        <div class="whgff-row-label"><i>*</i>上传展示图片：</div>
-        <div class="whgff-row-input">
-            <input type="hidden" id="whg_img_upload" name="showpicture" value="${cult.showpicture}">
-            <div class="whgff-row-input-fileview" id="whg_img_pload_view"></div>
-            <div class="whgff-row-input-filefile">
-                <i><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" id="fileUploadBtn2">选择图片</a></i>
-                <i style="color: #999;font-size: 12px;font-style: normal;">图片格式为jpg、png、gif，大小为2MB以内</i>
-            </div>
-        </div>
-    </div>
-
-    <div class="whgff-row">
-        <div class="whgff-row-label"><i>*</i>文化遗产描述：</div>
+        <div class="whgff-row-label"><i>*</i>文化人物介绍：</div>
         <div class="whgff-row-input">
             <script id="catalog" type="text/plain" style="width:700px; height:250px;"></script>
             </div>
@@ -105,11 +91,9 @@
     $(function () {
         WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn1', hiddenFieldId: 'cult_picture1', previewImgId: 'previewImg1'});
 
-        WhgUploadMoreImg.init({basePath: '${basePath}', uploadBtnId: 'fileUploadBtn2', hiddenFieldId: 'whg_img_upload',previewImgId:'whg_img_pload_view',needCut:false});
-
         $('#whgff').form({
             novalidate: true,
-            url: "${basePath}/admin/cultheritage/edit",
+            url: "${basePath}/admin/cultalents/edit",
             onSubmit : function(param) {
                 var _valid = $(this).form('enableValidation').form('validate')
                 if(_valid) {
@@ -117,9 +101,6 @@
                     if($('#cult_picture1').val() == ""){
                         _valid = false;
                         $.messager.alert('提示', '请选择封面图片');
-                    }else if($('#whg_img_upload').val() == ""){
-                        _valid = false;
-                        $.messager.alert('提示', '请上传展示图片图片');
                     }else if(!isUEvalid) {
                         var isUEvalid = validateUE();
                         if (isUEvalid) {
@@ -154,7 +135,7 @@
 
     function validateUE(){
         if (!ue_catalog.hasContents()) {
-            $.messager.alert("错误", '文化遗产描述不能为空', 'error');
+            $.messager.alert("错误", '文化人物介绍不能为空', 'error');
             return false;
         }
         return true;

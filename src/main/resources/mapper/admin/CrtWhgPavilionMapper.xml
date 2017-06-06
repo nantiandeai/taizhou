@@ -40,6 +40,50 @@
         ORDER BY wse.lastoperatortime DESC
     </select>
 
+    <select id="getPavilionListByStateEx" resultType="hashmap">
+        SELECT
+        wse.id AS id,
+        wse.hallname AS hallname,
+        wse.hallsummary AS hallsummary,
+        wse.halladdress AS halladdress,
+        wse.hallphone AS hallphone,
+        wse.hallcover AS hallcover,
+        wse.hallexterior360 AS hallexterior360,
+        wse.hallInterior360 AS hallInterior360,
+        wse.hallsort AS hallsort,
+        wse.isrecommend AS isrecommend,
+        wse.hallstate AS hallstate,
+        wse.lastoperator AS lastoperator,
+        date_format(wse.lastoperatortime,'%Y-%m-%d %H:%m:%s') AS lastoperatortime,
+        wse.isdel AS isdel
+        FROM wh_szzg_exhhall wse
+        <where>
+            1 = 1
+            <if test="mystate == 0">
+                AND wse.hallstate = 0
+                AND wse.isdel = 0
+            </if>
+            <if test="mystate == 1">
+                AND wse.hallstate = 1
+                AND wse.isdel = 0
+            </if>
+            <if test="mystate == 2">
+                AND  wse.hallstate in (2,3)
+                AND wse.isdel = 0
+            </if>
+            <if test="mystate == 3">
+                AND  wse.isdel = 1
+            </if>
+            <if test="relList != null">
+                AND wse.id IN
+                <foreach item="item" index="index" collection="relList" open="(" separator="," close=")">
+                    #{item.relid}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY wse.lastoperatortime DESC
+    </select>
+
     <update id="updatePavilionState">
         UPDATE wh_szzg_exhhall wse
         SET wse.hallstate = #{mySate}

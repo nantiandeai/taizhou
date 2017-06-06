@@ -375,6 +375,11 @@
                 $.messager.alert("错误", '活动室描述不能为空', 'error');
                 return false;
             }
+            var notNumCount = $(".whgmodule-venseatmaps li.type-0:empty").length;
+            if (notNumCount){
+                $.messager.alert("错误", notNumCount+'个座位没有设置座位号，请双击设置', 'error');
+                return false;
+            }
             return true;
         }
     });

@@ -9,13 +9,13 @@
     <meta charset="UTF-8">
     <c:choose>
     <c:when test="${type eq 'edit'}">
-        <c:set var="pageTitle" value="文化遗产编辑列表"></c:set>
+        <c:set var="pageTitle" value="重点文物编辑列表"></c:set>
     </c:when>
     <c:when test="${type eq 'check'}">
-        <c:set var="pageTitle" value="文化遗产审核列表"></c:set>
+        <c:set var="pageTitle" value="重点文物审核列表"></c:set>
     </c:when>
     <c:when test="${type eq 'publish'}">
-        <c:set var="pageTitle" value="文化遗产发布列表"></c:set>
+        <c:set var="pageTitle" value="重点文物发布列表"></c:set>
     </c:when>
     <c:when test="${type eq 'recycle'}">
         <c:set var="pageTitle" value="回收站"></c:set>
@@ -32,7 +32,7 @@
 <body>
 <!-- 表格 -->
 <table id="whgdg" title="${pageTitle}" class="easyui-datagrid" style="display: none"
-       data-options="fit:true, striped:true, rownumbers:true, fitColumns:true, singleSelect:false, checkOnSelect:true, selectOnCheck:true, pagination:true, toolbar:'#whgdg-tb', url:'${basePath}/admin/cultheritage/srchList4p?type=${type}'">
+       data-options="fit:true, striped:true, rownumbers:true, fitColumns:true, singleSelect:false, checkOnSelect:true, selectOnCheck:true, pagination:true, toolbar:'#whgdg-tb', url:'${basePath}/admin/historical/srchList4p?type=${type}'">
     <thead>
     <tr>
         <th data-options="field:'name',width:80">名称</th>
@@ -123,7 +123,7 @@
      * 添加
      */
     function add(){
-        WhgComm.editDialog('${basePath}/admin/cultheritage/view/add');
+        WhgComm.editDialog('${basePath}/admin/historical/view/add');
     }
 
     /**
@@ -132,7 +132,7 @@
      */
     function edit(idx){
         var row = $("#whgdg").datagrid("getRows")[idx];
-        WhgComm.editDialog('${basePath}/admin/cultheritage/view/add?id='+row.id);
+        WhgComm.editDialog('${basePath}/admin/historical/view/add?id='+row.id);
     }
 
     /**
@@ -141,7 +141,7 @@
      */
     function view(idx){
         var row = $("#whgdg").datagrid("getRows")[idx];
-        WhgComm.editDialog('${basePath}/admin/cultheritage/view/add?targetShow=1&id='+row.id);
+        WhgComm.editDialog('${basePath}/admin/historical/view/add?targetShow=1&id='+row.id);
     }
 
 
@@ -158,7 +158,7 @@
         $.messager.confirm("确认信息", confireStr, function(r){
             if (r){
                 $.messager.progress();
-                $.post('${basePath}/admin/cultheritage/del', {id: row.id}, function(data){
+                $.post('${basePath}/admin/historical/del', {id: row.id}, function(data){
                     $("#whgdg").datagrid('reload');
                     if (!data.success || data.success != "1"){
                         $.messager.alert("错误", data.errormsg||'操作失败', 'error');
@@ -178,7 +178,7 @@
         $.messager.confirm("确认信息", "确定要还原选中的项吗？", function(r){
             if (r){
                 $.messager.progress();
-                $.post('${basePath}/admin/cultheritage/undel', {id: row.id, delstate: 0}, function(data){
+                $.post('${basePath}/admin/historical/undel', {id: row.id, delstate: 0}, function(data){
                     $("#whgdg").datagrid('reload');
                     if (!data.success || data.success != "1"){
                         $.messager.alert("错误", data.errormsg||'操作失败', 'error');
@@ -268,7 +268,7 @@
     function __updStateSend(ids, formstates, tostate){
         $.messager.progress();
         var params = {ids: ids, formstates: formstates, tostate: tostate};
-        $.post('${basePath}/admin/cultheritage/updstate', params, function(data){
+        $.post('${basePath}/admin/historical/updstate', params, function(data){
             $("#whgdg").datagrid('reload');
             if (!data.success || data.success != "1"){
                 $.messager.alert("错误", data.errormsg||'操作失败', 'error');

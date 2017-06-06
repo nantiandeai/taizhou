@@ -4,6 +4,7 @@ import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.model.WhBranchRel;
 import com.creatoo.hn.model.WhSzydZx;
+import com.creatoo.hn.model.WhgSysUser;
 import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.ereading.WhgEReadingInfoService;
 import com.creatoo.hn.services.comm.CommService;
@@ -219,7 +220,9 @@ public class WhgEReadingAction {
         if(null == rows || !StringUtil.isNumeric(rows)){
             rows = "10";
         }
-        PageInfo myPage = whgEReadingInfoService.getInfoList(Integer.valueOf(page),Integer.valueOf(rows),zxstate);
+        WhgSysUser whgSysUser = (WhgSysUser) request.getSession().getAttribute("user");
+        List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_ACTIVITY.getValue());
+        PageInfo myPage = whgEReadingInfoService.getInfoList(Integer.valueOf(page),Integer.valueOf(rows),zxstate,relList);
         responseBean.setRows((List)myPage.getList());
         responseBean.setTotal(myPage.getTotal());
         return responseBean;
