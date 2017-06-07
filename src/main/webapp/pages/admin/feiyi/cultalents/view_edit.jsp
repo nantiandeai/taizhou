@@ -40,7 +40,11 @@
         <div class="whgff-row-label"><label style="color: red">*</label>名称：</div>
         <div class="whgff-row-input"><input class="easyui-textbox" name="name" value="${cult.name}" style="width:500px; height:32px" data-options="required:true, validType:'length[1,30]'"></div>
     </div>
-
+    <div class="whgff-row">
+        <div class="whgff-row-label"><label style="color: red"></label>文化人才类型：</div>
+        <div class="whgff-row-input"><input class="easyui-combobox" name="type" value="${cult.type}" style="height:32px;width: 500px"
+                                            data-options="editable:false,required:false, valueField:'id',textField:'text',prompt:'请选择文化人才类型', data:WhgSysData.getTypeData('18')"/></div>
+    </div>
     <div class="whgff-row">
         <div class="whgff-row-label"><i>*</i>简介：</div>
         <div class="whgff-row-input">

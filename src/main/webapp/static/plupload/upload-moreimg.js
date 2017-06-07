@@ -28,7 +28,6 @@ WhgUploadMoreImg = (function () {
         //初始
         this._init();
         var thisObj = this;
-
         //编辑预览
         if ($('#'+thisObj._options.hiddenFieldId).val() && $("#"+thisObj._options.previewImgId).size() == 1) {
             var filePaths = $('#'+thisObj._options.hiddenFieldId).val().split(",");
@@ -97,8 +96,8 @@ WhgUploadMoreImg = (function () {
                                 thisObj._goCutImg(imgurl);
                             }else{
                                 //图片预览 不需要裁剪图片
-                                var img = $('#' + thisObj._options.hiddenFieldId).val().split(",");
-                                img.push(response.data.url);
+                                // var img = $('#' + thisObj._options.hiddenFieldId).val().split(",");
+                                // img.push(response.data.url);
                                 var html = "";
                                 html += '<div class="previewImgsWrap"><img src="' + thisObj._options.imgServerAddr + response.data.url + '" style="width: 150px; height: 100px; margin-right: 20px;margin-bottom: 100px" /><span class="cancelImgBtn" fileurl="' + response.data.url + '">X</span></span></div>';
                                 $('#' + thisObj._options.previewImgId).append(html);

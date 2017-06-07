@@ -62,6 +62,11 @@ public class WhgCultTalents {
     private String introduction;
 
     /**
+     * 文化人物类型
+     */
+    private String type;
+
+    /**
      * 获取主键
      *
      * @return id - 主键
@@ -257,5 +262,13 @@ public class WhgCultTalents {
      */
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

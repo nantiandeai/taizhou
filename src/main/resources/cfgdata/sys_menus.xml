@@ -47,6 +47,10 @@
                 <menu type="1" state="1" href="/admin/yunwei/type/view/list/4" id="M_YWI_TYPE_ACTIVITY" text="活动分类配置"  opts="view, add, edit, del, publish, publishoff"/>
                 <menu type="1" state="1" href="/admin/yunwei/type/view/list/5" id="M_YWI_TYPE_TRAIN" text="培训分类配置"  opts="view, add, edit, del, publish, publishoff"/>
                 <menu type="1" state="1" href="/admin/yunwei/type/view/list/6" id="M_YWI_TYPE_AREA" text="区域配置"  opts="view, add, edit, del, publish, publishoff"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/16" id="M_YWI_TYPE_ThERITAGE" text="文化遗产分类配置"  opts="view, add, edit, del, publish, publishoff"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/17" id="M_YWI_TYPE_HISTORICAL" text="重点文物分类配置"  opts="view, add, edit, del, publish, publishoff"/>
+                <menu type="1" state="1" href="/admin/yunwei/type/view/list/18" id="M_YWI_TYPE_TALENTS" text="文化人才分类配置"  opts="view, add, edit, del, publish, publishoff"/>
+
                 <!--
                 <menu type="1" state="1" href="/admin/yunwei/type/view/list/7" id="M_YWI_TYPE_ROOMSB" text="活动室设备配置"  opts="view, add, edit, del, publish, publishoff"/>
                 <menu type="1" state="1" href="/admin/yunwei/type/view/list/8" id="M_YWI_TYPE_MLTYPE" text="名录项目类型配置"  opts="view, add, edit, del, publish, publishoff"/>
