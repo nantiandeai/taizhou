@@ -48,6 +48,7 @@ public class StartUpListener implements ApplicationContextAware {
                 }
             }catch (Exception e){
                 logger.error(e.toString());
+                //如果发生异常，则停止线程池，以免内存泄露
                 scheduledExecutorService.shutdown();
             }
         }
