@@ -127,5 +127,9 @@
 	    <property name="maxUploadSize" value="1073741824"/>  <!-- 1G -->
 	</bean>
 
+    <bean id="blackListService" class="com.creatoo.hn.services.home.userCenter.BlackListService"></bean>
 
+    <bean id="startUpListener" class="com.creatoo.hn.task.StartUpListener">
+        <property name="blackListService" ref="blackListService"></property>
+    </bean>
 </beans>
