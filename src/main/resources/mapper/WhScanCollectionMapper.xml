@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.creatoo.hn.mapper.WhScanCollectionMapper" >
+
+  <select id="getWhScanCollectionByParam" resultType="com.creatoo.hn.model.WhScanCollection">
+    SELECT
+        id,
+        relid,
+        reltype,
+        recordtime,
+        violationtype,
+        recordstate
+    FROM wh_scan_collection
+    <where>
+      1 = 1
+      <if test="whScanCollection.id != null">
+        AND id = #{whScanCollection.id}
+      </if>
+      <if test="whScanCollection.relid != null">
+        AND relid = #{whScanCollection.relid}
+      </if>
+      <if test="whScanCollection.reltype != null">
+        AND reltype = #{whScanCollection.reltype}
+      </if>
+      <if test="whScanCollection.recordtime != null">
+        AND recordtime = #{whScanCollection.recordtime}
+      </if>
+      <if test="whScanCollection.violationtype != null">
+        AND violationtype = #{whScanCollection.violationtype}
+      </if>
+      <if test="whScanCollection.recordstate != null">
+        AND recordstate = #{whScanCollection.recordstate}
+      </if>
+    </where>
+  </select>
+
+</mapper>
