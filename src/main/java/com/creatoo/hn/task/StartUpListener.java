@@ -21,8 +21,6 @@ public class StartUpListener implements ApplicationContextAware {
 
     private static final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-    private ApplicationContext applicationContext;
-
     private BlackListService blackListService;
 
     public void setBlackListService(BlackListService blackListService) {
@@ -35,7 +33,6 @@ public class StartUpListener implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
         scheduledExecutorService.scheduleAtFixedRate(myRunner, 3, 3, TimeUnit.SECONDS);
     }
 
