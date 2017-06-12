@@ -5,9 +5,20 @@ import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 public interface WhScanCollectionMapper extends Mapper<WhScanCollection> {
+    /**
+     * 查询扫描结果集
+     * @param whScanCollection
+     * @return
+     */
+    List<WhScanCollection> getWhScanCollectionByParam(@Param("whScanCollection") WhScanCollection whScanCollection);
 
-    public List<WhScanCollection> getWhScanCollectionByParam(@Param("whScanCollection") WhScanCollection whScanCollection);
+    /**
+     * 获取新的违规活动订单
+     * @return
+     */
+    List<Map> getActIllegalOrder(@Param("violationtype") Integer violationtype);
 
 }

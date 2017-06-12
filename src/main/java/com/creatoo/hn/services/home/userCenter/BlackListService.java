@@ -1,8 +1,14 @@
 package com.creatoo.hn.services.home.userCenter;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.creatoo.hn.mapper.WhScanCollectionMapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**黑名单服务
  * Created by caiyong on 2017/6/9.
@@ -28,6 +34,59 @@ public class BlackListService {
 
     private void doScan(){
 
+
+    }
+
+    private void scanByType(Integer scanType){
+        switch (scanType){
+            case 1:{
+                /**
+                 * 用户取消的订单
+                 */
+                List<Map> actIllegalOrder1 = whScanCollectionMapper.getActIllegalOrder(1);
+                /**
+                 * 用户没有参加的订单
+                 */
+                List<Map> actIllegalOrder2 = whScanCollectionMapper.getActIllegalOrder(2);
+
+
+
+                break;
+            }
+            case 2:{
+                break;
+            }
+            case 3:{
+                break;
+            }
+            default:{
+                break;
+            }
+        }
+    }
+
+    /**
+     * LIST转换
+     * @param list
+     * @param name
+     * @return
+     */
+    private List getArrayList(List list,String name){
+        List res = new ArrayList();
+        if(null == list || list.isEmpty()){
+            return null;
+        }
+        try {
+            for(Object item : list){
+                JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(item));
+                Object object = jsonObject.get(name);
+                res.add(object);
+            }
+            return res;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return null;
+        }
     }
 
     private void doJudge(){

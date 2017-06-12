@@ -1,7 +1,8 @@
 package com.creatoo.hn.model;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "wh_scan_collection")
 public class WhScanCollection {
@@ -35,6 +36,11 @@ public class WhScanCollection {
      * 记录状态：1、有效；2、无效
      */
     private Integer recordstate;
+
+    /**
+     * 用户ID
+     */
+    private String useid;
 
     /**
      * 获取主键
@@ -142,5 +148,23 @@ public class WhScanCollection {
      */
     public void setRecordstate(Integer recordstate) {
         this.recordstate = recordstate;
+    }
+
+    /**
+     * 获取用户ID
+     *
+     * @return useid - 用户ID
+     */
+    public String getUseid() {
+        return useid;
+    }
+
+    /**
+     * 设置用户ID
+     *
+     * @param useid 用户ID
+     */
+    public void setUseid(String useid) {
+        this.useid = useid;
     }
 }
