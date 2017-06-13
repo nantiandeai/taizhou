@@ -194,6 +194,10 @@ public class BlackListService {
         }
     }
 
+    /**
+     * 获取黑名单规则
+     * @return
+     */
     private Map getRule(){
         List<Map> list3 = whScanCollectionMapper.getRule();
         if(null == list3 || list3.isEmpty()){
@@ -203,6 +207,10 @@ public class BlackListService {
         return rule;
     }
 
+    /**
+     * 根据黑名单规则执行判定
+     * @throws Exception
+     */
     private void doJudge() throws Exception{
         /**
          * 获取用户的活动报名违规次数
@@ -249,6 +257,9 @@ public class BlackListService {
         }
     }
 
+    /**
+     * 根据黑名单规则，自动清楚黑名单用户
+     */
     private void autoClean(){
         Map rule = getRule();
         WhgUsrBacklist whgUsrBacklist = new WhgUsrBacklist();
@@ -280,6 +291,11 @@ public class BlackListService {
         }
     }
 
+    /**
+     * 时间类型转换
+     * @param date
+     * @return
+     */
     public LocalDateTime UDateToLocalDateTime(Date date) {
         Instant instant = date.toInstant();
         ZoneId zone = ZoneId.systemDefault();
