@@ -21,4 +21,12 @@ public interface WhScanCollectionMapper extends Mapper<WhScanCollection> {
      */
     List<Map> getActIllegalOrder(@Param("violationtype") Integer violationtype);
 
+    List<Map> getVenIllegalOrder();
+
+    /**
+     * 增加违规订单
+     * @param myParam
+     */
+    void addIllegalOrder(@Param("myParam") Map myParam);
+
 }

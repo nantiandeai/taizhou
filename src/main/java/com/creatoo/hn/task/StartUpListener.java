@@ -41,7 +41,7 @@ public class StartUpListener implements ApplicationContextAware {
         public void run() {
             try {
                 if(null != blackListService){
-                    blackListService.doTask();
+                    //blackListService.doTask();
                 }
             }catch (Exception e){
                 logger.error(e.toString());

@@ -58,7 +58,7 @@
               </when>
               <otherwise>
                   SELECT
-                    *
+                    t.*
                   FROM
                   <trim prefix="(" suffix=")">
                         SELECT
@@ -81,10 +81,10 @@
                               WHERE
                               wt.ticketstatus = 0
                           </trim>
-                  </trim>
+                  </trim> t
                   <where>
-                      ticketstatus != 3
-                      AND id not in
+                      t.ticketstatus != 3
+                      AND t.id NOT IN
                       <trim prefix="(" suffix=")">
                           select
                           relid
@@ -96,5 +96,70 @@
               </otherwise>
           </choose>
        </select>
+
+    <insert id="addIllegalOrder">
+        INSERT INTO wh_scan_collection
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="myParam.id != null">
+                id,
+            </if>
+            <if test="myParam.relid != null">
+                relid,
+            </if>
+            <if test="myParam.reltype != null">
+                reltype,
+            </if>
+            recordtime,
+            <if test="myParam.violationtype != null">
+                violationtype,
+            </if>
+            <if test="myParam.recordstate != null">
+                recordstate,
+            </if>
+            <if test="myParam.useid != null">
+                useid,
+            </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="myParam.id != null">
+                #{myParam.id},
+            </if>
+            <if test="myParam.relid != null">
+                #{myParam.relid},
+            </if>
+            <if test="myParam.reltype != null">
+                #{myParam.reltype},
+            </if>
+            now(),
+            <if test="myParam.violationtype != null">
+                #{myParam.violationtype},
+            </if>
+            <if test="myParam.recordstate != null">
+                #{myParam.recordstate},
+            </if>
+            <if test="myParam.useid != null">
+                #{myParam.useid},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getVenIllegalOrder" resultType="hashmap">
+        SELECT
+          *
+        FROM whg_ven_room_order
+        <where>
+            timeday <![CDATA[<=]]> now()
+            AND ticketcheckstate = 1
+            AND id NOT IN
+            <trim prefix="(" suffix=")">
+                select
+                relid
+                from wh_scan_collection
+                where
+                reltype = 2
+            </trim>
+        </where>
+    </select>
 
 </mapper>
