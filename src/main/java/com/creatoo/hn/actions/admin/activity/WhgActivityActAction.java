@@ -171,7 +171,7 @@ public class WhgActivityActAction {
             }
             WhgSysUser whgSysUser = (WhgSysUser) request.getSession().getAttribute("user");
             List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_ACTIVITY.getValue());
-            if(null != relList){
+            if(null != relList && relList.size()>0){
                 param.put("relList",relList);
             }
             PageInfo pageInfo = this.service.srchList4p(page, rows, param);

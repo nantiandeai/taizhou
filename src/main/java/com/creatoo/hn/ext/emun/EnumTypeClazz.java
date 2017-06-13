@@ -9,7 +9,8 @@ public enum EnumTypeClazz {
     TYPE_TRAIN("5", "培训分类"), TYPE_AREA("6", "区域") , TYPE_ROOM_SHEBEI("7", "活动室设备分类"),
     TYPE_GENRE("8", "类别"),TYPE_BATCH("9", "批次"),TYPE_LEVEL("10", "级别"),TYPE_TEA_SPE("11", "老师专长"),
     TYPE_VOL_TRAIN("12", "志愿培训类型"),TYPE_VOL_ACT("13", "志愿活动类型"),TYPE_ZYFL("14", "资源分类"),TYPE_CUL("15","文化展类型"),
-    TYPE_EREADING("16","数字阅读"),TYPE_HALL("17","数字展馆"),TYPE_CUL_THERITAGE("18","文化遗产"),TYPE_HISTORICAL("19","重点文物"),TYPE_TALENTS("20","文化人才");
+    TYPE_EREADING("16","数字阅读"),TYPE_HALL("17","数字展馆"),TYPE_CUL_THERITAGE("18","文化遗产"),TYPE_HISTORICAL("19","重点文物"),TYPE_TALENTS("20","文化人才")
+    ,TYPE_RESOURCE("21","特色资源管理");
 
     private String value;
     private String name;
