@@ -33,7 +33,7 @@ public class StartUpListener implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        scheduledExecutorService.scheduleAtFixedRate(myRunner, 3, 3, TimeUnit.SECONDS);
+        scheduledExecutorService.scheduleAtFixedRate(myRunner, 10, 10, TimeUnit.SECONDS);
     }
 
     private Runnable myRunner = new Runnable() {
@@ -41,7 +41,7 @@ public class StartUpListener implements ApplicationContextAware {
         public void run() {
             try {
                 if(null != blackListService){
-                    //blackListService.doTask();
+                    blackListService.doTask();
                 }
             }catch (Exception e){
                 logger.error(e.toString());

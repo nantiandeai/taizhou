@@ -24,9 +24,9 @@
     <div class="whgff-row">
         <div class="whgff-row-input">
             <input class="easyui-numberbox"  name="cancelnum" value="${rule.cancelnum}" style="width:60px; height:32px" data-options="required:true,min:1,max:100">
-            次取消预约，则加入黑名单（包括：活动、场馆和培训），
+            次取消预约，则加入黑名单，
             <input class="easyui-numberbox" name="cancelday" value="${rule.cancelday}" style="width:60px; height:32px" data-options="required:true,min:1,max:100">
-            天内，不得进行活动、场馆和培训的预约<br><br>
+            天内，不得进行活动的预约<br><br>
             <input class="easyui-numberbox" name="missnum" value="${rule.missnum}" style="width:60px; height:32px" data-options="required:true,min:1,max:100">
             次未参加活动，则加入黑名单，
             <input class="easyui-numberbox" name="missday" value="${rule.missday}" style="width:60px; height:32px" data-options="required:true,min:1,max:100">
