@@ -220,6 +220,17 @@
             </menu>
         </menu>
         <!-- 数字展馆END -->
+        <!-- 秀我风采 -->
+        <menu id="DIR1100" type="0" state="1" text="秀我风采" iconcls="p-10">
+            <menu id="DIR1100_U001" type="0" state="1" text="台州特色资源管理">
+                <menu id="DIR1100_L001" type="1" state="1" text="台州特色资源管理编辑列表"  href="/admin/pavilion/view/edit" opts="view,add,edit,checkgo,del"/>
+                <menu id="DIR1100_L002" type="1" state="1" text="台州特色资源管理审核列表"  href="/admin/pavilion/view/check" opts="view,checkon,checkoff,del"/>
+                <menu id="DIR1100_L003" type="1" state="1" text="台州特色资源管理发布列表"  href="/admin/pavilion/view/publish" opts="view,publish,publishoff,del"/>
+                <menu id="DIR1100_L004" type="1" state="1" text="回收站"  href="/admin/pavilion/view/recycle" opts="view,del,undel"/>
+            </menu>
+
+        </menu>
+        <!-- 秀我风采END -->
 
     </menus>
 

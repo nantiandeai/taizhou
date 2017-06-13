@@ -2,7 +2,6 @@ package com.creatoo.hn.actions.api.activity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.creatoo.hn.ext.bean.RetMobileEntity;
-import com.creatoo.hn.ext.emun.EnumOrderType;
 import com.creatoo.hn.model.*;
 import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.services.comm.SMSService;
@@ -23,6 +22,7 @@ import java.util.*;
  * 活动预定接口
  * Created by wangxl on 2017/4/12.
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/api/activity")
 public class APIActivityAction {
@@ -89,7 +89,7 @@ public class APIActivityAction {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/checkActPublish", method = RequestMethod.POST)
-	public RetMobileEntity checkActPublish(HttpServletRequest request,String actId,String seatStr,String eventid,int seats,HttpSession session){
+	public RetMobileEntity checkActPublish(HttpServletRequest request,String actId,String seatStr,String eventid,Integer seats,HttpSession session){
 		RetMobileEntity res = new RetMobileEntity();
 		WhUser user = (WhUser) session.getAttribute(WhConstance.SESS_USER_KEY);
 		try {
@@ -266,6 +266,7 @@ public class APIActivityAction {
 						param.put("scState", 1);
 					}
 				}
+				List<WhActivity> acttj = this.whhdService.acttjian(request);
 				List<Object> userList =  new ArrayList<Object>();
 				//活动场次信息
 				List<String> dateList = whhdService.getActDate(actvid);
@@ -297,7 +298,7 @@ public class APIActivityAction {
 					}
 				}
 				/**
-				 List<WhgActTime> actvitm = this.whhdService.getPlayDate4ActId(actvid);
+				 List<WhgActTime> actvitm = this.whhdService.getPlayDate4ActId(id);
 				 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				 if(actvitm != null && actvitm.size()>0){
 				 for(int i=0;i<actvitm.size();i++) {
@@ -306,7 +307,7 @@ public class APIActivityAction {
 
 				 param_.put("text", sdf.format(actvitm.get(i).getPlaydate()));
 				 param_.put("value", actvitm.get(i).getId());
-				 List<WhgActTime> timePlayList = whhdService.getActTimeList(actvid,actvitm.get(i).getPlaydate());
+				 List<WhgActTime> timePlayList = whhdService.getActTimeList(id,actvitm.get(i).getPlaydate());
 				 //将小于当前时间的场次过滤
 				 Map eventMap =  null;
 				 for(WhgActTime actTime : timePlayList ){
@@ -328,6 +329,7 @@ public class APIActivityAction {
 				 */
 				param.put("timeList", myTimeList);
 				param.put("actdetail", actdetail);
+				param.put("acttj", acttj);
 				res.setData(param);
 			}
 		} catch (Exception e) {
@@ -381,6 +383,42 @@ public class APIActivityAction {
 			return defaultValue;
 		}
 		return value;
+	}
+
+	/**
+	 * 获取资源
+	 * @param id 活动id
+	 * @param reftype 类型
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@CrossOrigin
+	@RequestMapping(value = "/resource", method = RequestMethod.POST)
+	public RetMobileEntity loadResource(String id, String reftype) {
+		RetMobileEntity res = new RetMobileEntity();
+		Map<String, Object> rest = null;
+		try {
+			rest = new HashMap();
+			if (id != null && !"".equals(id) && reftype != null && !"".equals(reftype)) {
+				//活动图片
+				List<WhgComResource> tsource = this.whhdService.selectactSource(id, "1", reftype);
+				//活动资源 音频
+				List<WhgComResource> ysource = this.whhdService.selectactSource(id, "3", reftype);
+				//活动资源 视频
+				List<WhgComResource> ssource = this.whhdService.selectactSource(id, "2", reftype);
+				rest.put("tsource", tsource);
+				rest.put("tsource", tsource);
+				rest.put("ysource", ysource);
+				rest.put("ssource", ssource);
+				rest.put("code", 0);
+			}else {
+				res.setMsg("参数错误");
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		res.setData(rest);
+		return res;
 	}
 
 }

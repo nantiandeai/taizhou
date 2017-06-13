@@ -49,7 +49,7 @@
 
 		function setBranch() {
             $.getJSON("${basePath}/admin/branch/branchListUser",function (data) {
-                debugger;
+//                debugger;
                 if("1" != data.success){
                     $.messager.alert("错误", data.errormsg, 'error');
                     return;
