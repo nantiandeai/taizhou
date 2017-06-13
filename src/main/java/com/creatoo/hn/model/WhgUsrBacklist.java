@@ -37,6 +37,11 @@ public class WhgUsrBacklist {
     private Integer state;
 
     /**
+     * 关联类型:1、活动；2、活动室预约；3、培训
+     */
+    private Integer reltype;
+
+    /**
      * 获取主键
      *
      * @return id - 主键
@@ -142,5 +147,23 @@ public class WhgUsrBacklist {
      */
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    /**
+     * 获取关联类型:1、活动；2、活动室预约；3、培训
+     *
+     * @return reltype - 关联类型:1、活动；2、活动室预约；3、培训
+     */
+    public Integer getReltype() {
+        return reltype;
+    }
+
+    /**
+     * 设置关联类型:1、活动；2、活动室预约；3、培训
+     *
+     * @param reltype 关联类型:1、活动；2、活动室预约；3、培训
+     */
+    public void setReltype(Integer reltype) {
+        this.reltype = reltype;
     }
 }

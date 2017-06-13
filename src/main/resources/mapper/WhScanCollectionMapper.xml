@@ -162,4 +162,48 @@
         </where>
     </select>
 
+    <select id="getWhScanCollectionStatisticsResult" resultType="hashmap">
+        SELECT
+          count(*) as myCount,
+          useid as useid,
+          (SELECT phone FROM wh_user WHERE id = useid) as phone
+        FROM wh_scan_collection
+        <where>
+            recordstate = 1
+            <if test="reltype != null">
+                AND reltype = #{reltype}
+            </if>
+            <if test="violationtype != null">
+                AND violationtype = #{violationtype}
+            </if>
+        </where>
+        GROUP BY useid
+    </select>
+
+    <select id="getRule" resultType="hashmap">
+        SELECT
+            id,
+            cancelnum,
+            cancelday,
+            missnum,
+            missday
+        FROM whg_backlist_rule
+    </select>
+
+    <update id="updateBlackListState">
+        UPDATE whg_usr_backlist SET
+        state = #{state}
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <update id="updateWhScanCollectionState">
+        UPDATE wh_scan_collection SET
+        recordstate = #{recordstate}
+        <where>
+            useid = #{userid} AND reltype = #{reltype} AND violationtype = #{violationtype}
+        </where>
+    </update>
+
 </mapper>
