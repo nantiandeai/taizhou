@@ -4,7 +4,7 @@
   <artifactId>szwhg-tzs</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
-  <name>admin</name>
+  <name>console</name>
   
   <properties>
   		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

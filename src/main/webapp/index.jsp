@@ -9,7 +9,7 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="author" content="">
-<meta http-equiv="refresh" content="0;URL=${basePath }/home">
+<meta http-equiv="refresh" content="0;URL=${basePath }/consoleLogin">
 <title></title>
 
 </head>

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.method.annotation.ModelAndViewMethodReturnValueHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,6 +65,16 @@ public class IndexPageAction {
 	 */
 	@Autowired
 	private CommPropertiesService commPropertiesService;
+
+	/**
+	 * 跳转后台登录页
+	 * @return
+	 */
+	@RequestMapping("consoleLogin")
+	public ModelAndView consoleLogin(){
+		ModelAndView view = new ModelAndView("admin/login");
+		return view;
+	}
 
 	/**
 	 * 首页登录验证
