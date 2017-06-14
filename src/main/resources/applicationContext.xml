@@ -14,34 +14,7 @@
               http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd         
              http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
-	<bean id="SpringContextUtil" class="com.creatoo.hn.utils.SpringContextUtil"></bean> 
-
-	<!--引入属性文件 -->  
-    <context:property-placeholder location="classpath*:application.properties"/>
-
-    <bean id="commPropertiesService" class="com.creatoo.hn.services.comm.CommPropertiesService">
-        <property name="uploadType" value="${upload.type}" />
-        <property name="uploadLocalAddr" value="${upload.local.addr}" />
-        <property name="uploadLocalServerAddr" value="${upload.local.server.addr}" />
-        <property name="uploadOssEndpoint" value="${upload.oss.endpoint}" />
-        <property name="uploadOssAccessKeyId" value="${upload.oss.access.key.id}" />
-        <property name="uploadOssAccessKeySecret" value="${upload.oss.access.key.secret}" />
-        <property name="uploadOssBucketName" value="${upload.oss.bucket.name}" />
-        <property name="smsUrl" value="${sms.url}" />
-        <property name="smsUsername" value="${sms.username}" />
-        <property name="smsPassword" value="${sms.password}" />
-        <property name="redisHost" value="${redis.host}" />
-        <property name="redisPort" value="${redis.port}" />
-        <property name="redisPass" value="${redis.pass}" />
-        <property name="redisMaxIdle" value="${redis.maxIdle}" />
-        <property name="redisMaxActive" value="${redis.maxActive}" />
-        <property name="redisMaxWait" value="${redis.maxWait}" />
-        <property name="redisTestOnBorrow" value="${redis.testOnBorrow}" />
-        <property name="wxAppId" value="${wechat.appid}" />
-        <property name="wxAppSecret" value="${wechat.appsecret}" />
-        <property name="popularreSources" value="${popularresources.url}" />
-        <property name="popSourceDocPre" value="${popularresources.dovUrl}" />
-    </bean>
+	<bean id="SpringContextUtil" class="com.creatoo.hn.utils.SpringContextUtil"></bean>
     
 	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"   destroy-method="close">         
 	    <property name="driverClassName" value="${jdbc.driverClassName}" />  
@@ -70,7 +43,7 @@
         <property name="testOnBorrow" value="false"/>
         <property name="testOnReturn" value="false"/>
     </bean>
-
+	
 	<!-- spring和MyBatis整合，不需要mybatis的配置映射文件 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
@@ -132,4 +105,40 @@
     <bean id="startUpListener" class="com.creatoo.hn.task.StartUpListener">
         <property name="blackListService" ref="blackListService"></property>
     </bean>
+
+
+    <!-- 属性配置文件 -->
+    <bean id="commPropertiesService" class="com.creatoo.hn.services.comm.CommPropertiesService">
+        <property name="uploadType" value="${upload.type}" />
+        <property name="uploadLocalAddr" value="${upload.local.addr}" />
+        <property name="uploadLocalServerAddr" value="${upload.local.server.addr}" />
+        <property name="uploadOssEndpoint" value="${upload.oss.endpoint}" />
+        <property name="uploadOssAccessKeyId" value="${upload.oss.access.key.id}" />
+        <property name="uploadOssAccessKeySecret" value="${upload.oss.access.key.secret}" />
+        <property name="uploadOssBucketName" value="${upload.oss.bucket.name}" />
+        <property name="smsUrl" value="${sms.url}" />
+        <property name="smsUsername" value="${sms.username}" />
+        <property name="smsPassword" value="${sms.password}" />
+        <property name="redisHost" value="${redis.host}" />
+        <property name="redisPort" value="${redis.port}" />
+        <property name="redisPass" value="${redis.pass}" />
+        <property name="redisMaxIdle" value="${redis.maxIdle}" />
+        <property name="redisMaxActive" value="${redis.maxActive}" />
+        <property name="redisMaxWait" value="${redis.maxWait}" />
+        <property name="redisTestOnBorrow" value="${redis.testOnBorrow}" />
+        <property name="wxAppId" value="${wechat.appid}" />
+        <property name="wxAppSecret" value="${wechat.appsecret}" />
+        <property name="popularreSources" value="${popularresources.url}" />
+        <property name="popSourceDocPre" value="${popularresources.dovUrl}" />
+    </bean>
+    <beans profile="test">
+        <context:property-placeholder location="classpath*:application-test.properties" />
+    </beans>
+    <beans profile="prod">
+        <context:property-placeholder location="classpath*:application-prod.properties" />
+    </beans>
+    <beans profile="dev">
+        <context:property-placeholder location="classpath*:application.properties" />
+    </beans>
+
 </beans>
