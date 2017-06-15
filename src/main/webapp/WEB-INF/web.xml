@@ -7,7 +7,7 @@
 
 	<!--  指定配置文件[dev,test,prod],参考applicationContext.xml -->
 	<context-param>
-		<param-name>spring.profiles.active</param-name>
+		<param-name>spring.profiles.default</param-name>
 		<param-value>dev</param-value>
 	</context-param>
 	
