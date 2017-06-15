@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creatoo.hn.mapper.WhgSpecilResourceMapper">
+
+<!-- 活动后台管理列表 查询 -->
+    <select id="searchName" resultType="WhgSpecilResource">
+    SELECT
+      b.name AS branch
+    FROM whg_specil_resource t
+    LEFT JOIN wh_branch b
+    ON t.branch = b.id
+    </select>
+
+
+</mapper>
