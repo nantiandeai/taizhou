@@ -47,80 +47,7 @@ public class WhgSpecialSourceService {
      *
      * @param request。
      */
-//    public PageInfo<WhgSpecilResource> t_srchList4p(HttpServletRequest request, WhgSpecilResource historical) throws Exception {
-//        Map<String, Object> paramMap = ReqParamsUtil.parseRequest(request);
-//        //分页信息
-//        int page = Integer.parseInt((String) paramMap.get("page"));
-//        int rows = Integer.parseInt((String) paramMap.get("rows"));
-//
-//        //搜索条件
-//        Example example = new Example(WhgCultHeritage.class);
-//        Example.Criteria c = example.createCriteria();
-//
-//        //名称条件
-//        if (historical != null && historical.getName() != null) {
-//            c.andLike("name", "%" + historical.getName() + "%");
-//            historical.setName(null);
-//        }
-//
-//        String pageType = request.getParameter("type");
-//        //编辑列表
-//        if ("edit".equalsIgnoreCase(pageType)) {
-//            c.andIn("state", Arrays.asList(1, 5));
-//        }
-//        //审核列表，查 9待审核
-//        if ("check".equalsIgnoreCase(pageType)) {
-//            c.andEqualTo("state", 9);
-//        }
-//        //发布列表，查 2待发布 6已发布 4已下架
-//        if ("publish".equalsIgnoreCase(pageType)) {
-//            c.andIn("state", Arrays.asList(2, 6, 4));
-//        }
-//        //删除列表，查已删除 否则查未删除的
-//        if ("recycle".equalsIgnoreCase(pageType)) {
-//            c.andEqualTo("isdel", 1);
-//        } else {
-//            c.andEqualTo("isdel", 0);
-//        }
-//        if (request.getParameter("state") != null) {
-//            int state = Integer.parseInt(request.getParameter("state"));
-//            c.andEqualTo("state", state);
-//        }
-//
-//        example.setOrderByClause("crtdate desc");
-//        String branch = "";
-//        List<WhgSpecilResource> list = this.whgSpecilResourceMapper.searchName();
-//
-//        //分页查询
-//        PageHelper.startPage(page, rows);
-//        List<WhgSpecilResource> typeList = this.whgSpecilResourceMapper.selectByExample(example);
-//
-//
-//
-//        for (WhgSpecilResource resource : list) {
-//            branch = resource.getBranch();
-//            WhgSpecilResource cc = new WhgSpecilResource();
-//            cc.setBranch(branch);
-//            typeList.add(cc);
-//        }
-//
-//        for (WhgSpecilResource specilResource : typeList) {
-//            specilResource.setBranch(branch);
-//        }
-//
-//
-////            for (WhgSpecilResource whgSpecilResource : list) {
-////                for (WhgSpecilResource specilResource : typeList) {
-////                    branch = whgSpecilResource.getBranch();
-////                    specilResource.setBranch(branch);
-////                }
-////            }
-//
-//
-//        return new PageInfo<>(typeList);
-//    }
-
-    public PageInfo<WhgSpecilResource> t_srchList4p(HttpServletRequest request, WhgSpecilResource historical) throws Exception {
+    public PageInfo<WhgSpecilResourceSarch> t_srchList4p(HttpServletRequest request, WhgSpecilResource historical) throws Exception {
         Map<String, Object> paramMap = ReqParamsUtil.parseRequest(request);
         //分页信息
         int page = Integer.parseInt((String) paramMap.get("page"));
@@ -151,22 +78,18 @@ public class WhgSpecialSourceService {
         }
         //删除列表，查已删除 否则查未删除的
         if ("recycle".equalsIgnoreCase(pageType)) {
-            c.andEqualTo("isdel", 1);
             param.put("isdel", 1);
         }
         if (request.getParameter("state") != null) {
-            int state = Integer.parseInt(request.getParameter("state"));
-            c.andEqualTo("state", state);
+            param.put("state", request.getParameter("state"));
         }
 
-        example.setOrderByClause("crtdate desc");
-        String branch = "";
-        List<WhgSpecilResource> list = this.whgSpecilResourceMapper.searchName();
+        List<WhgSpecilResourceSarch> list = this.whgSpecilResourceMapper.searchName(param);
 
         //分页查询
         PageHelper.startPage(page, rows);
         List<WhgSpecilResource> typeList = this.whgSpecilResourceMapper.selectByExample(example);
-        return new PageInfo<>(typeList);
+        return new PageInfo<>(list);
     }
     /**
      * 查询单条记录

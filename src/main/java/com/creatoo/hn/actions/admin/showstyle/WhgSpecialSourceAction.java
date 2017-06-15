@@ -2,10 +2,7 @@ package com.creatoo.hn.actions.admin.showstyle;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.ext.emun.EnumTypeClazz;
-import com.creatoo.hn.model.WhBranchRel;
-import com.creatoo.hn.model.WhgHistorical;
-import com.creatoo.hn.model.WhgSpecilResource;
-import com.creatoo.hn.model.WhgSysUser;
+import com.creatoo.hn.model.*;
 import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.showstyle.WhgSpecialSourceService;
 import com.github.pagehelper.PageInfo;
@@ -86,7 +83,7 @@ public class WhgSpecialSourceAction {
     public ResponseBean srchList4p(HttpServletRequest request, WhgSpecilResource resource) {
         ResponseBean res = new ResponseBean();
         try {
-            PageInfo<WhgSpecilResource> pageInfo = whgSpecialSourceService.t_srchList4p(request, resource);
+            PageInfo<WhgSpecilResourceSarch> pageInfo = whgSpecialSourceService.t_srchList4p(request, resource);
             res.setRows(pageInfo.getList());
             res.setTotal(pageInfo.getTotal());
         } catch (Exception e) {

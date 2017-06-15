@@ -36,8 +36,8 @@
     <thead>
     <tr>
         <th data-options="field:'name',width:80">标题</th>
-        <th data-options="field:'branch',width:80">所属单位</th>
-        <th data-options="field:'type',width:60,formatter:function(val) {return ['图片','视频','文档'][parseInt(val)-1]}">类型</th>
+        <th data-options="field:'branchName',width:80">所属单位</th>
+        <th data-options="field:'type',width:60,formatter:function(val) {return ['图片','视频','文档'][parseInt(val)-1]}">资源类型</th>
         <th data-options="field:'crtdate', width:60,formatter:WhgComm.FMTDateTime">创建时间</th>
         <th data-options="field:'state', width:50,formatter:WhgComm.FMTBizState" >状态</th>
         <th data-options="field:'_opt', formatter:WhgComm.FMTOpt,fixed:true, optDivId:'whgdg-opt'">操作</th>
