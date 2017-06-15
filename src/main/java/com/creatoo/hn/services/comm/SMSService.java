@@ -167,20 +167,25 @@ public class SMSService {
 
             StringBuilder sb = new StringBuilder();
             sb.append(gxtUrl);		//正式环境下的地址
-            sb.append("id=").append(URLEncoder.encode(gxtId,"gb2312"));	//吉信通用户名
+            sb.append("uid=").append(URLEncoder.encode(gxtId,"UTF-8"));	//吉信通用户名
             sb.append("&pwd=").append(gxtPwd);	//吉信通登录密码
-            sb.append("&to=").append(phoneNumber);	//接收的手机号码
-            sb.append("&content=").append(URLEncoder.encode(content,"gb2312")); //短信模板
-            sb.append("&time=").append("");	//短信发送时间
+            sb.append("&tos=").append(phoneNumber);	//接收的手机号码
+            sb.append("&msg=").append(URLEncoder.encode(content,"UTF-8")); //短信模板
+            sb.append("&otime=").append("");	//短信发送时间
             URL url = new URL(sb.toString());
             httpconn = (HttpURLConnection) url.openConnection();
             rd = new BufferedReader(new InputStreamReader(httpconn.getInputStream()));
             result = rd.readLine();
-
-            if(result != null && result.length() > 2 && "000".equals(result.substring(0,3))){
-                result = "100";
-                isOK = true;
+            String valueString = null;
+            while ((valueString=rd.readLine())!=null){
+                System.out.println(valueString);
+                result += valueString;
             }
+
+            /*if(result != null && result.length() > 2 && "000".equals(result.substring(0,3))){
+                result = "100";
+            }*/
+            isOK = true;
         }catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally{
