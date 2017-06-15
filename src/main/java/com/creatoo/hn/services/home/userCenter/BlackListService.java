@@ -220,7 +220,7 @@ public class BlackListService {
         List<Map> list3 = whScanCollectionMapper.getRule();
         Map rule = getRule();
         for(Map map : list1){
-            Integer myCount = Integer.valueOf((String) map.get("myCount"));
+            Integer myCount = Integer.valueOf(String.valueOf(map.get("myCount")));
             if(null == myCount){
                 continue;
             }
@@ -238,7 +238,7 @@ public class BlackListService {
             }
         }
         for (Map map : list2){
-            Integer myCount = (Integer) map.get("myCount");
+            Integer myCount = Integer.valueOf(String.valueOf(map.get("myCount")));
             if(null == myCount){
                 continue;
             }
