@@ -57,11 +57,13 @@ public class APIVenueAction {
 	public RetMobileEntity list(int index,int size,WebRequest request){
 		RetMobileEntity res = new RetMobileEntity();
 		String type = request.getParameter("type");
+		String area = request.getParameter("area");
 		Map<String,Object> param = new HashMap<>();
 		Map<String, Object> venueList = new HashMap<>();
 		param.put("page", index);
 		param.put("rows", size);
 		param.put("etype", type);
+		param.put("area", area);
 		try {
 			venueList =  this.cgfwService.findList(param);
 		} catch (Exception e) {
@@ -95,6 +97,7 @@ public class APIVenueAction {
 				}
 
 				param.put("roomlist", this.cgfwService.selectWhgVenroom4Ven(itemId));
+				param.put("tjvenlist", this.cgfwService.selectWhgVen4Recommend(null,itemId));
 				//判断该场馆是否已经收藏
 				if(userId !=null && userId != "0"){
 					List<WhCollection> collectionList = whhdService.findCollection4UserIdAndItemId(userId, itemId,"2");

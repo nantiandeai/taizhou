@@ -12,7 +12,9 @@ import com.creatoo.hn.utils.WhConstance;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,6 +33,7 @@ import java.util.Map;
  * @author dzl
  *
  */
+@CrossOrigin
 @Controller
 public class RegistAction{
 	/**
@@ -58,6 +61,7 @@ public class RegistAction{
 	 * 
 	 * @return
 	 */
+	@CrossOrigin
 	@RequestMapping("/toregist")
 	public String toRegistPage() {
 		return "home/user/regist";
@@ -69,6 +73,7 @@ public class RegistAction{
 	 * @param request
 	 * @return
 	 */
+	@CrossOrigin
 	@RequestMapping("/toregist_2")
 	@ResponseBody
 	public ModelAndView toRegist_2(WebRequest request) {
@@ -94,6 +99,7 @@ public class RegistAction{
 	 * 
 	 * @return
 	 */
+	@CrossOrigin
 	@RequestMapping("/toregist_3")
 	public String toRegist_3() {
 		return "home/user/regist_3";
@@ -107,8 +113,9 @@ public class RegistAction{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/user/isPhone")
+	@RequestMapping(value = "/user/isPhone",method = RequestMethod.POST)
 	@ResponseBody
+	@CrossOrigin
 	public Object isPhone(WebRequest request,WhCode whcode) {
 		String success = "0";
 		String errMsg = "";
@@ -136,8 +143,9 @@ public class RegistAction{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/user/phoneCode")
+	@RequestMapping(value = "/user/phoneCode", method = RequestMethod.POST)
 	@ResponseBody
+	@CrossOrigin
 	public Object phoneCode(WebRequest request,HttpSession session) {
 		String success = "0";
 		String errMsg = "";
@@ -189,6 +197,7 @@ public class RegistAction{
 	 */
 	@RequestMapping("/user/isEmail")
 	@ResponseBody
+	@CrossOrigin
 	public Object isEmail(WebRequest request,WhCode whcode) {
 		String success = "0";
 		String errMsg = "";
@@ -218,6 +227,7 @@ public class RegistAction{
 	 */
 	@RequestMapping("/user/emailCode")
 	@ResponseBody
+	@CrossOrigin
 	public Object emailCode(WebRequest request,HttpSession session) {
 		String success = "0";
 		String errMsg = "";
@@ -267,6 +277,7 @@ public class RegistAction{
 	 */
 	@RequestMapping("/user/sendEmail")
 	@ResponseBody
+	@CrossOrigin
 	public Object sendEmail(HttpSession session,WebRequest request,WhCode whcode){
 		String success = "0";
 		String errMsg = "";
@@ -330,8 +341,9 @@ public class RegistAction{
 	/**
 	 * 短信验证:发送验证码（并保存手机号码及短信验证码至验证码表）
 	 */
-	@RequestMapping("/user/sendPhone")
+	@RequestMapping(value = "/user/sendPhone",method = RequestMethod.POST)
 	@ResponseBody
+	@CrossOrigin
 	public Object sendPhone(WhCode whcode,WebRequest request, HttpSession session) {
 		String success = "0";
 		String errMsg = "";
@@ -407,8 +419,9 @@ public class RegistAction{
 	 * 保存注册信息到user：第一步
 	 * @return
 	 */
-	@RequestMapping("/user/saveRegist")
+	@RequestMapping(value = "/user/saveRegist",method = RequestMethod.POST)
 	@ResponseBody
+	@CrossOrigin
 	public Object saveRegist(WebRequest request,WhUser whuser) {
 		String success = "0";
 		String errMsg = "";
@@ -455,8 +468,9 @@ public class RegistAction{
 	 * 判断昵称是否已存在
 	 * @return
 	 */
-	@RequestMapping("/user/hasNickName")
+	@RequestMapping(value = "/user/hasNickName",method = RequestMethod.POST)
 	@ResponseBody
+	@CrossOrigin
 	public Object hasNickName(WebRequest request,HttpSession session){
 		String success = "0";
 		String errMsg = "";
@@ -492,8 +506,9 @@ public class RegistAction{
 	 * 保存注册信息到user：第二步
 	 * @return
 	 */
-	@RequestMapping("/user/saveRegist2")
+	@RequestMapping(value = "/user/saveRegist2",method = RequestMethod.POST)
 	@ResponseBody
+	@CrossOrigin
 	public Object saveRegist2(HttpServletRequest request) {
 		Map<String,Object> map = new HashMap<String,Object>();
 		String success = "0";
