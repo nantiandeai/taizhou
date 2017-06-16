@@ -56,13 +56,17 @@ public class ExhibitionHallAction {
             rows = "12";
         }
         try {
+            List<Map> photo360Link = exhibitionhallService.get360Photo();
             PageInfo pageInfo = exhibitionhallService.getExhibitionhallList(Integer.valueOf(page),Integer.valueOf(rows));
             if(null == pageInfo){
                 responseBean.setSuccess(ResponseBean.FAIL);
                 responseBean.setErrormsg("查询展馆列表失败");
             }else {
-                responseBean.setRows((List)pageInfo.getList());
+                responseBean.setRows(photo360Link);
+                responseBean.setData((List)pageInfo.getList());
                 responseBean.setTotal(pageInfo.getTotal());
+                responseBean.setPage(Integer.parseInt(page));
+                responseBean.setPageSize(Integer.parseInt(rows));
             }
         }catch (Exception e){
             logger.error(e.toString());
@@ -90,6 +94,12 @@ public class ExhibitionHallAction {
         String id = request.getParameter("id");
         String page = request.getParameter("page");
         String rows = request.getParameter("rows");
+        if(null == page || page.isEmpty()){
+            page = "1";
+        }
+        if(null == rows || rows.isEmpty()){
+            rows = "12";
+        }
         try {
             PageInfo myPage = exhibitionhallService.getExhibitList(id,Integer.valueOf(page),Integer.valueOf(rows));
             if(null == myPage){

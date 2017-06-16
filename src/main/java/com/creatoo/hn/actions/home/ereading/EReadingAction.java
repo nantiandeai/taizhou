@@ -1,14 +1,19 @@
 package com.creatoo.hn.actions.home.ereading;
 
 import com.alibaba.fastjson.JSON;
+import com.creatoo.hn.ext.bean.RetMobileEntity;
+import com.creatoo.hn.model.WhgYwiType;
 import com.creatoo.hn.services.home.adgszyd.SzydService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +45,27 @@ public class EReadingAction {
         }
 
         return view;
+    }
+
+    /**
+     * 数字阅读前端接口
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/szreading", method = RequestMethod.POST)
+    public RetMobileEntity reading(){
+        RetMobileEntity res = new RetMobileEntity();
+        Map<String, Object> rest = new HashMap();
+
+        List<Map> infoList = szydService.getReadingInfoList(1,20);
+
+        List<Map> carousel = szydService.getReadingCarousel(1,1);
+
+        rest.put("infoList", infoList);
+        rest.put("carousel", carousel);
+        res.setData(rest);
+        res.setCode(0);
+        return res;
     }
 
 }

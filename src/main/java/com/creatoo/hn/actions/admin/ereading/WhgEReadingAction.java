@@ -222,9 +222,12 @@ public class WhgEReadingAction {
         }
         WhgSysUser whgSysUser = (WhgSysUser) request.getSession().getAttribute("user");
         List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_ACTIVITY.getValue());
-        PageInfo myPage = whgEReadingInfoService.getInfoList(Integer.valueOf(page),Integer.valueOf(rows),zxstate,relList);
-        responseBean.setRows((List)myPage.getList());
-        responseBean.setTotal(myPage.getTotal());
+        PageInfo myPage = null;
+        if (relList.size()>0) {
+            myPage = whgEReadingInfoService.getInfoList(Integer.valueOf(page),Integer.valueOf(rows),zxstate,relList);
+            responseBean.setRows((List)myPage.getList());
+            responseBean.setTotal(myPage.getTotal());
+        }
         return responseBean;
     }
 
