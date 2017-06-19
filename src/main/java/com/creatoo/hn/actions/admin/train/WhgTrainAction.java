@@ -2,28 +2,26 @@ package com.creatoo.hn.actions.admin.train;
 
 import com.creatoo.hn.ext.annotation.WhgOPT;
 import com.creatoo.hn.ext.bean.ResponseBean;
-
 import com.creatoo.hn.ext.emun.EnumOptType;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.model.WhgSysUser;
 import com.creatoo.hn.model.WhgTra;
+import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.train.WhgTrainCourseService;
 import com.creatoo.hn.services.admin.train.WhgTrainService;
-
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 培训驿站action
@@ -46,6 +44,9 @@ public class WhgTrainAction {
      */
     @Autowired
     private WhgTrainCourseService whgTrainCourseService;
+
+    @Autowired
+    private BranchService branchService;
 
     org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(this.getClass());
     /**
@@ -132,6 +133,13 @@ public class WhgTrainAction {
         WhgSysUser user = (WhgSysUser) session.getAttribute("user");
         try {
             res = this.whgTrainService.t_add(tra,user,request);
+            if("0".equals(res.getSuccess())){
+                //设置活动所属单位
+                String[] branch = request.getParameterValues("branch");
+                for(String branchId : branch){
+                    branchService.setBranchRel((String )((Map)res.getData()).get("newId"), EnumTypeClazz.TYPE_TRAIN.getValue(),branchId);
+                }
+            }
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg("培训保存失败");
@@ -177,6 +185,14 @@ public class WhgTrainAction {
                 tra.setVenroom("");
             }
             res = this.whgTrainService.t_edit(tra, sysUser, request);
+            if("0".equals(res.getSuccess())){
+                branchService.clearBranchRel(tra.getId(),EnumTypeClazz.TYPE_TRAIN.getValue());
+                //设置活动所属单位
+                String[] branch = request.getParameterValues("branch");
+                for(String branchId : branch){
+                    branchService.setBranchRel(tra.getId(), EnumTypeClazz.TYPE_TRAIN.getValue(),branchId);
+                }
+            }
         }catch (Exception e){
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg("培训信息保存失败");
