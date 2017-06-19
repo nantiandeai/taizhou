@@ -94,6 +94,10 @@ public class APIVenueAction {
 					}
 					type = type.substring(0,type.length()-1);
 					param.put("type", type);
+					WhgYwiType whgYwiType = whgYunweiTypeService.findWhgYwiType4Id(whgVen.getArea());
+					if (whgYwiType.getName() != null && !"".equals(whgYwiType.getName())) {
+						param.put("areaName", whgYwiType.getName());
+					}
 				}
 
 				param.put("roomlist", this.cgfwService.selectWhgVenroom4Ven(itemId));

@@ -9,6 +9,7 @@ import com.creatoo.hn.services.home.userCenter.UserCenterService;
 import com.creatoo.hn.utils.EmailUtil;
 import com.creatoo.hn.utils.RegistRandomUtil;
 import com.creatoo.hn.utils.WhConstance;
+import com.sun.org.apache.xml.internal.security.encryption.CipherData;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -159,9 +160,10 @@ public class RegistAction{
 			//获取页面参数
 			String msgcontent = request.getParameter("msgcontent");
 			String msgphone = request.getParameter("msgphone");
-			
+			String cid = request.getParameter("temp_pid");
+
 			//获取验证码会话id
-			String cid = (String) session.getAttribute("temp_pid");
+//			String cid = (String) session.getAttribute("temp_pid");
 			
 			//判断页面参数是否为空
 			if(msgcontent != null && !"".equals(msgcontent) && msgphone != null && !"".equals(msgphone) && cid != null && !"".equals(cid)){
@@ -347,7 +349,7 @@ public class RegistAction{
 	public Object sendPhone(WhCode whcode,WebRequest request, HttpSession session) {
 		String success = "0";
 		String errMsg = "";
-
+		String cid = "";
 		HashMap<String, String> map = new HashMap<String, String>();
 
 		try {
@@ -391,7 +393,7 @@ public class RegistAction{
 				smsService.t_sendSMS(msgphone, "LOGIN_VALIDCODE", smsData);
 
 				//将数据保存至code表
-				String cid = this.commService.getKey("wh_code");
+				cid = this.commService.getKey("wh_code");
 				whcode.setId(cid);
 				whcode.setSessid(session.getId());
 				whcode.setMsgcontent(msgcontent);
@@ -406,7 +408,7 @@ public class RegistAction{
 			success = "1";
 			errMsg = e.getMessage();
 		}
-
+		map.put("temp_pid", cid);
 		map.put("success", success);
 		map.put("errMsg", errMsg);
 		return map;

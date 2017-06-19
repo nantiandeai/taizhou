@@ -13,7 +13,9 @@ import com.creatoo.hn.utils.ReqParamsUtil;
 import com.creatoo.hn.utils.WhConstance;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,6 +32,7 @@ import java.util.*;
  * @version 2016.11.16
  */
 @RestController
+@SuppressWarnings("all")
 @RequestMapping("/agdwhhd")
 public class WhhdAction {
 	/**
@@ -334,6 +337,35 @@ public class WhhdAction {
 		}
 		return view;
 	}
+	/**
+	 * 台州文化馆活动 活动类型 排序接口
+	 * @return
+	 */
+	@CrossOrigin
+	@RequestMapping(value = "/selectResource", method = RequestMethod.POST)
+	public Map<String,List> selectResource(String actvid,String reftype) {
+		Map map = new HashMap<>();
+		try {
+			if (actvid !=null&&!"".equals(actvid)&& reftype !=null &&!"".equals(reftype)) {
+				//活动图片
+				List<WhgComResource> tsource = this.whhdService.selectactSource(actvid,"1",reftype);
+				//活动资源 音频
+				List<WhgComResource> ysource = this.whhdService.selectactSource(actvid,"3",reftype);
+				//活动资源 视频
+				List<WhgComResource> ssource = this.whhdService.selectactSource(actvid,"2",reftype);
+
+				map.put("tsource", tsource);
+				map.put("ysource", ysource);
+				map.put("ssource", ssource);
+			}else {
+				map.put("error", "参数错误");
+			}
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return map;
+	}
 
 	/**
 	 * 品牌活动列表页 加载相关数据
@@ -357,16 +389,50 @@ public class WhhdAction {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/activityload")
-	public Object activityList(int page,int rows,WebRequest request){
+	@CrossOrigin
+	@RequestMapping(value = "/activityload", method = RequestMethod.POST)
+	public Object activityList(Integer page,Integer rows,WebRequest request){
 		try {
+			if(page == null){
+				page = 1;
+			}
+			if(rows == null){
+				rows = 12;
+			}
 			return this.whhdService.activityList(page,rows,request);
 		} catch (Exception e) {
-			log.debug(e.getMessage(), e);
+			log.error(e.getMessage(), e);
 			return null;
 		}
 	}
 
+	/**
+	 * 台州文化馆活动 活动类型 排序接口
+	 * @return
+	 */
+	@CrossOrigin
+	@RequestMapping(value = "/selectAre", method = RequestMethod.GET)
+	public Map<String,List> selectAre() {
+		Map<String,List> map = new HashMap<>();
+		try {
+			//活动分类
+			List<WhgYwiType> acttype = this.commservice.findYwiType(EnumTypeClazz.TYPE_ACTIVITY.getValue());
+
+			//艺术分类
+//			List<WhgYwiType> ystype = this.commservice.findYwiType(EnumTypeClazz.TYPE_ART.getValue());
+
+			//区域分类
+			List<WhgYwiType> qrtype = this.commservice.findYwiType(EnumTypeClazz.TYPE_AREA.getValue());
+
+			map.put("acttype", acttype);
+//			map.put("ystype", ystype);
+			map.put("qrtype", qrtype);
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return map;
+	}
 	/**
 	 * 根据活动id 查活动信息 品牌详情页
 	 * @param request
