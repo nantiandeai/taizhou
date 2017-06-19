@@ -10,6 +10,7 @@ import com.creatoo.hn.model.WhgTraCourse;
 import com.creatoo.hn.services.comm.CommService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -41,13 +42,15 @@ public class WhgTrainService {
     @Autowired
     private CommService commService;
 
+    private static Logger logger = Logger.getLogger(WhgTrainService.class);
+
     /**
      * 分页查询培训
      * @param request
      * @return
      * @throws Exception
      */
-    public PageInfo t_srchList4p(HttpServletRequest request, String sort, String order) throws Exception {
+    public PageInfo t_srchList4p(HttpServletRequest request, String sort, String order,List relList) throws Exception {
         int page = Integer.parseInt((String)request.getParameter("page"));
         int rows = Integer.parseInt((String)request.getParameter("rows"));
         Example example = new Example(WhgTra.class);
@@ -82,6 +85,9 @@ public class WhgTrainService {
             int recommend = Integer.parseInt((String)request.getParameter("recommend"));
             c.andEqualTo("recommend", recommend);
         }
+        if(null != relList && 0 < relList.size()){
+            c.andIn("id", Arrays.asList(relList2relIdList(relList)));
+        }
         //排序
         if (sort!=null && !sort.isEmpty()){
             if (order!=null && "asc".equalsIgnoreCase(order)){
@@ -94,9 +100,27 @@ public class WhgTrainService {
         }
 
         PageHelper.startPage(page, rows);
-        List list= this.whgTraMapper.selectByExample(example);
-        PageInfo pageInfo = new PageInfo(list);
-        return pageInfo;
+        try {
+            List list= this.whgTraMapper.selectByExample(example);
+            PageInfo pageInfo = new PageInfo(list);
+            return pageInfo;
+        }catch (Exception e){
+                String errorInfo = e.toString();
+                logger.error(e.toString());
+                return null;
+        }
+    }
+
+    private List relList2relIdList(List relList){
+        List list = new ArrayList();
+        if(null != relList && 0 < relList.size()){
+            for(Object item : relList){
+                Map mapItem = (Map)item;
+                String relId = (String) mapItem.get("relid");
+                list.add(relId);
+            }
+        }
+        return list;
     }
 
     /**
