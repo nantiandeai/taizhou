@@ -123,7 +123,8 @@ public class WhgTrainService {
             tra.setAge(_age1+","+_age2);
         }
         Date now = new Date();
-        tra.setId(commService.getKey("whgtra"));  //id
+        String newId = commService.getKey("whgtra");
+        tra.setId(newId);  //id
         tra.setCrtdate(now);  //创建时间
         tra.setCrtuser(user.getId());   //创建人
         //tra.setCultid(user.getCultid());
@@ -185,6 +186,9 @@ public class WhgTrainService {
             traCourse.setEndtime(sdf.parse(request.getParameter("sin_endtime")));
             saveCourse(tra, user, traCourse);
         }
+        Map map = new HashMap();
+        map.put("newId",newId);
+        res.setData(map);
         return res;
     }
 
