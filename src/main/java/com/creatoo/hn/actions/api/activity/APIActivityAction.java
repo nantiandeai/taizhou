@@ -89,7 +89,7 @@ public class APIActivityAction {
 	 */
 	@CrossOrigin
 	@RequestMapping(value = "/checkActPublish", method = RequestMethod.POST)
-	public RetMobileEntity checkActPublish(HttpServletRequest request,String actId,String seatStr,String eventid,Integer seats,HttpSession session){
+	public RetMobileEntity checkActPublish(HttpServletRequest request,String userId,String actId,String seatStr,String eventid,Integer seats,HttpSession session){
 		RetMobileEntity res = new RetMobileEntity();
 		WhUser user = (WhUser) session.getAttribute(WhConstance.SESS_USER_KEY);
 		try {
@@ -108,7 +108,7 @@ public class APIActivityAction {
 			}
 			if(whgAct.getSellticket() == 2){
 				int seatCount = whgAct.getTicketnum();
-				JSONObject seatJson = whhdService.getSeat4ActId(actId,eventid,user.getId());
+				JSONObject seatJson = whhdService.getSeat4ActId(actId,eventid,userId);
 				int userSeatNum = seatJson.getIntValue("seatSizeUser");//当前用户订票数
 				int seatSize = seatJson.getIntValue("seatSize");//当前活动已被预定票数
 				if(seatCount - seatSize <= 0 ){
@@ -210,7 +210,7 @@ public class APIActivityAction {
 		String district = getParam(request,"district",null);//区域
 		String sdate = getParam(request,"sdate",null);//排序值
 		String index = getParam(request,"index","1");//pageNo
-		String size = getParam(request,"size","10");//pageSize
+		String size = getParam(request,"size","12");//pageSize
 		Map param = new HashMap();
 		if(null != type){
 			param.put("etype", type);
@@ -297,7 +297,7 @@ public class APIActivityAction {
 						}
 					}
 				}
-				/**
+				/*
 				 List<WhgActTime> actvitm = this.whhdService.getPlayDate4ActId(id);
 				 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				 if(actvitm != null && actvitm.size()>0){

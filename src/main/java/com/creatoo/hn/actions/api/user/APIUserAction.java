@@ -862,6 +862,7 @@ public class APIUserAction {
         map.put("userId",oneUser.get("id"));
         map.put("userName",oneUser.get("name"));
         map.put("mobile",oneUser.get("phone"));
+        map.put("job", oneUser.get("job"));
         map.put("sex",oneUser.get("sex"));
         map.put("birthday",oneUser.get("birthday"));
         map.put("nickName",oneUser.get("nickname"));
