@@ -133,7 +133,7 @@ public class WhgTrainAction {
         WhgSysUser user = (WhgSysUser) session.getAttribute("user");
         try {
             res = this.whgTrainService.t_add(tra,user,request);
-            if("0".equals(res.getSuccess())){
+            if("1".equals(res.getSuccess())){
                 //设置活动所属单位
                 String[] branch = request.getParameterValues("branch");
                 for(String branchId : branch){
@@ -185,7 +185,7 @@ public class WhgTrainAction {
                 tra.setVenroom("");
             }
             res = this.whgTrainService.t_edit(tra, sysUser, request);
-            if("0".equals(res.getSuccess())){
+            if("1".equals(res.getSuccess())){
                 branchService.clearBranchRel(tra.getId(),EnumTypeClazz.TYPE_TRAIN.getValue());
                 //设置活动所属单位
                 String[] branch = request.getParameterValues("branch");
