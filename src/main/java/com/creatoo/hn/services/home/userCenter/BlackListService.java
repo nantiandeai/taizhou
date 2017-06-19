@@ -92,9 +92,9 @@ public class BlackListService {
     }
 
     private void doScan() throws  Exception{
-        scanByType(1);
-        doJudge();
-        autoClean();
+        //scanByType(1);
+        //doJudge();
+        //autoClean();
     }
 
     /**
