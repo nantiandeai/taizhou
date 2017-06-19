@@ -4,6 +4,7 @@ import com.creatoo.hn.ext.annotation.WhgOPT;
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.ext.emun.EnumOptType;
 import com.creatoo.hn.ext.emun.EnumTypeClazz;
+import com.creatoo.hn.model.WhBranchRel;
 import com.creatoo.hn.model.WhgSysUser;
 import com.creatoo.hn.model.WhgTra;
 import com.creatoo.hn.services.admin.branch.BranchService;
@@ -77,10 +78,15 @@ public class WhgTrainAction {
                     mmp.addAttribute("state",this.whgTrainService.srchOne(id).getState());
                     mmp.addAttribute("course",this.whgTrainCourseService.srchList(id));
                     view.setViewName("admin/train/base/view_edit");
+                    //分馆权限部分
+                    WhBranchRel whBranchRel = branchService.getBranchRel(id,EnumTypeClazz.TYPE_TRAIN.getValue());
+                    if(null != whBranchRel){
+                        view.addObject("whBranchRel",whBranchRel);
+                    }
+                    //分馆权限部分END
                 }else{
                     view.setViewName("admin/train/base/view_add");
                 }
-
             }else{
                 view.setViewName("admin/train/base/view_list");
             }
