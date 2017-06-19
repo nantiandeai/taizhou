@@ -92,9 +92,9 @@ public class BlackListService {
     }
 
     private void doScan() throws  Exception{
-        //scanByType(1);
-        //doJudge();
-        //autoClean();
+        scanByType(1);
+        doJudge();
+        autoClean();
     }
 
     /**
@@ -235,6 +235,7 @@ public class BlackListService {
                 whgUsrBacklist.setJointime(new Date());
                 whgUsrBacklist.setReltype(1);
                 whgUsrBacklistMapper.insert(whgUsrBacklist);
+                whScanCollectionMapper.updateWhScanCollectionState((String) map.get("useid"),1,1,2);
             }
         }
         for (Map map : list2){
@@ -253,6 +254,7 @@ public class BlackListService {
                 whgUsrBacklist.setJointime(new Date());
                 whgUsrBacklist.setReltype(1);
                 whgUsrBacklistMapper.insert(whgUsrBacklist);
+                whScanCollectionMapper.updateWhScanCollectionState((String) map.get("useid"),1,2,2);
             }
         }
     }
