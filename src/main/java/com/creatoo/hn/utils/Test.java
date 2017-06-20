@@ -594,8 +594,7 @@ public class Test {
     	//getOracleConn();
         
         //query();
-    	
-    	System.out.println(MD5Util.toMd5("123456"));
+       // () -> System.out.println("Hello Lambda Expressions");
         
         //创建表结构
         //doDDLtoOracle(sqls);

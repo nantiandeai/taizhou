@@ -109,7 +109,9 @@ public class WhgTrainAction {
     public ResponseBean srchList4p(HttpServletRequest request, String sort, String order){
         ResponseBean resb = new ResponseBean();
         try {
-            PageInfo pageInfo = this.whgTrainService.t_srchList4p(request,sort,order);
+            WhgSysUser whgSysUser = (WhgSysUser) request.getSession().getAttribute("user");
+            List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_TRAIN.getValue());
+            PageInfo pageInfo = this.whgTrainService.t_srchList4p(request,sort,order,relList);
             resb.setRows( (List)pageInfo.getList() );
             resb.setTotal(pageInfo.getTotal());
         } catch (Exception e) {
