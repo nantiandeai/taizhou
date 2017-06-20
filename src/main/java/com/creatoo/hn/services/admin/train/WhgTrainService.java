@@ -85,8 +85,9 @@ public class WhgTrainService {
             int recommend = Integer.parseInt((String)request.getParameter("recommend"));
             c.andEqualTo("recommend", recommend);
         }
-        if(null != relList && 0 < relList.size()){
-            c.andIn("id", Arrays.asList(relList2relIdList(relList)));
+        List list = relList2relIdList(relList);
+        if(null != list && 0 < list.size()){
+            c.andIn("id", list);
         }
         //排序
         if (sort!=null && !sort.isEmpty()){
@@ -101,8 +102,8 @@ public class WhgTrainService {
 
         PageHelper.startPage(page, rows);
         try {
-            List list= this.whgTraMapper.selectByExample(example);
-            PageInfo pageInfo = new PageInfo(list);
+            List listTmp= this.whgTraMapper.selectByExample(example);
+            PageInfo pageInfo = new PageInfo(listTmp);
             return pageInfo;
         }catch (Exception e){
                 String errorInfo = e.toString();
@@ -111,8 +112,8 @@ public class WhgTrainService {
         }
     }
 
-    private List relList2relIdList(List relList){
-        List list = new ArrayList();
+    private List<String> relList2relIdList(List relList){
+        List<String> list = new ArrayList<String>();
         if(null != relList && 0 < relList.size()){
             for(Object item : relList){
                 Map mapItem = (Map)item;
