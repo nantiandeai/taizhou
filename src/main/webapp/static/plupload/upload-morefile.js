@@ -54,6 +54,16 @@ WhgUploadMoreFile = (function () {
                 thisEle.parent().remove();
             });
         });
+
+        $("input[type=radio][name=type]").change(function () {
+            thisObj.clear();
+            var fileType = ["","img","video","file"][$(this).val()];
+            thisObj._options.uploadFileType = fileType;
+            thisObj._init();
+            console.log(fileType);
+            console.log($(this).val());
+            console.log(thisObj);
+        });
     }
 
     /**
@@ -63,6 +73,14 @@ WhgUploadMoreFile = (function () {
     __obj_Construct.prototype._init = function () {
         //this对象
         var thisObj = this;
+        var mime_type = {};
+        if (thisObj._options.uploadFileType == "img") {
+            mime_type = { title : "Image files", extensions : "jpg,gif,png" }
+        } else if (thisObj._options.uploadFileType == "video") {
+            mime_type = { title : "Video files", extensions : "mp3,mp4,flv,avi" }
+        } else {
+            mime_type = { title : "File files", extensions : "doc,docx,xls,zip,xlsx,pdf" };
+        }
 // debugger
         //使用plupload构造文件上传
         this._uploader = new plupload.Uploader({
@@ -73,8 +91,8 @@ WhgUploadMoreFile = (function () {
             silverlight_xap_url : this._options.basePath+'/static/plupload/lib/plupload-2.1.2/js/Moxie.xap',
             url : this._uploadURL,
             filters: {
-                // mime_types : [{ title : "files", extensions : "doc,docx,xls,zip,xlsx,pdf" }],
-                mime_types : [{ title : "files", extensions : "mp3,mp4,flv,jpg,gif,png,bmp,doc,docx,xls,zip,xlsx" }],
+                mime_types : [mime_type],
+                // mime_types : [{ title : "files", extensions : "mp3,mp4,flv,jpg,gif,png,bmp,doc,docx,xls,zip,xlsx" }],
                 max_file_size : this._options.maxFileSize, //最大只能上传10mb的文件
                 prevent_duplicates : false //不允许选取重复文件
             },
@@ -224,7 +242,7 @@ WhgUploadMoreFile = (function () {
      */
     __obj_Construct.prototype.clear = function () {
         var thisObj = this;
-
+        console.log("thisObj:"+thisObj);
         //图片预览
         //$('#'+thisObj._options.previewImgId).html('');
         //设置隐藏域
@@ -238,7 +256,7 @@ WhgUploadMoreFile = (function () {
         if(thisObj._uploader){
             thisObj._uploader.destroy();
         }
-        thisObj._init();
+        //thisObj._init();
     }
 
     return {

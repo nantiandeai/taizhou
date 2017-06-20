@@ -481,9 +481,10 @@ public class RegistAction{
 		try {
 			//获取昵称
 			String nickname = request.getParameter("nickname");
+			String id = request.getParameter("id");
 			if(nickname != null && !"".equals(nickname)){
 				//判断昵称是否已存在
-				int hasNickName = this.regService.getNickName(nickname);
+				int hasNickName = this.regService.getNickName(nickname,id);
 				if(hasNickName != 0){
 					success = "1";	//已存在
 				}else{

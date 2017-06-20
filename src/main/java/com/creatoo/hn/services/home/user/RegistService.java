@@ -201,9 +201,9 @@ public class RegistService {
 	/**
 	 * 根据昵称查询记录
 	 */
-	public int getNickName(String nickname)throws Exception{
+	public int getNickName(String nickname,String id)throws Exception{
 		Example example = new Example(WhUser.class);
-		example.createCriteria().andEqualTo("nickname", nickname);
+		example.createCriteria().andEqualTo("nickname", nickname).andNotEqualTo("id",id);
 		return this.userMapper.selectCountByExample(example);
 	}
 	

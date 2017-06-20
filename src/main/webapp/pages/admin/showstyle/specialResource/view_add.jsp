@@ -28,7 +28,7 @@
 </head>
 <body>
 
-<form id="whgff" class="whgff" method="post" action="${basePath}/admin/yunwei/whpp/add">
+<form id="whgff" class="whgff" method="post">
     <h2>添加特色资源</h2>
     <div class="whgff-row">
         <div class="whgff-row-label"><label style="color: red">*</label>标题：</div>
@@ -109,9 +109,15 @@ $(function () {
 
     WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn1', hiddenFieldId: 'cult_picture1', previewImgId: 'previewImg1'});
 
-    <%--WhgUploadMoreFile.init({basePath: '${basePath}', uploadBtnId: 'fileUploadBtn2', hiddenFieldId: 'whg_img_upload',previewImgId:'whg_img_pload_view',needCut:false});--%>
-    WhgUploadMoreFile.init({basePath: '${basePath}', uploadBtnId: 'fileUploadBtn2', hiddenFieldId: 'whg_file_upload',previewFileId:'whg_file_pload_view'});
-
+    var uploader = WhgUploadMoreFile.init({basePath: '${basePath}', uploadBtnId: 'fileUploadBtn2', hiddenFieldId: 'whg_file_upload',previewFileId:'whg_file_pload_view',uploadFileType:"img"});
+    /*$("input[type=radio][name=type]").change(function () {
+        console.log(uploader);
+        uploader._upload.();
+        var fileType = ["","img","video","file"][$(this).val()];
+        console.log(fileType);
+        uploader = WhgUploadMoreFile.init({basePath: '${basePath}', uploadBtnId: 'fileUploadBtn2', hiddenFieldId: 'whg_file_upload',previewFileId:'whg_file_pload_view',uploadFileType:fileType});
+        console.log($(this).val())
+    });*/
     $('#whgff').form({
         novalidate: true,
         url: "${basePath}/admin/specialResource/add",

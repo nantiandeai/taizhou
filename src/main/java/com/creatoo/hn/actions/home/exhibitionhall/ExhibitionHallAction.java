@@ -5,7 +5,9 @@ import com.creatoo.hn.services.home.exhibitionhall.ExhibitionhallService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -44,7 +46,8 @@ public class ExhibitionHallAction {
         return view;
     }
 
-    @RequestMapping("/getHallList")
+    @CrossOrigin
+    @RequestMapping(value = "/getHallList",method = RequestMethod.POST )
     public ResponseBean getHallList(HttpServletRequest request){
         ResponseBean responseBean = new ResponseBean();
         String page = request.getParameter("page");

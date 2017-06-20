@@ -28,7 +28,7 @@
 </head>
 <body>
 
-<form id="whgff" class="whgff" method="post" action="${basePath}/admin/yunwei/whpp/add">
+<form id="whgff" class="whgff" method="post">
     <c:choose>
         <c:when test="${not empty targetShow}">
             <h2>查看特色资源</h2>
@@ -206,6 +206,7 @@
             $('.easyui-textbox').textbox('readonly');
             $('.easyui-combobox').combobox('readonly');
 
+            $("#whgff").find("input[type='checkbox'], input[type='radio']").on('click', function(){return false});
             //不显示提交 button
             $('#whgwin-add-btn-save').hide();
             return;
