@@ -3,6 +3,7 @@ package com.creatoo.hn.actions.admin.pavilion;
 import com.alibaba.fastjson.JSON;
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.ext.emun.EnumTypeClazz;
+import com.creatoo.hn.model.WhBranchRel;
 import com.creatoo.hn.model.WhSzzgExhibit;
 import com.creatoo.hn.model.WhgSysUser;
 import com.creatoo.hn.model.WhgYwiKey;
@@ -91,8 +92,7 @@ public class WhgAntiquesAction {
             rows = "10";
         }
         WhgSysUser whgSysUser = (WhgSysUser)request.getSession().getAttribute("user");
-
-        PageInfo myPage = whgAntiquesInfoService.getInfoList(Integer.valueOf(page),Integer.valueOf(rows),zxstate);
+        PageInfo myPage = whgAntiquesInfoService.getInfoList(Integer.valueOf(page),Integer.valueOf(rows),zxstate,whgSysUser.getId());
         responseBean.setRows((List)myPage.getList());
         responseBean.setTotal(myPage.getTotal());
         return responseBean;
@@ -163,6 +163,12 @@ public class WhgAntiquesAction {
                     responseBean.setSuccess(ResponseBean.FAIL);
                     responseBean.setErrormsg("修改藏品失败");
                 }
+                branchService.clearBranchRel((String )map.get("id"),EnumTypeClazz.TYPE_EXHIBIT.getValue());
+                String hallid = (String )map.get("hallid");
+                WhBranchRel whBranchRel = branchService.getBranchRel(hallid,EnumTypeClazz.TYPE_HALL.getValue());
+                if(null != whBranchRel){
+                    branchService.setBranchRel((String )map.get("id"),EnumTypeClazz.TYPE_EXHIBIT.getValue(),whBranchRel.getBranchid());
+                }
             }else if("add".equalsIgnoreCase(type)){
                 String id = commService.getKey("wh_szzg_exhibit");
                 map.put("id",id);
@@ -170,6 +176,11 @@ public class WhgAntiquesAction {
                 if(0 != whgAntiquesInfoService.addOneExhbitMapper(map)){
                     responseBean.setSuccess(ResponseBean.FAIL);
                     responseBean.setErrormsg("添加藏品失败");
+                }
+                String hallid = (String )map.get("hallid");
+                WhBranchRel whBranchRel = branchService.getBranchRel(hallid,EnumTypeClazz.TYPE_HALL.getValue());
+                if(null != whBranchRel){
+                    branchService.setBranchRel(id,EnumTypeClazz.TYPE_EXHIBIT.getValue(),whBranchRel.getBranchid());
                 }
             }
         }catch (Exception e){

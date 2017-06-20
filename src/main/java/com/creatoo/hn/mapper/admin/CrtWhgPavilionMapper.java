@@ -47,6 +47,13 @@ public interface CrtWhgPavilionMapper {
     List<Map> getAntiquesListByState(@Param("mystate") Integer zxstate);
 
     /**
+     * 根据状态获取藏品
+     * @param zxstate
+     * @return
+     */
+    List<Map> getAntiquesListByStateEx(@Param("mystate") Integer zxstate,@Param("relList")List relList);
+
+    /**
      * 添加一个藏品
      * @param map
      */

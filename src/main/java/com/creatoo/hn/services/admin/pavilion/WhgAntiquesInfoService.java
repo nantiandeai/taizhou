@@ -1,9 +1,11 @@
 package com.creatoo.hn.services.admin.pavilion;
 
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.mapper.WhSzzgExhibitMapper;
 import com.creatoo.hn.mapper.WhgYwiKeyMapper;
 import com.creatoo.hn.mapper.admin.CrtWhgPavilionMapper;
 import com.creatoo.hn.model.WhgYwiKey;
+import com.creatoo.hn.services.admin.branch.BranchService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -30,6 +32,9 @@ public class WhgAntiquesInfoService {
 
     @Autowired
     private WhgYwiKeyMapper whgYwiKeyMapper;
+
+    @Autowired
+    private BranchService branchService;
     /**
      * 获取藏品列表(支持分页)
      * @param page
@@ -50,6 +55,35 @@ public class WhgAntiquesInfoService {
         try {
             PageHelper.startPage(page,rows);
             List<Map> list = crtWhgPavilionMapper.getAntiquesListByState(zxstate);
+            return new PageInfo(list);
+        }catch (Exception e){
+            logger.error(e.toString());
+            return null;
+        }
+    }
+
+    /**
+     * 获取藏品列表(支持分页)
+     * @param page
+     * @param rows
+     * @param zxstate
+     * @return
+     */
+    public PageInfo getInfoList(Integer page, Integer rows, Integer zxstate,String userId){
+        if(null == page){
+            page = 1;
+        }
+        if(null == rows){
+            rows = 10;
+        }
+        if(null == zxstate){
+            return null;
+        }
+        try {
+
+            List<Map> relList = branchService.getBranchRelList(userId, EnumTypeClazz.TYPE_EXHIBIT.getValue());
+            PageHelper.startPage(page,rows);
+            List<Map> list = crtWhgPavilionMapper.getAntiquesListByStateEx(zxstate,relList);
             return new PageInfo(list);
         }catch (Exception e){
             logger.error(e.toString());
