@@ -775,7 +775,7 @@ public class APIUserAction {
      * }
      */
     @CrossOrigin
-    @RequestMapping("/info/save")
+    @RequestMapping(value = "/info/save",method = RequestMethod.POST)
     public ResponseBean saveUserInfo(WhUser whUser){
         ResponseBean res = new ResponseBean();
         try {
@@ -1106,22 +1106,21 @@ public class APIUserAction {
                     rme.setCode(101);
                     rme.setMsg("该订单不存在");
                     return rme;
-                }
-                if(2 == canCancel){
+                }else if(2 == canCancel){
                     rme.setCode(101);
                     rme.setMsg("该订单不存在");
                     return rme;
-                }
-                if(3 == canCancel){
+                }else if(3 == canCancel){
                     rme.setCode(101);
                     rme.setMsg("已经有验过的票，不能取消");
                     return rme;
+                }else {
+                    actOrder.setTicketstatus(3);
+                    actOrder.setOrderisvalid(2);
+                    userCenterService.upActOrder(actOrder);
+                    rme.setCode(0);
+                    rme.setMsg("活动订单取消成功！");
                 }
-                actOrder.setTicketstatus(3);
-                actOrder.setOrderisvalid(2);
-                userCenterService.upActOrder(actOrder);
-                rme.setCode(0);
-                rme.setMsg("活动订单取消成功！");
             }else if(type.equals("2")){
                 int count =  this.service.unOrder(itemId);
                 rme.setData(count);
