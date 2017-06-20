@@ -225,6 +225,8 @@ public class WhgVenroomService {
          */
         WhBranchRel whBranchRel = branchService.getBranchRel(room.getVenid(),EnumTypeClazz.TYPE_VENUE.getValue());
         branchService.clearBranchRel(room.getId(),EnumTypeClazz.TYPE_ROOM.getValue());
-        branchService.setBranchRel(room.getId(),EnumTypeClazz.TYPE_ROOM.getValue(),whBranchRel.getBranchid());
+        if(null != whBranchRel){
+            branchService.setBranchRel(room.getId(),EnumTypeClazz.TYPE_ROOM.getValue(),whBranchRel.getBranchid());
+        }
     }
 }
