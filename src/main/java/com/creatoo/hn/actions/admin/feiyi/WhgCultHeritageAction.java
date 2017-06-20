@@ -1,9 +1,13 @@
 package com.creatoo.hn.actions.admin.feiyi;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
+import com.creatoo.hn.model.WhBranchRel;
 import com.creatoo.hn.model.WhgCultHeritage;
 import com.creatoo.hn.model.WhgSysUser;
+import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.feiyi.WhgCultHeritageService;
+import com.creatoo.hn.services.comm.CommService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 文化遗产管理action
@@ -31,6 +37,12 @@ public class WhgCultHeritageAction {
      */
     @Autowired
     private WhgCultHeritageService whgCultHeritageService;
+
+    @Autowired
+    private BranchService branchService;
+
+    @Autowired
+    private CommService commService;
 
     /**
      * 进入type(list|add|edit|view)视图
@@ -51,6 +63,10 @@ public class WhgCultHeritageAction {
                     view.addObject("id", id);
                     view.addObject("targetShow", targetShow);
                     view.addObject("cult", whgCultHeritageService.t_srchOne(id));
+                    WhBranchRel whBranchRel = branchService.getBranchRel(id,EnumTypeClazz.TYPE_CUL_THERITAGE.getValue());
+                    if(null != whBranchRel){
+                        view.addObject("whBranchRel",whBranchRel);
+                    }
                     view.setViewName("admin/feiyi/cultheritage/view_edit");
                 } else {
                     view.setViewName("admin/feiyi/cultheritage/view_add");
@@ -74,7 +90,9 @@ public class WhgCultHeritageAction {
     public ResponseBean srchList4p(HttpServletRequest request, WhgCultHeritage cultHeritage) {
         ResponseBean res = new ResponseBean();
         try {
-            PageInfo<WhgCultHeritage> pageInfo = whgCultHeritageService.t_srchList4p(request, cultHeritage);
+            WhgSysUser whgSysUser = (WhgSysUser)request.getSession().getAttribute("user");
+            List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_CUL_THERITAGE.getValue());
+            PageInfo<WhgCultHeritage> pageInfo = whgCultHeritageService.t_srchList4p(request, cultHeritage,relList);
             res.setRows(pageInfo.getList());
             res.setTotal(pageInfo.getTotal());
         } catch (Exception e) {
@@ -94,7 +112,13 @@ public class WhgCultHeritageAction {
     public ResponseBean add(WhgCultHeritage cultHeritage, HttpServletRequest request) {
         ResponseBean res = new ResponseBean();
         try {
+            String newId = commService.getKey("whg_cult_heritage");
+            cultHeritage.setId(newId);
             this.whgCultHeritageService.t_add(request, cultHeritage);
+            String branch = request.getParameter("branch");
+            if(null != branch && !branch.trim().isEmpty()){
+                branchService.setBranchRel(newId, EnumTypeClazz.TYPE_CUL_THERITAGE.getValue(),branch);
+            }
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg("保存失败");
@@ -110,10 +134,15 @@ public class WhgCultHeritageAction {
      * @return res
      */
     @RequestMapping(value = "/edit")
-    public ResponseBean edit(WhgCultHeritage cultHeritage) {
+    public ResponseBean edit(WhgCultHeritage cultHeritage,HttpServletRequest request) {
         ResponseBean res = new ResponseBean();
         try {
             this.whgCultHeritageService.t_edit(cultHeritage);
+            String branch = request.getParameter("branch");
+            if(null != branch && !branch.trim().isEmpty()){
+                branchService.clearBranchRel(cultHeritage.getId(),EnumTypeClazz.TYPE_CUL_THERITAGE.getValue());
+                branchService.setBranchRel(cultHeritage.getId(), EnumTypeClazz.TYPE_CUL_THERITAGE.getValue(),branch);
+            }
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg(e.getMessage());
