@@ -33,6 +33,6 @@
 
     <javaClientGenerator targetPackage="${targetMapperPackage}" targetProject="${targetJavaProject}" type="ANNOTATEDMAPPER" />
 
-    <table tableName="wh_szyd_zx" ></table>
+    <table tableName="whg_usr_backlist" ></table>
   </context>
 </generatorConfiguration>
