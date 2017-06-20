@@ -123,10 +123,10 @@ public class WhgAntiquesInfoService {
      * 获取展馆列表
      * @return
      */
-    public PageInfo getAllPavilion(Integer page,Integer rows){
+    public PageInfo getAllPavilion(Integer page,Integer rows,List relList){
         try {
             PageHelper.startPage(page,rows);
-            return new PageInfo(crtWhgPavilionMapper.getAllPavilion());
+            return new PageInfo(crtWhgPavilionMapper.getPavilionListByStateEx(3,relList));
         }catch (Exception e){
             logger.error(e.toString());
             return null;

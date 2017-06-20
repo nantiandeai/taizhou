@@ -2,10 +2,13 @@ package com.creatoo.hn.actions.admin.pavilion;
 
 import com.alibaba.fastjson.JSON;
 import com.creatoo.hn.ext.bean.ResponseBean;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.model.WhSzzgExhibit;
 import com.creatoo.hn.model.WhgSysUser;
 import com.creatoo.hn.model.WhgYwiKey;
+import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.pavilion.WhgAntiquesInfoService;
+import com.creatoo.hn.services.admin.pavilion.WhgPavilionInfoService;
 import com.creatoo.hn.services.comm.CommService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -38,6 +41,12 @@ public class WhgAntiquesAction {
 
     @Autowired
     private WhgAntiquesInfoService whgAntiquesInfoService;
+
+    @Autowired
+    private WhgPavilionInfoService whgPavilionInfoService;
+
+    @Autowired
+    private BranchService branchService;
 
     @RequestMapping("/view/{type}")
     public ModelAndView listview(HttpServletRequest request, ModelMap mmp, @PathVariable("type")String type){
@@ -81,6 +90,8 @@ public class WhgAntiquesAction {
         if(null == rows || !StringUtil.isNumeric(rows)){
             rows = "10";
         }
+        WhgSysUser whgSysUser = (WhgSysUser)request.getSession().getAttribute("user");
+
         PageInfo myPage = whgAntiquesInfoService.getInfoList(Integer.valueOf(page),Integer.valueOf(rows),zxstate);
         responseBean.setRows((List)myPage.getList());
         responseBean.setTotal(myPage.getTotal());
@@ -207,7 +218,9 @@ public class WhgAntiquesAction {
         if(null == rows || rows.isEmpty()){
             rows = "10";
         }
-        PageInfo myPage = whgAntiquesInfoService.getAllPavilion(Integer.valueOf(page),Integer.valueOf(rows));
+        WhgSysUser whgSysUser = (WhgSysUser)request.getSession().getAttribute("user");
+        List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(), EnumTypeClazz.TYPE_HALL.getValue());
+        PageInfo myPage = whgPavilionInfoService.getInfoList(Integer.valueOf(page),Integer.valueOf(rows),2,relList);
         if(null == myPage){
             responseBean.setSuccess(ResponseBean.FAIL);
             responseBean.setErrormsg("获取展馆状态失败");
