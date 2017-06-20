@@ -3,8 +3,10 @@ package com.creatoo.hn.actions.admin.venue;
 import com.creatoo.hn.ext.annotation.WhgOPT;
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.ext.emun.EnumOptType;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.model.WhgSysUser;
 import com.creatoo.hn.model.WhgVenRoom;
+import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.venue.WhgVenroomService;
 import com.creatoo.hn.services.admin.venue.WhgVenueService;
 import com.github.pagehelper.PageInfo;
@@ -38,6 +40,9 @@ public class WhgVenroomAction {
 
     @Autowired
     private WhgVenueService venueService;
+
+    @Autowired
+    private BranchService branchService;
 
     /**
      * 页面转入处理
@@ -80,9 +85,10 @@ public class WhgVenroomAction {
      * @param request
      * @return
      */
+    @SuppressWarnings("all")
     @RequestMapping("/srchList4p")
     @ResponseBody
-    public Object srchList4p(int page, int rows, WebRequest request){
+    public Object srchList4p(int page, int rows, HttpServletRequest request){
         ResponseBean resb = new ResponseBean();
         try {
             Map<String, String[]> pmap = request.getParameterMap();
@@ -116,7 +122,11 @@ public class WhgVenroomAction {
             }else{
                 record.put("delstate", 0);
             }
-
+            WhgSysUser whgSysUser = (WhgSysUser)request.getSession().getAttribute("user");
+            List<Map> branchRefList = branchService.getBranchRelList(whgSysUser.getId(), EnumTypeClazz.TYPE_ROOM.getValue());
+            if(null != branchRefList && !branchRefList.isEmpty()){
+                record.put("branchRefList",branchRefList);
+            }
             PageInfo pageInfo = this.whgVenroomService.srchList4p(page, rows, record);
             resb.setRows( (List)pageInfo.getList() );
             resb.setTotal(pageInfo.getTotal());
