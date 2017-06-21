@@ -9,7 +9,6 @@ import com.creatoo.hn.services.home.userCenter.UserCenterService;
 import com.creatoo.hn.utils.EmailUtil;
 import com.creatoo.hn.utils.RegistRandomUtil;
 import com.creatoo.hn.utils.WhConstance;
-import com.sun.org.apache.xml.internal.security.encryption.CipherData;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
