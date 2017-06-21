@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -36,7 +37,7 @@ public class APICommentAction {
     @Autowired
     private CommService commService;
     @CrossOrigin
-    @RequestMapping("/list")
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
     public ResponseBean getList(String userId, String itemId, Integer type, Integer index, Integer size){
         ResponseBean res = new ResponseBean();
         try{
@@ -58,7 +59,7 @@ public class APICommentAction {
         return res;
     }
     @CrossOrigin
-    @RequestMapping("/create")
+    @RequestMapping(value = "/create",method = RequestMethod.POST)
     public ResponseBean addColle(String userId,String itemId,Integer type,String content){
         ResponseBean res = new ResponseBean();
         try {

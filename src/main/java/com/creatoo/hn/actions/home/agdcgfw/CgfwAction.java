@@ -11,9 +11,7 @@ import com.creatoo.hn.utils.WhConstance;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -190,7 +188,8 @@ public class CgfwAction {
      * @param eday
      * @return
      */
-    @RequestMapping("/loadRoomTimes")
+    @CrossOrigin
+    @RequestMapping(value = "/loadRoomTimes",method = RequestMethod.POST)
     public Object loadRoomTimes(@DateTimeFormat(pattern="yyyy-MM-dd")Date bday,
                                 @DateTimeFormat(pattern="yyyy-MM-dd")Date eday,
                                 String roomid, HttpSession session){

@@ -18,12 +18,15 @@ import com.creatoo.hn.services.home.userCenter.CommentService;
 import com.creatoo.hn.services.home.userCenter.UserCenterService;
 import com.creatoo.hn.services.home.userCenter.VenueOrderService;
 import com.creatoo.hn.utils.RegistRandomUtil;
+import com.creatoo.hn.utils.WhConstance;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -547,7 +550,7 @@ public class APIUserAction {
      * @return
      */
     @CrossOrigin
-    @RequestMapping("/setPasswd")
+    @RequestMapping(value = "/setPasswd",method = RequestMethod.POST)
     public ResponseBean setPasswd(HttpServletRequest request){
         ResponseBean responseBean = new ResponseBean();
         String mobile = request.getParameter("mobile");
@@ -568,6 +571,7 @@ public class APIUserAction {
         whUser.setPhone(mobile);
         Map findResult = null;
         findResult = apiUserService.getOneUser(whUser);
+
         if(null == findResult){
             responseBean.setSuccess("103");
             responseBean.setErrormsg("手机号不存在");
@@ -585,7 +589,7 @@ public class APIUserAction {
         }
         whUser.setPassword(password);
         try {
-            apiUserService.saveUserInfo(whUser);
+            apiUserService.saveUserInfoPhone(whUser);
             return responseBean;
         }catch (Exception e){
             log.error(e.toString());
@@ -1529,4 +1533,119 @@ public class APIUserAction {
         retMobileEntity.pushExData("staticServerUrl",commPropertiesService.getUploadLocalServerAddr());
         return retMobileEntity;
     }
+
+    /**
+     * 判断原始密码（接口用）
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @ResponseBody
+    @RequestMapping(value = "/isPassWord",method = RequestMethod.POST)
+    public Object isPassWord(WebRequest request, String passWord, String userId) {
+        Map<String, Object> res = new HashMap<>();
+//		String passWord = request.getParameter("passWord");
+//		String id = request.getParameter("userId");
+        WhUser user;
+        try {
+            user = (WhUser) userCenterService.getList(userId);
+            String pwd = user.getPassword();
+            if (passWord != null && pwd.equals(passWord)) {
+                res.put("success", 0);
+            } else {
+                res.put("error", "密码不一致");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    /**
+     * 修改用户密码(接口用)
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/modifyPassword",method = RequestMethod.POST)
+    public Object modifyPassword(WebRequest request){
+        String success = "0";
+        String errMsg = "";
+        Map<String,Object> map = new HashMap<String,Object>();
+        try {
+            //获取页面数据
+            String newPwdMd5 = request.getParameter("newPwdMd5");
+            String id = request.getParameter("userId");
+            //获取用户
+            WhUser user = (WhUser) userCenterService.getList(id);
+            user.setPassword(newPwdMd5);
+            this.userCenterService.modifyPwd(user);
+        } catch (Exception e) {
+            errMsg = e.getMessage();
+            e.printStackTrace();
+        }
+        map.put("success", success);
+        map.put("errMsg", errMsg);
+        return map;
+    }
+
+    /**
+     * 判断原始手机 (接口用)
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/isPrePhone",method = RequestMethod.POST)
+    public Object isPrePhone(WebRequest request) {
+        String success = "0";
+        String errMsg = "";
+        Map<String,Object> map = new HashMap<>();
+        try {
+            String id = request.getParameter("userId");
+            WhUser user = (WhUser) userCenterService.getList(id);
+            String phone = user.getPhone();
+            String preMsgPhone = request.getParameter("preMsgPhone");
+            if(preMsgPhone != null && phone.equals(preMsgPhone)){
+                success = "0";	//与原始手机匹配
+            }else{
+                success = "2";	//与原始手机不匹配
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        map.put("success", success);
+        map.put("errMsg", errMsg);
+        return map;
+    }
+
+    /**
+     * 绑定手机号码（接口用）
+     *
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/modifyPhone",method = RequestMethod.POST)
+    public Object modifyPhone(WebRequest request) {
+        String success = "0";
+        String errMsg = "";
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            String phone = request.getParameter("phone");
+            String id = request.getParameter("userId");
+            if ((phone == null && "".equals(phone)) || (id == null && "".equals(id))) {
+                WhUser user = (WhUser) userCenterService.getList(id);
+                user.setPhone(phone);
+                this.userCenterService.modifyPhone(user);
+            } else {
+                errMsg = "参数错误";
+            }
+
+        } catch (Exception e) {
+            errMsg = e.getMessage();
+            e.printStackTrace();
+        }
+        map.put("success", success);
+        map.put("errMsg", errMsg);
+        return map;
+    }
+
 }

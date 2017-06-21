@@ -9,10 +9,7 @@ import com.creatoo.hn.services.home.agdwhhd.WhhdService;
 import com.creatoo.hn.services.home.userCenter.VenueOrderService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 
 import java.text.ParseException;
@@ -225,11 +222,15 @@ public class APIVenueAction {
 					//}
 
 				}
+				int roomtimeCount = this.cgfwService.countRoomTimeOpen4Room(roomId);
+				 rest.put("roomtimeCount", roomtimeCount);
 				rest.put("timeInfo", timeInfoList);
 				rest.put("roomOrderUser", this.cgfwService.selectWhgVenroomorder4User(roomId, bday_, eday_, userId) );
-
-
+				Map seday1 = this.cgfwService.roomTimeOpenSEday(roomId);
+				rest.put("seday",seday);
+				rest.put("roomOrderOK",  this.cgfwService.selectWhgVenroomorder4OK(roomId, bday_, eday_));
 			}
+			rest.put("nowDate", new Date());
 			rest.put("whgVenRoom", whgVenRoom);
 			rest.put("whgVen", whgVen);
 			res.setData(rest);

@@ -14,7 +14,9 @@ import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,6 +38,7 @@ import java.util.Map;
  */
 @Controller
 @SuppressWarnings("all")
+@CrossOrigin
 public class UserCenterAction {
 	/**
 	 * 日志控制器
@@ -1198,6 +1201,7 @@ public class UserCenterAction {
 	 * @param phone
 	 * @return
 	 */
+	@CrossOrigin
 	@RequestMapping("/center/modifyPhone")
 	@ResponseBody
 	public Object modifyPhone(HttpSession session,String phone){
@@ -1274,6 +1278,7 @@ public class UserCenterAction {
 	 * 修改用户密码
 	 * @return
 	 */
+	@CrossOrigin
 	@RequestMapping("/center/modifyPwd")
 	@ResponseBody
 	public Object modifyPwd(HttpSession session,WebRequest request,WhUser whuser){
