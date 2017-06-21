@@ -277,6 +277,23 @@ public class ApiUserService {
         example.createCriteria().andEqualTo("id", whUser.getId());
         this.whUserMapper.updateByExampleSelective(whUser, example);
     }
+
+    /**
+     * 修改用户资料 通过手机
+     * @param whUser 用户信息
+     * @throws Exception
+     */
+    public void saveUserInfoPhone(WhUser whUser) throws Exception {
+        try {
+            if (null != whUser.getPhone() && !"".equals(whUser.getPhone())) {
+                Example example = new Example(WhUser.class);
+                example.createCriteria().andEqualTo("phone", whUser.getPhone());
+                this.whUserMapper.updateByExampleSelective(whUser, example);
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+    }
     
     /**
      * 根据用户预留电话号码获取用户对象
