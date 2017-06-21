@@ -97,8 +97,6 @@ public class WhgCultTalentsService {
      */
     @SuppressWarnings("all")
     public PageInfo<WhgCultTalents> t_srchList4p(HttpServletRequest request, WhgCultTalents talents,List<Map> relList) throws Exception {
-
-
         Map<String, Object> paramMap = ReqParamsUtil.parseRequest(request);
         //分页信息
         int page = Integer.parseInt((String) paramMap.get("page"));
