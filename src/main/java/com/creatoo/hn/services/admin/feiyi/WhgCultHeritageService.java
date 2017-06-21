@@ -96,10 +96,6 @@ public class WhgCultHeritageService {
      */
     @SuppressWarnings("all")
     public PageInfo<WhgCultHeritage> t_srchList4p(HttpServletRequest request, WhgCultHeritage cult,List<Map> relList) throws Exception {
-        List list = new ArrayList();
-        for(Map item : relList){
-            list.add((String )item.get("relid"));
-        }
 
         Map<String, Object> paramMap = ReqParamsUtil.parseRequest(request);
         //分页信息
@@ -139,7 +135,13 @@ public class WhgCultHeritageService {
             int state = Integer.parseInt(request.getParameter("state"));
             c.andEqualTo("state", state);
         }
-        c.andIn("id",list);
+        if(null != relList){
+            List list = new ArrayList();
+            for(Map item : relList){
+                list.add((String )item.get("relid"));
+            }
+            c.andIn("id",list);
+        }
         example.setOrderByClause("crtdate desc");
 
         //分页查询
