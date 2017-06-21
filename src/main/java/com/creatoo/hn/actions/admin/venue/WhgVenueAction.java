@@ -105,11 +105,17 @@ public class WhgVenueAction {
 
             WhgSysUser whgSysUser = (WhgSysUser) request.getSession().getAttribute("user");
             List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_VENUE.getValue());
-            List myList = new ArrayList();
-            for(Map map : relList){
-                myList.add(map.get("relid"));
+            PageInfo pageInfo = null;
+            if(null != relList){
+                List myList = new ArrayList();
+                for(Map map : relList){
+                    myList.add(map.get("relid"));
+                }
+                pageInfo = this.venueService.srchList4p(page, rows, ven, states, sort, order,myList);
+            }else {
+                pageInfo = this.venueService.srchList4p(page, rows, ven, states, sort, order,null);
             }
-            PageInfo pageInfo = this.venueService.srchList4p(page, rows, ven, states, sort, order,myList);
+
             resb.setRows( (List)pageInfo.getList() );
             resb.setTotal(pageInfo.getTotal());
         } catch (Exception e) {
