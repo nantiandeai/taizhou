@@ -38,6 +38,17 @@
         <div class="whgff-row-input"><input class="easyui-combobox" name="type" style="height:32px;width: 500px"
                                             data-options="editable:false,required:false, valueField:'id',textField:'text',prompt:'请选择文化遗产类型', data:WhgSysData.getTypeData('16')"/></div>
     </div>
+
+    <div class="whgff-row">
+        <div class="whgff-row-label"><label style="color: red">*</label>所属单位：</div>
+        <div class="whgff-row-input">
+            <input class="easyui-combobox" name="branch" id="branch" panelHeight="auto" limitToList="true" style="width:500px; height:32px"
+                   data-options="required:false, editable:false,multiple:false, mode:'remote',
+                   valueField:'id', textField:'name'
+                   "/>
+        </div>
+    </div>
+
     <div class="whgff-row">
         <div class="whgff-row-label"><i>*</i>简介：</div>
         <div class="whgff-row-input">
@@ -141,6 +152,8 @@ $(function () {
     });
     //注册提交事件
     $('#whgwin-add-btn-save').off('click').one('click', function () { $('#whgff').submit(); });
+
+    setBranch();
 });
 
     function validateUE(){
@@ -151,6 +164,21 @@ $(function () {
         return true;
     }
 
+    function setBranch() {
+        $.getJSON("${basePath}/admin/branch/branchListUser",function (data) {
+    //                debugger;
+            if("1" != data.success){
+                $.messager.alert("错误", data.errormsg, 'error');
+                return;
+            }
+            var rows = data.rows;
+            $("#branch").combobox("loadData",rows);
+
+            if(0 < rows.length){
+                $("#branch").combobox("setValue",rows[0].id);
+            }
+        });
+    }
 </script>
 <!-- script END -->
 </body>

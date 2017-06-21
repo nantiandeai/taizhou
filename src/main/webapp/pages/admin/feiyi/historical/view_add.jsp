@@ -38,6 +38,17 @@
         <div class="whgff-row-input"><input class="easyui-combobox" name="type" style="height:32px;width: 500px"
                                             data-options="editable:false,required:false, valueField:'id',textField:'text',prompt:'请选择重点文物类型', data:WhgSysData.getTypeData('17')"/></div>
     </div>
+
+    <div class="whgff-row">
+        <div class="whgff-row-label"><label style="color: red">*</label>所属单位：</div>
+        <div class="whgff-row-input">
+            <input class="easyui-combobox" name="branch" id="branch" panelHeight="auto" limitToList="true" style="width:500px; height:32px"
+                   data-options="required:false, editable:false,multiple:false, mode:'remote',
+                   valueField:'id', textField:'name'
+                   "/>
+        </div>
+    </div>
+
     <div class="whgff-row">
         <div class="whgff-row-label"><i>*</i>简介：</div>
         <div class="whgff-row-input">
@@ -94,6 +105,8 @@ var ueConfig = {
 var ue_catalog = UE.getEditor('catalog', ueConfig);
 
 $(function () {
+    setBranch();
+
     WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn1', hiddenFieldId: 'cult_picture1', previewImgId: 'previewImg1'});
 
     WhgUploadMoreImg.init({basePath: '${basePath}', uploadBtnId: 'fileUploadBtn2', hiddenFieldId: 'whg_img_upload',previewImgId:'whg_img_pload_view',needCut:false});
@@ -149,6 +162,22 @@ $(function () {
             return false;
         }
         return true;
+    }
+
+    function setBranch() {
+        $.getJSON("${basePath}/admin/branch/branchListUser",function (data) {
+            //                debugger;
+            if("1" != data.success){
+                $.messager.alert("错误", data.errormsg, 'error');
+                return;
+            }
+            var rows = data.rows;
+            $("#branch").combobox("loadData",rows);
+
+            if(0 < rows.length){
+                $("#branch").combobox("setValue",rows[0].id);
+            }
+        });
     }
 
 </script>

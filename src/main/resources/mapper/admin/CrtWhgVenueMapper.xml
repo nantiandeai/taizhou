@@ -34,7 +34,12 @@
                 #{item}
             </foreach>
         </if>
-
+        <if test="branchRefList != null">
+            AND VR.id IN
+            <foreach item="item" index="index" collection="branchRefList" open="(" separator="," close=")">
+                #{item.relid}
+            </foreach>
+        </if>
         <choose>
             <when test="sort != null">
                 ORDER BY VR.${sort}

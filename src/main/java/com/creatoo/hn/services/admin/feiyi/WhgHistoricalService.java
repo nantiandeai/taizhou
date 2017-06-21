@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 重点文物管理service
@@ -94,6 +91,67 @@ public class WhgHistoricalService {
     }
 
     /**
+     * 分页查询分类列表信息
+     *
+     * @param request。
+     */
+    @SuppressWarnings("all")
+    public PageInfo<WhgHistorical> t_srchList4p(HttpServletRequest request, WhgHistorical historical,List<Map> relList) throws Exception {
+        List list = new ArrayList();
+        if(null != relList){
+            for(Map item : relList){
+                String relid = (String)item.get("relid");
+                list.add(relid);
+            }
+        }
+        Map<String, Object> paramMap = ReqParamsUtil.parseRequest(request);
+        //分页信息
+        int page = Integer.parseInt((String) paramMap.get("page"));
+        int rows = Integer.parseInt((String) paramMap.get("rows"));
+
+        //搜索条件
+        Example example = new Example(WhgCultHeritage.class);
+        Example.Criteria c = example.createCriteria();
+
+        //名称条件
+        if (historical != null && historical.getName() != null) {
+            c.andLike("name", "%" + historical.getName() + "%");
+            historical.setName(null);
+        }
+
+        String pageType = request.getParameter("type");
+        //编辑列表
+        if ("edit".equalsIgnoreCase(pageType)){
+            c.andIn("state", Arrays.asList(1,5));
+        }
+        //审核列表，查 9待审核
+        if ("check".equalsIgnoreCase(pageType)){
+            c.andEqualTo("state", 9);
+        }
+        //发布列表，查 2待发布 6已发布 4已下架
+        if ("publish".equalsIgnoreCase(pageType)){
+            c.andIn("state", Arrays.asList(2,6,4));
+        }
+        //删除列表，查已删除 否则查未删除的
+        if ("recycle".equalsIgnoreCase(pageType)){
+            c.andEqualTo("isdel", 1);
+        }else{
+            c.andEqualTo("isdel", 0);
+        }
+        if(request.getParameter("state") != null){
+            int state = Integer.parseInt(request.getParameter("state"));
+            c.andEqualTo("state", state);
+        }
+        c.andIn("id",list);
+        example.setOrderByClause("crtdate desc");
+
+        //分页查询
+        PageHelper.startPage(page, rows);
+        List<WhgHistorical> typeList = this.whgHistoricalMapper.selectByExample(example);
+        return new PageInfo<>(typeList);
+    }
+
+    /**
      * 查询单条记录
      *
      * @param id id
@@ -112,7 +170,7 @@ public class WhgHistoricalService {
     public void t_add(HttpServletRequest request, WhgHistorical historical) throws Exception {
         WhgSysUser user = (WhgSysUser) request.getSession().getAttribute("user");
 
-        historical.setId(commService.getKey("whg_historical"));
+        //historical.setId(commService.getKey("whg_historical"));
         historical.setCrtdate(new Date());
         historical.setIsrecommend(0);
         historical.setIsdel(EnumDelState.STATE_DEL_NO.getValue());

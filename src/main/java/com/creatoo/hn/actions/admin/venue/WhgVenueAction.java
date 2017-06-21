@@ -127,7 +127,7 @@ public class WhgVenueAction {
      */
     @RequestMapping("/srchList")
     @ResponseBody
-    public Object srchList(WhgVen ven,
+    public Object srchList(WhgVen ven,HttpServletRequest request,
                            @RequestParam(required = false)String states,
                            @RequestParam(required = false)String sort,
                            @RequestParam(required = false)String order
@@ -137,7 +137,15 @@ public class WhgVenueAction {
             if (states!=null && !states.isEmpty()){
                 stateslist = Arrays.asList(states.split("\\s*,\\s*"));
             }
-            return this.venueService.srchList(ven, stateslist, sort, order);
+            WhgSysUser sysUser = (WhgSysUser) request.getSession().getAttribute("user");
+            List<Map> branchList = branchService.getUserBranchInfo(sysUser.getId());
+            List<Map> branchRefList = branchService.getBranchRelList(sysUser.getId(),EnumTypeClazz.TYPE_VENUE.getValue());
+            List myList = new ArrayList();
+            for(Map map : branchRefList){
+                myList.add(map.get("relid"));
+            }
+            List venList = this.venueService.srchList(ven, stateslist, sort, order,myList);
+            return venList;
         } catch (Exception e) {
             log.debug(e.getMessage(), e);
             return new ArrayList();

@@ -1,9 +1,13 @@
 package com.creatoo.hn.actions.admin.feiyi;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
+import com.creatoo.hn.model.WhBranchRel;
 import com.creatoo.hn.model.WhgHistorical;
 import com.creatoo.hn.model.WhgSysUser;
+import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.feiyi.WhgHistoricalService;
+import com.creatoo.hn.services.comm.CommService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 重点文物管理action
@@ -31,6 +37,12 @@ public class WhgHistoricalAction {
      */
     @Autowired
     private WhgHistoricalService whgHistoricalService;
+
+    @Autowired
+    private BranchService branchService;
+
+    @Autowired
+    private CommService commService;
 
     /**
      * 进入type(list|add|edit|view)视图
@@ -51,6 +63,10 @@ public class WhgHistoricalAction {
                     view.addObject("id", id);
                     view.addObject("targetShow", targetShow);
                     view.addObject("cult", whgHistoricalService.t_srchOne(id));
+                    WhBranchRel whBranchRel = branchService.getBranchRel(id,EnumTypeClazz.TYPE_HISTORICAL.getValue());
+                    if(null != whBranchRel){
+                        view.addObject("whBranchRel",whBranchRel);
+                    }
                     view.setViewName("admin/feiyi/historical/view_edit");
                 } else {
                     view.setViewName("admin/feiyi/historical/view_add");
@@ -74,7 +90,9 @@ public class WhgHistoricalAction {
     public ResponseBean srchList4p(HttpServletRequest request, WhgHistorical historical) {
         ResponseBean res = new ResponseBean();
         try {
-            PageInfo<WhgHistorical> pageInfo = whgHistoricalService.t_srchList4p(request, historical);
+            WhgSysUser whgSysUser = (WhgSysUser)request.getSession().getAttribute("user");
+            List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_HISTORICAL.getValue());
+            PageInfo<WhgHistorical> pageInfo = whgHistoricalService.t_srchList4p(request, historical,relList);
             res.setRows(pageInfo.getList());
             res.setTotal(pageInfo.getTotal());
         } catch (Exception e) {
@@ -94,7 +112,13 @@ public class WhgHistoricalAction {
     public ResponseBean add(WhgHistorical historical, HttpServletRequest request) {
         ResponseBean res = new ResponseBean();
         try {
+            String newId = commService.getKey("whg_historical");
+            historical.setId(newId);
             this.whgHistoricalService.t_add(request, historical);
+            String branch = request.getParameter("branch");
+            if(null != branch && !branch.trim().isEmpty()){
+                branchService.setBranchRel(newId, EnumTypeClazz.TYPE_HISTORICAL.getValue(),branch);
+            }
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg("保存失败");
@@ -110,10 +134,16 @@ public class WhgHistoricalAction {
      * @return res
      */
     @RequestMapping(value = "/edit")
-    public ResponseBean edit(WhgHistorical historical) {
+    public ResponseBean edit(WhgHistorical historical,HttpServletRequest request) {
         ResponseBean res = new ResponseBean();
         try {
-            this.whgHistoricalService.t_edit(historical);
+
+            String branch = request.getParameter("branch");
+            if(null != branch && !branch.trim().isEmpty()){
+                this.whgHistoricalService.t_edit(historical);
+                branchService.clearBranchRel(historical.getId(),EnumTypeClazz.TYPE_HISTORICAL.getValue());
+                branchService.setBranchRel(historical.getId(),EnumTypeClazz.TYPE_HISTORICAL.getValue(),branch);
+            }
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg(e.getMessage());

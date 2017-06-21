@@ -1,9 +1,13 @@
 package com.creatoo.hn.actions.admin.feiyi;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
+import com.creatoo.hn.model.WhBranchRel;
 import com.creatoo.hn.model.WhgCultTalents;
 import com.creatoo.hn.model.WhgSysUser;
+import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.feiyi.WhgCultTalentsService;
+import com.creatoo.hn.services.comm.CommService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 文化人才管理action
@@ -31,6 +37,12 @@ public class WhgCultTalentsAction {
      */
     @Autowired
     private WhgCultTalentsService whgCultTalentsService;
+
+    @Autowired
+    private BranchService branchService;
+
+    @Autowired
+    private CommService commService;
 
     /**
      * 进入type(list|add|edit|view)视图
@@ -51,6 +63,10 @@ public class WhgCultTalentsAction {
                     view.addObject("id", id);
                     view.addObject("targetShow", targetShow);
                     view.addObject("cult", whgCultTalentsService.t_srchOne(id));
+                    WhBranchRel whBranchRel = branchService.getBranchRel(id,EnumTypeClazz.TYPE_TALENTS.getValue());
+                    if(null != whBranchRel){
+                        view.addObject("whBranchRel",whBranchRel);
+                    }
                     view.setViewName("admin/feiyi/cultalents/view_edit");
                 } else {
                     view.setViewName("admin/feiyi/cultalents/view_add");
@@ -74,7 +90,9 @@ public class WhgCultTalentsAction {
     public ResponseBean srchList4p(HttpServletRequest request, WhgCultTalents talents) {
         ResponseBean res = new ResponseBean();
         try {
-            PageInfo<WhgCultTalents> pageInfo = whgCultTalentsService.t_srchList4p(request, talents);
+            WhgSysUser whgSysUser = (WhgSysUser)request.getSession().getAttribute("user");
+            List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_TALENTS.getValue());
+            PageInfo<WhgCultTalents> pageInfo = whgCultTalentsService.t_srchList4p(request, talents,relList);
             res.setRows(pageInfo.getList());
             res.setTotal(pageInfo.getTotal());
         } catch (Exception e) {
@@ -94,7 +112,13 @@ public class WhgCultTalentsAction {
     public ResponseBean add(WhgCultTalents talents, HttpServletRequest request) {
         ResponseBean res = new ResponseBean();
         try {
+            String newId = commService.getKey("whg_cult_talents");
+            talents.setId(newId);
             this.whgCultTalentsService.t_add(request, talents);
+            String branch = request.getParameter("branch");
+            if(null != branch && !branch.trim().isEmpty()){
+                branchService.setBranchRel(newId, EnumTypeClazz.TYPE_TALENTS.getValue(),branch);
+            }
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg("保存失败");
@@ -110,10 +134,15 @@ public class WhgCultTalentsAction {
      * @return res
      */
     @RequestMapping(value = "/edit")
-    public ResponseBean edit(WhgCultTalents talents) {
+    public ResponseBean edit(WhgCultTalents talents,HttpServletRequest request) {
         ResponseBean res = new ResponseBean();
         try {
             this.whgCultTalentsService.t_edit(talents);
+            branchService.clearBranchRel(talents.getId(),EnumTypeClazz.TYPE_TALENTS.getValue());
+            String branch = request.getParameter("branch");
+            if(null != branch && !branch.trim().isEmpty()){
+                branchService.setBranchRel(talents.getId(), EnumTypeClazz.TYPE_TALENTS.getValue(),branch);
+            }
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg(e.getMessage());

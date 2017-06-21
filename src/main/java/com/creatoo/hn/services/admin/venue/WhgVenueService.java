@@ -129,6 +129,19 @@ public class WhgVenueService {
         return this.venMapper.selectByExample(example);
     }
 
+    /**
+     * 场馆列表查询
+     * @param ven
+     * @param states
+     * @param sort
+     * @param order
+     * @return
+     * @throws Exception
+     */
+    public List srchList(WhgVen ven, List states, String sort, String order,List relList) throws Exception{
+        Example example = getSrchListExample(ven, states, sort, order,relList);
+        return this.venMapper.selectByExample(example);
+    }
 
     /**
      * 场馆列表页分页查询

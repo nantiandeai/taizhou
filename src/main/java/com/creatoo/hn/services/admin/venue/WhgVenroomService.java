@@ -1,12 +1,15 @@
 package com.creatoo.hn.services.admin.venue;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.mapper.WhgVenMapper;
 import com.creatoo.hn.mapper.WhgVenRoomMapper;
 import com.creatoo.hn.mapper.admin.CrtWhgVenueMapper;
+import com.creatoo.hn.model.WhBranchRel;
 import com.creatoo.hn.model.WhgSysUser;
 import com.creatoo.hn.model.WhgVen;
 import com.creatoo.hn.model.WhgVenRoom;
+import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.comm.CommService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -38,6 +41,9 @@ public class WhgVenroomService {
 
     @Autowired
     private CommService commService;
+
+    @Autowired
+    private BranchService branchService;
 
     /**
      * 分页查询活动室
@@ -198,7 +204,11 @@ public class WhgVenroomService {
         room.setCrtuser(user.getId());
         room.setRecommend(0);
         this.whgVenRoomMapper.insert(room);
-
+        String venId = room.getVenid();
+        WhBranchRel whBranchRel = branchService.getBranchRel(venId,EnumTypeClazz.TYPE_VENUE.getValue());
+        if(null != whBranchRel){
+            branchService.setBranchRel(room.getId(), EnumTypeClazz.TYPE_ROOM.getValue(),whBranchRel.getBranchid());
+        }
         return rb;
     }
 
@@ -210,5 +220,13 @@ public class WhgVenroomService {
      */
     public void t_edit(WhgVenRoom room, WhgSysUser user) throws Exception{
         this.whgVenRoomMapper.updateByPrimaryKeySelective(room);
+        /**
+         * 处理分馆权限
+         */
+        WhBranchRel whBranchRel = branchService.getBranchRel(room.getVenid(),EnumTypeClazz.TYPE_VENUE.getValue());
+        branchService.clearBranchRel(room.getId(),EnumTypeClazz.TYPE_ROOM.getValue());
+        if(null != whBranchRel){
+            branchService.setBranchRel(room.getId(),EnumTypeClazz.TYPE_ROOM.getValue(),whBranchRel.getBranchid());
+        }
     }
 }

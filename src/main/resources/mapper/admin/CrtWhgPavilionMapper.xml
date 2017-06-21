@@ -138,6 +138,51 @@
         ORDER BY wse.lastoperatortime DESC
     </select>
 
+    <select id="getAntiquesListByStateEx" resultType="hashmap">
+        SELECT
+        wse.id,
+        wse.exhname,
+        wse.exhsummary,
+        wse.exhtype,
+        wse.exhtheme,
+        wse.exhphoto,
+        wse.exhstate,
+        wse.exhsort,
+        wse.isrecommend,
+        wse.lastoperator,
+        wse.lastoperatortime,
+        wse.hallid,
+        (SELECT wsh.hallname FROM wh_szzg_exhhall wsh WHERE wsh.id = wse.hallid) AS hallname,
+        wse.isdel
+        FROM wh_szzg_exhibit wse
+        <where>
+            1 = 1
+            <if test="mystate == 0">
+                AND wse.exhstate = 0
+                AND wse.isdel = 0
+            </if>
+            <if test="mystate == 1">
+                AND wse.exhstate = 1
+                AND wse.isdel = 0
+            </if>
+            <if test="mystate == 2">
+                AND  wse.exhstate in (2,3)
+                AND wse.isdel = 0
+            </if>
+            <if test="mystate == 3">
+                AND wse.isdel = 1
+            </if>
+            <if test="relList != null">
+                AND wse.id IN
+                <foreach item="item" index="index" collection="relList" open="(" separator="," close=")">
+                    #{item.relid}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY wse.lastoperatortime DESC
+    </select>
+
+
     <insert id="addOneAntiques">
         INSERT INTO wh_szzg_exhibit
         <trim prefix="(" suffix=")" suffixOverrides=",">
