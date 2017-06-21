@@ -181,6 +181,9 @@ public class BranchService {
     }
 
     public List<Map> getBranchRelList(String userId,String relType){
+        if("2015121200000000".equals(userId)){
+            return null;
+        }
         try {
             Map param = new HashMap();
             param.put("userId",userId);

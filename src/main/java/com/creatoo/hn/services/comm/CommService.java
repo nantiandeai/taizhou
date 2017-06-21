@@ -1,28 +1,30 @@
 package com.creatoo.hn.services.comm;
 
+import com.creatoo.hn.ext.emun.EnumDelState;
+import com.creatoo.hn.ext.emun.EnumState;
+import com.creatoo.hn.mapper.*;
+import com.creatoo.hn.model.*;
+import com.creatoo.hn.utils.CommUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.Criteria;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.creatoo.hn.ext.emun.*;
-import com.creatoo.hn.mapper.*;
-import com.creatoo.hn.model.*;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.entity.Example.Criteria;
-
 /**
  * 生成主键值的服务类
  * @author wangxl
  * @version 20160928
  */
+@SuppressWarnings("ALL")
 @Service
 public class CommService {
 	/**
@@ -109,6 +111,19 @@ public class CommService {
 	private WhgYwiNoteMapper whgYwiNoteMapper;
 
 	/**
+	 * 资讯信息关联mapper
+
+	@Autowired
+	private WhgPubInfoMapper whgPubInfoMapper;
+	 */
+
+	/**
+	 * 资讯信息mapper
+	 */
+	@Autowired
+	private WhZxColinfoMapper whZxColinfoMapper;
+
+	/**
 	 * 保存系统的操作日志
 	 * @param note 操作日志对象
 	 * @throws Exception
@@ -129,7 +144,8 @@ public class CommService {
 	public String getKey(String tableName)throws Exception{
 		//表名转小写，日期字符串yyyyMMdd
 		String tname = tableName.toLowerCase();
-		String cdate = new java.text.SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis());
+		long curtTimeMillis = System.currentTimeMillis();
+		String cdate = new java.text.SimpleDateFormat("yyyyMMdd").format(curtTimeMillis);
 		
 		//根据表名和日期查询当前值
 		WhSerialno whSerialno = null;
@@ -166,7 +182,14 @@ public class CommService {
 		this.whSerialnoMapper.deleteByExample(example2);
 		
 		//主键格式 yyyyMMdd00000000
-		String keyVal = cdate + String.format("%08d", curval);
+		//String keyVal = cdate + String.format("%08d", curval);
+
+		//主键格式 yyyyMMdd[随机数][序号]
+		String f1 = new java.text.SimpleDateFormat("yyyyMMdd").format(curtTimeMillis);
+		String f3 = curval+"";
+		int len = 16 - (f1.length()+f3.length());
+		String f2 = CommUtil.getRandom4Other(len);
+		String keyVal = f1+f2+f3;
 		
 		return keyVal;
 	}
@@ -178,6 +201,23 @@ public class CommService {
 	 * @throws Exception
 	 */
 	public String getOrderId(int type)throws Exception{
+		//日期字符串yyyyMMdd
+		String cdate = new java.text.SimpleDateFormat("yyMMdd").format(System.currentTimeMillis());
+
+		//主键格式   [type]yyMMdd[6位随机数] 总共12位
+		String keyVal = type + cdate + CommUtil.getRandom4Order();
+
+		return keyVal;
+	}
+
+	/**
+	 * 生成订单号: getOrderId(EnumOrderType.ORDER_ACT.getValue()),取活动订单号
+	 * @param type 订单类型, 详见EnumOrderType
+	 * @return 新的订单号
+	 * @throws Exception
+	 */
+	@Deprecated
+	public String getOrderId2(int type)throws Exception{
 		//表名转小写，日期字符串yyyyMMdd
 		String tname = "order_id_"+type;
 		String cdate = new java.text.SimpleDateFormat("yyMMdd").format(System.currentTimeMillis());
@@ -298,6 +338,18 @@ public class CommService {
 		//分页信息
 		int page = Integer.parseInt((String)param.get("page"));
 		int rows = Integer.parseInt((String)param.get("rows"));
+
+        //查找所有相关的 关键字 id
+        Example example = new Example(WhgYwiKey.class);
+        example.createCriteria().andLike("name", param.get("srchkey").toString());
+        List<WhgYwiKey> keys = this.whgYwiKeyMapper.selectByExample(example);
+        if (keys!=null && keys.size()>0){
+            List<String> ekeys = new ArrayList();
+            for(WhgYwiKey key : keys){
+                ekeys.add(key.getId());
+            }
+            param.put("ekeys", ekeys);
+        }
 
 		//带条件的分页查询
 		PageHelper.startPage(page, rows);
@@ -464,4 +516,33 @@ public class CommService {
 		example.setOrderByClause("redate desc");
 		return whgComResourceMapper.selectByExample(example);
 	}
+
+	/**
+	 * 查询实体关联的资讯信息
+	 * @param entityid 实体ID
+	 * @param clnftype 栏目ID
+     * @return
+
+	public List<WhZxColinfo> findColinfo(String entityid, String clnftype){
+		WhZxColinfo colinfo = new WhZxColinfo();
+		List<WhZxColinfo> list = new ArrayList<>();
+		Example example = new Example(WhgPubInfo.class);
+		example.createCriteria().andEqualTo("entityid",entityid).andEqualTo("clnftype",clnftype);
+		List<WhgPubInfo> Info = whgPubInfoMapper.selectByExample(example);
+		if(Info.size() > 0){
+			for(int i = 0; i < Info.size(); i++){
+				String clnfid = Info.get(i).getClnfid();
+				Example example1 = new Example(WhZxColinfo.class);
+				Criteria c1 = example1.createCriteria();
+				c1.andEqualTo("clnfid",clnfid);
+				example1.setOrderByClause("clnfcrttime desc");
+				List<WhZxColinfo> colinfoList = whZxColinfoMapper.selectByExample(example1);
+				if(colinfoList.size() > 0){
+					list.add(colinfoList.get(0));
+				}
+			}
+		}
+		return list;
+	}
+	 */
 }
