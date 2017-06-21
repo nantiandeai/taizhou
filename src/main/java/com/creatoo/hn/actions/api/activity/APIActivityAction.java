@@ -37,6 +37,7 @@ public class APIActivityAction {
 	@Autowired
 	public CommService commservice;
 
+
 	/**
 	 * 短信公开服务类
 	 */
