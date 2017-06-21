@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -187,7 +188,7 @@ public class BranchService {
             return whBranchRelMapper.getWhBranchRelByUserId(param);
         }catch (Exception e){
             logger.error(e.toString());
-            return null;
+            return new ArrayList<Map>();
         }
     }
 }
