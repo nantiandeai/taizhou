@@ -471,6 +471,8 @@ public class ApiUserService {
                     if(null != whgVen){
                         Map map = new HashMap();
                         map.put("id",whgVen.getId());
+                        map.put("cmdate",whCollection.getCmdate());
+                        map.put("cmurl",whCollection.getCmurl());
                         map.put("imgurl",whgVen.getImgurl());
                         map.put("venueName",whgVen.getTitle());
                         map.put("venueAddress",whgVen.getAddress());
@@ -483,6 +485,9 @@ public class ApiUserService {
                     if(null != whgVenRoom){
                         Map map = new HashMap();
                         map.put("id",whgVenRoom.getId());
+                        map.put("venid",whgVenRoom.getVenid());
+                        map.put("cmdate",whCollection.getCmdate());
+                        map.put("cmurl",whCollection.getCmurl());
                         map.put("imgurl",whgVenRoom.getImgurl());
                         map.put("roomName",whgVenRoom.getTitle());
                         map.put("typeName",getTypeName(whgVenRoom.getEtype()));
@@ -497,6 +502,8 @@ public class ApiUserService {
                     if(null != whgActActivity){
                         Map map = new HashMap();
                         map.put("id",whgActActivity.getId());
+                        map.put("cmdate",whCollection.getCmdate());
+                        map.put("cmurl",whCollection.getCmurl());
                         map.put("imgurl",whgActActivity.getImgurl());
                         map.put("cmtitle",whgActActivity.getName());
                         map.put("activityAddress",whgActActivity.getAddress());
@@ -602,6 +609,7 @@ public class ApiUserService {
                 if(null != whgVen){
                     Map map = new HashMap();
                     map.put("rmurl",whgVen.getImgurl());
+                    map.put("venid",whgVen.getId());
                     map.put("rmdate",sdf.format(whComment.getRmdate()));
                     map.put("rmcontent",whComment.getRmcontent());
                     map.put("rmtitle",whgVen.getTitle());

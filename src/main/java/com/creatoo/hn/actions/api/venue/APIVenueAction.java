@@ -223,13 +223,15 @@ public class APIVenueAction {
 
 				}
 				int roomtimeCount = this.cgfwService.countRoomTimeOpen4Room(roomId);
-				 rest.put("roomtimeCount", roomtimeCount);
+				rest.put("roomtimeCount", roomtimeCount);
 				rest.put("timeInfo", timeInfoList);
 				rest.put("roomOrderUser", this.cgfwService.selectWhgVenroomorder4User(roomId, bday_, eday_, userId) );
 				Map seday1 = this.cgfwService.roomTimeOpenSEday(roomId);
 				rest.put("seday",seday);
 				rest.put("roomOrderOK",  this.cgfwService.selectWhgVenroomorder4OK(roomId, bday_, eday_));
 			}
+			rest.put("roomlist", this.cgfwService.selectWhgVenroom4Ven(whgVenRoom.getVenid()));
+			rest.put("tjvenlist", this.cgfwService.selectWhgVen4Recommend(null,whgVenRoom.getVenid()));
 			rest.put("nowDate", new Date());
 			rest.put("whgVenRoom", whgVenRoom);
 			rest.put("whgVen", whgVen);
@@ -320,6 +322,7 @@ public class APIVenueAction {
 			rest.put("success", true);
 			rest.put("data", order);
 			res.setData(rest);
+			res.setCode(0);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			res.setCode(101);

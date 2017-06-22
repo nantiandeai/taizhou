@@ -13,28 +13,25 @@ import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.services.comm.SMSService;
 import com.creatoo.hn.services.home.agdwhhd.WhhdService;
 import com.creatoo.hn.services.home.user.RegistService;
-import com.creatoo.hn.services.home.userCenter.CollectionService;
-import com.creatoo.hn.services.home.userCenter.CommentService;
-import com.creatoo.hn.services.home.userCenter.UserCenterService;
-import com.creatoo.hn.services.home.userCenter.VenueOrderService;
+import com.creatoo.hn.services.home.userCenter.*;
 import com.creatoo.hn.utils.RegistRandomUtil;
+import com.creatoo.hn.utils.ReqParamsUtil;
 import com.creatoo.hn.utils.WhConstance;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -90,6 +87,9 @@ public class APIUserAction {
 
     @Autowired
     private WhhdService whhdService;
+
+    @Autowired
+    private UserRealService realService;
     /**
      * 发送手机验证码
      * @param request
@@ -1213,6 +1213,29 @@ public class APIUserAction {
     }
 
     /**
+     * 查询个人中心我的场馆预定数据（web端）
+     * @return
+     */
+    @RequestMapping(value = "/loadVenueOrder", method = RequestMethod.POST)
+    @CrossOrigin
+    public Object loadVenueOrder(HttpServletRequest req) {
+        //分页查询
+        Map<String, Object> rtnMap = new HashMap<>();
+        try {
+            //获取请求参数
+            Map<String, Object> param = ReqParamsUtil.parseRequest(req);
+            param.put("userid", param.get("userId"));
+            rtnMap = this.service.findOrder(param);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            rtnMap.put("total", 0);
+            rtnMap.put("rows", new ArrayList<Map<String, Object>>(0));
+        }
+        return rtnMap;
+    }
+
+    /**
      * 添加收藏
      * @param request
      * @return
@@ -1314,8 +1337,12 @@ public class APIUserAction {
                 return retMobileEntity;
             }
             // 删除用户收藏记录
-            this.colleService.removeCommColle(cmreftyp, itemId, myUserId);
-            retMobileEntity.setCode(0);
+            int c = this.colleService.removeCommColle(cmreftyp, itemId, myUserId);
+            if (c != 1) {
+                retMobileEntity.setCode(101);
+            } else {
+                retMobileEntity.setCode(0);
+            }
             retMobileEntity.setData(scNum);
             return retMobileEntity;
         } catch (Exception e) {
@@ -1594,8 +1621,8 @@ public class APIUserAction {
      * @return
      */
     @CrossOrigin
-    @RequestMapping(value = "/isPrePhone",method = RequestMethod.POST)
-    public Object isPrePhone(WebRequest request) {
+    @RequestMapping(value = "/PrePhone",method = RequestMethod.POST)
+    public Object PrePhone(WebRequest request) {
         String success = "0";
         String errMsg = "";
         Map<String,Object> map = new HashMap<>();
@@ -1618,27 +1645,33 @@ public class APIUserAction {
     }
 
     /**
-     * 绑定手机号码（接口用）
+     * 个人中心-安全设置-绑定手机号码（接口用）
      *
      * @return
      */
     @CrossOrigin
-    @RequestMapping(value = "/modifyPhone",method = RequestMethod.POST)
+    @RequestMapping(value = "/bindPhone", method = RequestMethod.POST)
     public Object modifyPhone(WebRequest request) {
         String success = "0";
         String errMsg = "";
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         try {
             String phone = request.getParameter("phone");
             String id = request.getParameter("userId");
-            if ((phone == null && "".equals(phone)) || (id == null && "".equals(id))) {
-                WhUser user = (WhUser) userCenterService.getList(id);
-                user.setPhone(phone);
-                this.userCenterService.modifyPhone(user);
-            } else {
+            String code = request.getParameter("code");
+            if (code == null || phone == null || id == null) {
                 errMsg = "参数错误";
+            } else {
+                WhCode whCode = apiUserService.findWhCode4SmsContent(phone, code);
+                if (null == whCode) {
+                    map.put("errMsg", "短信验证码校验失败");
+                    return map;
+                } else {
+                    WhUser user = (WhUser) userCenterService.getList(id);
+                    user.setPhone(phone);
+                    this.userCenterService.modifyPhone(user);
+                }
             }
-
         } catch (Exception e) {
             errMsg = e.getMessage();
             e.printStackTrace();
@@ -1648,4 +1681,225 @@ public class APIUserAction {
         return map;
     }
 
+    /**
+     * 判断用户是否点亮点赞
+     *
+     * @param session
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/isDianZan",method = RequestMethod.POST)
+    @CrossOrigin
+    public Object IsGood(HttpServletRequest servletRequest,HttpSession session, WebRequest request) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String success = "0";
+        String errMsg = "";
+        String num = "0";
+
+        try {
+            //取得收藏关联参数
+            String reftyp = request.getParameter("reftyp"); // 收藏关联类型
+            String refid = request.getParameter("refid"); // 收藏关联id
+            String userId = request.getParameter("userId"); // 用户id
+
+            //判断用户id是否为空
+            if(userId == null){
+                // 获取点赞ip地址
+                ReqParamsUtil IP = new ReqParamsUtil();
+                String dzIP = IP.gerClientIP(servletRequest);
+                //判断是否有点赞记录
+                boolean isgood = this.colleService.IsGood(dzIP, reftyp, refid);
+                if (isgood) {
+                    success = "1"; // 已点赞
+                }
+            }else{
+                //用户id不为空
+                boolean isgood = this.colleService.IsGood(userId, reftyp, refid);
+                if (isgood) {
+                    success = "1"; // 已点赞
+                }
+            }
+
+            //设置被点赞次数
+            num = this.colleService.dianZhanShu(reftyp, refid)+"";
+        } catch (Exception e) {
+            success = "2";
+            errMsg = e.getMessage();
+        }
+        map.put("success", success);
+        map.put("errMsg", errMsg);
+        map.put("num", num);
+        return map;
+    }
+
+    /**
+     * 添加点赞
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/addDianZan",method = RequestMethod.POST)
+    @CrossOrigin
+    public Object addGood(HttpServletRequest servletRequest, WebRequest request,
+                          WhCollection whcolle) {
+        String success = "0";
+        String errMsg = "";
+        // 获取点赞ip地址
+        ReqParamsUtil IP = new ReqParamsUtil();
+        String dzIP = IP.gerClientIP(servletRequest);
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        String num = "0";
+        try {
+            // 取得用户id
+//            String uid = (String) session.getAttribute(WhConstance.SESS_USER_ID_KEY);
+            String uid = request.getParameter("userId");
+            String reftyp = request.getParameter("reftyp");
+            String refid = request.getParameter("refid");
+            // 判断用户id是否为空	 null:根据ip地址添加点赞记录	 不为null:根据用户id添加点赞记录
+            if (uid == null) {
+                whcolle.setCmid(this.commService.getKey("whcolle"));
+                whcolle.setCmuid(dzIP);
+                whcolle.setCmdate(new Date()); // 收藏时间
+                whcolle.setCmopttyp("2"); // 操作类型为点赞
+                whcolle.setCmreftyp(reftyp);
+                whcolle.setCmrefid(refid);
+                this.colleService.addGood(whcolle);
+            } else {
+                whcolle.setCmid(this.commService.getKey("whcolle"));
+                whcolle.setCmuid(uid);
+                whcolle.setCmdate(new Date()); // 收藏时间
+                whcolle.setCmopttyp("2"); // 操作类型为点赞
+                whcolle.setCmreftyp(reftyp);
+                whcolle.setCmrefid(refid);
+                this.colleService.addGood(whcolle);
+            }
+            num = this.colleService.dianZhanShu(reftyp, refid)+"";
+        } catch (Exception e) {
+            success = "1";
+            errMsg = e.getMessage();
+        }
+        map.put("success", success);
+        map.put("errMsg", errMsg);
+        map.put("num", num);
+        return map;
+    }
+
+    /**
+     * 处理身份证图片上传
+     * @param file
+     * @param filemake
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/uploadIdCard",method = RequestMethod.POST)
+    public Object uploadIdCard(MultipartFile file, String filemake, HttpServletRequest request){
+        Map<String, Object> res = new HashMap<>();
+        try {
+            String id = request.getParameter("userId");
+            //根据用户id获取用户
+            WhUser user = (WhUser) userCenterService.getList(id);
+            if(user != null){
+                user = this.realService.saveUserIdCardPic(user, file, filemake, request);
+                res.put("success", 0);
+                res.put("msg", user);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            res.put("success", false);
+            res.put("msg", e.getMessage());
+        }
+        return res;
+    }
+
+    /**
+     * 保存用户姓名和身份证号
+     * @param name
+     * @param idcard
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/saveInfo",method = RequestMethod.POST)
+    public Object saveInfo(String name, String idcard, HttpServletRequest request) {
+        Map<String, Object> res = new HashMap<>();
+        try {
+            String id = request.getParameter("userId");
+            //根据用户id获取用户
+            WhUser user = (WhUser) userCenterService.getList(id);
+            if (user != null) {
+                user.setName(name);
+                user.setIdcard(idcard);
+                user = this.realService.saveInfo(user);
+                res.put("success", 0);
+                res.put("msg", user);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            res.put("error", false);
+            res.put("msg", e.getMessage());
+        }
+        return res;
+    }
+
+    /**
+     * 查询用户信息
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/getUserInfo",method = RequestMethod.POST)
+    public Object getUserInfo(HttpServletRequest request) {
+        Map<String, Object> res = new HashMap<>();
+        try {
+            String id = request.getParameter("userId");
+            //根据用户id获取用户
+            WhUser user = (WhUser) userCenterService.getList(id);
+            if (user != null) {
+                res.put("success", 0);
+                res.put("data", user);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            res.put("error", false);
+            res.put("msg", e.getMessage());
+        }
+        return res;
+    }
+
+    /**
+     * 删除个人中心评论
+     */
+    @RequestMapping(value = "/removeContent",method = RequestMethod.POST)
+    @CrossOrigin
+    public Object removeContent(WebRequest request){
+        Map<String, Object> res = new HashMap<>();
+        try {
+            res.put("code",0);
+            this.commentSerice.removeContent(request);
+        } catch (Exception e) {
+            res.put("code",101);
+        }
+        return res;
+    }
+
+    /**
+     * 点评个人中心页面加载数据（web端）
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/getComment",method = RequestMethod.POST)
+    @CrossOrigin
+    public Object getComment(WebRequest request,HttpSession session){
+        Map<String, Object> res = new HashMap<>();
+        try {
+            res.put("data", this.commentSerice.loadcomLoad(request, session));
+            return res;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            res.put("error","加载失败");
+        }
+        return res;
+    }
 }
+
+

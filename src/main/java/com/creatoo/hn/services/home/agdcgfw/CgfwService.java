@@ -10,6 +10,7 @@ import com.creatoo.hn.mapper.WhgVenRoomOrderMapper;
 import com.creatoo.hn.mapper.WhgVenRoomTimeMapper;
 import com.creatoo.hn.mapper.home.CrtCgfwMapper;
 import com.creatoo.hn.model.*;
+import com.creatoo.hn.services.admin.yunwei.WhgYunweiTypeService;
 import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.services.comm.SMSService;
 import com.github.pagehelper.PageHelper;
@@ -52,6 +53,10 @@ public class CgfwService {
 
     @Autowired
     private SMSService smsService;
+
+    //设备类型
+    @Autowired
+    private WhgYunweiTypeService whgYunweiTypeService;
 
 
     /**
@@ -128,7 +133,19 @@ public class CgfwService {
         Example example = new Example(WhgVenRoom.class);
         example.createCriteria().andEqualTo(venRoom);
         example.orderBy("statemdfdate").desc();
-        return this.whgVenRoomMapper.selectByExample(example);
+        List<WhgVenRoom> list = this.whgVenRoomMapper.selectByExample(example);
+//        for (WhgVenRoom room : list) {
+//            String facility = room.getFacility();
+//            String [] cc = facility.split(",");
+//            if(cc.length>0){
+//                for (String s : cc) {
+//                    WhgYwiType whgYwiType = whgYunweiTypeService.findWhgYwiType4Id(s);
+//                    s = whgYwiType.getName();
+//                }
+//            }
+//
+//        }
+         return list;
     }
 
 

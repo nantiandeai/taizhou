@@ -1,9 +1,6 @@
 package com.creatoo.hn.services.home.userCenter;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -88,8 +85,6 @@ public class CommentService {
 		return this.whcommMapper.searchComment(param);
 	}
 	/** 查询回复
-	 * @param reftype
-	 * @param refid
 	 * @return
 	 * @throws Exception
 	 */
@@ -101,7 +96,6 @@ public class CommentService {
 	/**
 	 * 个人中心 评论查询
 	 * @param request
-	 * @param session
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
@@ -134,16 +128,18 @@ public class CommentService {
 		}
 		System.out.println("ids==============="+ids);
 		List<HashMap> commReList = this.whcommMapper.searchMyCommentRetry(ids);
+
+        //将回复  和对应的 放map
+        //Map<String, HashMap> commRetryMap = new HashMap<String, HashMap>();
+        List commRetryMap = new ArrayList();
+        if(commReList != null){
+            for(HashMap m :commReList){
+                //commRetryMap.put((String)m.get("rmid"), m);
+                commRetryMap.add(m);
+            }
+        }
 		
-		//将回复  和对应的 放map
-		Map<String, HashMap> commRetryMap = new HashMap<String, HashMap>();
-		if(commReList != null){
-			for(HashMap m :commReList){
-				commRetryMap.put((String)m.get("rmrefid"), m);
-			}
-		}
-		
-		Map<String, Object> commMapAll = new HashMap<String, Object>();
+		Map<String, Object> commMapAll = new HashMap<>();
 		commMapAll.put("total", pinfo.getTotal());
 		commMapAll.put("commList", commList);
 		commMapAll.put("commRetryMap", commRetryMap);

@@ -1,36 +1,23 @@
 package com.creatoo.hn.actions.wap;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.creatoo.hn.model.WhActivity;
-import com.creatoo.hn.model.WhArtExhibition;
-import com.creatoo.hn.model.WhBrand;
-import com.creatoo.hn.model.WhCollection;
-import com.creatoo.hn.model.WhComment;
-import com.creatoo.hn.model.WhTrain;
-import com.creatoo.hn.model.WhUser;
-import com.creatoo.hn.model.WhUserTroupe;
-import com.creatoo.hn.model.WhVenue;
-import com.creatoo.hn.model.WhZxColinfo;
+import com.creatoo.hn.model.*;
 import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.services.wap.WapExhibitionService;
 import com.creatoo.hn.utils.ReqParamsUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/wap/wechat/misc")
@@ -115,6 +102,7 @@ public class WapMiscAction {
 	/**
 	 * 区域字典
 	 */
+	@CrossOrigin
 	@RequestMapping("/district")
 	public Object getdistrict(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -133,7 +121,8 @@ public class WapMiscAction {
 	/**
 	 * 点赞
 	 */
-	@RequestMapping("/voteup")
+	@CrossOrigin
+	@RequestMapping(value = "/voteup",method = RequestMethod.POST)
 	public Object getvoteup(HttpServletRequest req, HttpServletResponse response) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		// 获取请求参数

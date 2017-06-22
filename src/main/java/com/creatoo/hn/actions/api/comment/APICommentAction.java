@@ -85,4 +85,41 @@ public class APICommentAction {
         return res;
     }
 
+    /**
+     * 评论web端
+     * @param itemId 对应的
+     * @param type 类型
+     * @param index 当前页
+     * @param size 每页条数
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/getListByWeb",method = RequestMethod.POST)
+    public ResponseBean getListByWeb(String userId, String itemId, Integer type, Integer index, Integer size){
+        ResponseBean res = new ResponseBean();
+        try{
+            if (null==itemId||null==type){
+                res.setSuccess("1000");
+                res.setErrormsg("必要参数不完整！");
+                return  res;
+            }
+            if(null==index){
+                index = 1;
+            }
+            if (null == size) {
+                size = 10;
+            }
+            PageInfo<Map> commentList=commentService.getCommentList(userId,itemId,type,index,size);
+            res.setData(commentList.getList());
+            res.setTotal(commentList.getTotal());
+            res.setPage(commentList.getPageNum());
+            res.setPageSize(commentList.getPageSize());
+        } catch (Exception e){
+            log.error(e.getMessage(), e);
+            res.setSuccess(ResponseBean.FAIL);
+            res.setErrormsg(e.getMessage());
+        }
+        return res;
+    }
+
 }

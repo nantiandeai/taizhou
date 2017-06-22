@@ -106,7 +106,7 @@ public class CollectionService {
 	 * @param uid 用户id	
 	 * @return
 	 */
-	public Object removeCommColle(String reftyp, String refid, String uid)throws Exception{
+	public int removeCommColle(String reftyp, String refid, String uid)throws Exception{
 //		Example example = new Example(WhCollection.class);
 //		Criteria c = example.createCriteria();
 //		c.andEqualTo("cmopttyp", "0"); //0-收藏,1-浏览,2-推荐,3-置顶
