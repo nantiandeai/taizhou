@@ -234,7 +234,7 @@
         <!-- 环市民文化联盟-->
         <menu id="DIR1400" type="0" state="1" text="文化联盟" iconcls="p-2">
             <menu id="DIR1410_U001" type="0" state="1" text="联盟单位管理">
-                <menu id="DIR1410_L001" type="1" state="1" text="联盟单位编辑列表"  href="/admin/cultureunit/view/list" opts="view,add,edit,checkgo,del"/>
+                <menu id="DIR1410_L001" type="1" state="1" text="联盟单位编辑列表"  href="/admin/cultureunit/view/list" opts="view,add,edit,on,off,del"/>
             </menu>
             <menu id="DIR1420_U001" type="0" state="1" text="大型联盟活动管理">
                 <menu id="DIR1420_L001" type="1" state="1" text="大型联盟活动编辑列表"  href="/admin/specialResource/view/edit" opts="view,add,edit,checkgo,del"/>

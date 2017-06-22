@@ -32,7 +32,7 @@
 <body>
 <!-- 表格 -->
 <table id="whgdg" title="${pageTitle}" class="easyui-datagrid" style="display: none"
-       data-options="fit:true, striped:true, rownumbers:true, fitColumns:true, singleSelect:false, checkOnSelect:true, selectOnCheck:true, pagination:true, toolbar:'#whgdg-tb', url:'${basePath}/admin/cultheritage/srchList4p?type=${type}'">
+       data-options="fit:true, striped:true, rownumbers:true, fitColumns:true, singleSelect:false, checkOnSelect:true, selectOnCheck:true, pagination:true, toolbar:'#whgdg-tb', url:'${basePath}/admin/cultureunit/srchList4p?type=${type}'">
     <thead>
     <tr>
         <th data-options="field:'name',width:80">名称</th>
