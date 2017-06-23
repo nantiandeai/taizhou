@@ -56,7 +56,7 @@ public class WhgActivityTimeService {
         	try {
 				Date playStartTime = sdfDateTime.parse(sdf.format(time) + " " + playstrtime);
 				Date playEndTime = sdfDateTime.parse(sdf.format(time) + " " + playendtime);
-        		actTime.setId(commService.getKey("whg_sys_act"));
+        		actTime.setId(commService.getKey("whg_act_time"));
         		actTime.setActid(actId);
         		actTime.setPlaydate(time);
         		actTime.setPlayetime(playendtime);

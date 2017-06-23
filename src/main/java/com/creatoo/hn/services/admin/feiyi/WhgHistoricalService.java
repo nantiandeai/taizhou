@@ -97,13 +97,6 @@ public class WhgHistoricalService {
      */
     @SuppressWarnings("all")
     public PageInfo<WhgHistorical> t_srchList4p(HttpServletRequest request, WhgHistorical historical,List<Map> relList) throws Exception {
-        List list = new ArrayList();
-        if(null != relList){
-            for(Map item : relList){
-                String relid = (String)item.get("relid");
-                list.add(relid);
-            }
-        }
         Map<String, Object> paramMap = ReqParamsUtil.parseRequest(request);
         //分页信息
         int page = Integer.parseInt((String) paramMap.get("page"));
@@ -142,7 +135,16 @@ public class WhgHistoricalService {
             int state = Integer.parseInt(request.getParameter("state"));
             c.andEqualTo("state", state);
         }
-        c.andIn("id",list);
+
+        if(null != relList){
+            List list = new ArrayList();
+            for(Map item : relList){
+                String relid = (String)item.get("relid");
+                list.add(relid);
+            }
+            c.andIn("id",list);
+        }
+
         example.setOrderByClause("crtdate desc");
 
         //分页查询

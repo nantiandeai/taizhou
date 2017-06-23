@@ -59,7 +59,7 @@ public class WhgActivitySeatService {
         	String seatcode = map.get("seatcode");
         	String numreal = map.get("numreal");
         	WhgActSeat actSeat = new WhgActSeat();
-        	actSeat.setId(commService.getKey("whg_sys_act"));
+        	actSeat.setId(commService.getKey("whg_act_seat"));
         	actSeat.setActivityid(actId);
         	actSeat.setSeatcode(seatcode);
         	actSeat.setSeatcolumn(seatcolumn);

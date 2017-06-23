@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.lang.model.element.Name;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -91,6 +90,64 @@ public class WhgSpecialSourceService {
         List<WhgSpecilResource> typeList = this.whgSpecilResourceMapper.selectByExample(example);
         return new PageInfo<>(list);
     }
+
+    /**
+     * 分页查询分类列表信息
+     *
+     * @param request。
+     */
+    @SuppressWarnings("all")
+    public PageInfo<WhgSpecilResourceSarch> t_srchList4p(HttpServletRequest request, WhgSpecilResource historical,List<Map> relList) throws Exception {
+        Map<String, Object> paramMap = ReqParamsUtil.parseRequest(request);
+        //分页信息
+        int page = Integer.parseInt((String) paramMap.get("page"));
+        int rows = Integer.parseInt((String) paramMap.get("rows"));
+
+        Map param = new HashMap();
+        //搜索条件
+        Example example = new Example(WhgCultHeritage.class);
+        Example.Criteria c = example.createCriteria();
+
+        //名称条件
+        if (historical != null && historical.getName() != null) {
+            param.put("name", historical.getName());
+        }
+
+        String pageType = request.getParameter("type");
+        //编辑列表
+        if ("edit".equalsIgnoreCase(pageType)) {
+            param.put("states", Arrays.asList(1, 5));
+        }
+        //审核列表，查 9待审核
+        if ("check".equalsIgnoreCase(pageType)) {
+            param.put("states", Arrays.asList(9));
+        }
+        //发布列表，查 2待发布 6已发布 4已下架
+        if ("publish".equalsIgnoreCase(pageType)) {
+            param.put("states", Arrays.asList(2,6,4));
+        }
+        //删除列表，查已删除 否则查未删除的
+        if ("recycle".equalsIgnoreCase(pageType)) {
+            param.put("isdel", 1);
+        }
+        if (request.getParameter("state") != null) {
+            param.put("state", request.getParameter("state"));
+        }
+        if(null != relList){
+            List list = new ArrayList();
+            for(Map item : relList){
+                String relid = (String)item.get("relid");
+                list.add(relid);
+            }
+            param.put("relList",list);
+        }
+        //分页查询
+        PageHelper.startPage(page, rows);
+        //List<WhgSpecilResource> typeList = this.whgSpecilResourceMapper.selectByExample(example);
+        List<WhgSpecilResourceSarch> list = this.whgSpecilResourceMapper.searchName(param);
+        return new PageInfo<>(list);
+    }
+
     /**
      * 查询单条记录
      *
@@ -109,13 +166,6 @@ public class WhgSpecialSourceService {
      */
     public void t_add(HttpServletRequest request, WhgSpecilResource source) throws Exception {
         WhgSysUser user = (WhgSysUser) request.getSession().getAttribute("user");
-        String id = commService.getKey("whg_specil_resource");
-        //设置活动所属单位
-        String[] branch = request.getParameterValues("branch");
-        for(String branchId : branch){
-            branchService.setBranchRel(id, EnumTypeClazz.TYPE_RESOURCE.getValue(),branchId);
-        }
-        source.setId(id);
         source.setCrtdate(new Date());
         source.setIsrecommend(0);
         source.setIsdel(EnumDelState.STATE_DEL_NO.getValue());
@@ -136,10 +186,10 @@ public class WhgSpecialSourceService {
     public void t_edit(HttpServletRequest request,WhgSpecilResource source) throws Exception {
         source.setStatemdfdate(new Date());
         //设置活动所属单位
-        branchService.clearBranchRel(source.getId(),EnumTypeClazz.TYPE_RESOURCE.getValue());
+
 //        String[] branch = request.getParameterValues("branch");
 //        for(String branchId : branch){
-            branchService.setBranchRel(source.getId(), EnumTypeClazz.TYPE_RESOURCE.getValue(),source.getBranch());
+
 //        }
         int result = this.whgSpecilResourceMapper.updateByPrimaryKeySelective(source);
         if (result != 1) {

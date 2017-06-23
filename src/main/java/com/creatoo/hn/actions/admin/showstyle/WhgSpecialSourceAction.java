@@ -5,6 +5,7 @@ import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.model.*;
 import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.showstyle.WhgSpecialSourceService;
+import com.creatoo.hn.services.comm.CommService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 台州特色资源管理action
@@ -35,6 +38,9 @@ public class WhgSpecialSourceAction {
 
     @Autowired
     private BranchService branchService;
+
+    @Autowired
+    private CommService commService;
 
     /**
      * 进入type(list|add|edit|view)视图
@@ -82,8 +88,10 @@ public class WhgSpecialSourceAction {
     @RequestMapping(value = "/srchList4p")
     public ResponseBean srchList4p(HttpServletRequest request, WhgSpecilResource resource) {
         ResponseBean res = new ResponseBean();
+        WhgSysUser whgSysUser = (WhgSysUser)request.getSession().getAttribute("user");
+        List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_RESOURCE.getValue());
         try {
-            PageInfo<WhgSpecilResourceSarch> pageInfo = whgSpecialSourceService.t_srchList4p(request, resource);
+            PageInfo<WhgSpecilResourceSarch> pageInfo = whgSpecialSourceService.t_srchList4p(request, resource,relList);
             res.setRows(pageInfo.getList());
             res.setTotal(pageInfo.getTotal());
         } catch (Exception e) {
@@ -103,7 +111,13 @@ public class WhgSpecialSourceAction {
     public ResponseBean add(WhgSpecilResource resource, HttpServletRequest request) {
         ResponseBean res = new ResponseBean();
         try {
+            String newId = commService.getKey("whg_specil_resource");
+            resource.setId(newId);
             this.whgSpecialSourceService.t_add(request, resource);
+            String branch = request.getParameter("branch");
+            if(null != branch && !branch.trim().isEmpty()){
+                branchService.setBranchRel(newId, EnumTypeClazz.TYPE_RESOURCE.getValue(),branch);
+            }
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg("保存失败");
@@ -123,6 +137,11 @@ public class WhgSpecialSourceAction {
         ResponseBean res = new ResponseBean();
         try {
             this.whgSpecialSourceService.t_edit(request, resource);
+            String branch = request.getParameter("branch");
+            if(null != branch && !branch.trim().isEmpty()){
+                branchService.clearBranchRel(resource.getId(),EnumTypeClazz.TYPE_RESOURCE.getValue());
+                branchService.setBranchRel(resource.getId(), EnumTypeClazz.TYPE_RESOURCE.getValue(),branch);
+            }
         } catch (Exception e) {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg(e.getMessage());

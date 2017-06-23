@@ -3,7 +3,6 @@ package com.creatoo.hn.services.admin.activity;
 import com.creatoo.hn.ext.emun.EnumDelState;
 import com.creatoo.hn.ext.emun.EnumState;
 import com.creatoo.hn.mapper.WhgActActivityMapper;
-import com.creatoo.hn.mapper.WhgActTicketMapper;
 import com.creatoo.hn.mapper.WhgActTimeMapper;
 import com.creatoo.hn.mapper.admin.CrtWhgActivityMapper;
 import com.creatoo.hn.model.WhgActActivity;
@@ -191,7 +190,7 @@ public class WhgActivityActService {
 
         //设置初始值
         Date now = new Date();
-        act.setId(commService.getKey("whg_sys_act"));
+        act.setId(commService.getKey("whg_act_activity"));
         act.setState(EnumState.STATE_YES.getValue());
         act.setCrtdate(now);
         act.setCrtuser(user.getId());

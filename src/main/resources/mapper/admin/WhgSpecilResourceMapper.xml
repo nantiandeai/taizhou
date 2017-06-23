@@ -6,32 +6,32 @@
     <select id="searchName" resultType="WhgSpecilResourceSarch">
         select
         t.*,
-        b.name AS branchName
+        (SELECT b.name FROM wh_branch b WHERE t.branch = b.id) AS branchName
         from whg_specil_resource t
-        left join wh_branch b
-        on t.branch = b.id
         WHERE 1=1
-
         <if test="name != null and name != ''">
             AND t.name like "%"#{name}"%"
         </if>
-
         <if test="state != null">
             AND t.state = #{state}
         </if>
-
         <if test="states != null">
             AND t.state IN
             <foreach item="item" index="index" collection="states" open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
-
         <if test="isdel != null">
             AND t.isdel = #{isdel}
         </if>
         <if test="isdel == null">
             AND t.isdel = 0
+        </if>
+        <if test="relList != null">
+            AND t.id IN
+            <foreach item="item" index="index" collection="relList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
         </if>
         <choose>
             <when test="sort != null">

@@ -244,7 +244,7 @@ public class WhgActivityActAction {
             Date nowDate = df.parse(df.format(new Date()));// new Date()为获取当前系统时间
             Date strDate = df.parse(df.format(act.getEnterstrtime()));
             if(strDate.getTime() < playDate.getTime() && playDate.getTime() > nowDate.getTime()  ){
-                whgActTime.setId(commservice.getKey("whg_sys_act"));
+                whgActTime.setId(commservice.getKey("whg_act_time"));
                 whgActTime.setActid(actId);
                 whgActTime.setPlaydate(sdf.parse(paramMap.get("playdate")));
                 whgActTime.setPlaystime(paramMap.get("playstime"));

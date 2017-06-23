@@ -4,10 +4,7 @@ import com.creatoo.hn.model.WhTyp;
 import org.apache.commons.beanutils.BeanUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.lang.reflect.Field;
 
@@ -96,5 +93,55 @@ public class CommUtil {
 			}
 		}
 		return map;
+	}
+
+	/**
+	 * 为订单生成6位长度的随机数
+	 * @return
+	 */
+	public static String getRandom4Order(){
+		String random = CommUtil.getRandom(6);
+		while(random.length() != 6){
+			random = CommUtil.getRandom(6);
+		}
+		return random;
+	}
+
+	/**
+	 * 获取随机长度的字符串
+	 * @param len
+	 * @return
+	 */
+	public static String getRandom4Other(int len){
+		String random = CommUtil.getRandom(len);
+		while(random.length() != len){
+			random = CommUtil.getRandom(len);
+		}
+		return random;
+	}
+
+	/**
+	 * 根据长度生成随机数
+	 * @param len 随机数长度
+	 * @return
+	 */
+	public static String getRandom(int len){
+		int result = 0;
+		try{
+			Integer[] array = {0,1,2,3,4,5,6,7,8,9};
+			Random rand = new Random();
+			for (int i = 10; i > 1; i--) {
+				int index = rand.nextInt(i);
+				int tmp = array[index];
+				array[index] = array[i - 1];
+				array[i - 1] = tmp;
+			}
+			for(int i = 0; i < len; i++){
+				result = result * 10 + array[i];
+			}
+		}catch (Exception e){
+
+		}
+		return ""+result;
 	}
 }

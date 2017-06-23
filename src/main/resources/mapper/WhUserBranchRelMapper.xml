@@ -2,21 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.creatoo.hn.mapper.WhUserBranchRelMapper" >
     <select id="getUserBranchInfo" resultType="hashmap">
-        SELECT
-            wb.id,
-            wb.name,
-            wb.areaid,
-            wb.contacts,
-            wb.contactway,
-            wb.lastoperator,
-            wb.operatetime,
-            wb.state
-        FROM wh_user_branch_rel wr,wh_branch wb
-        <where>
-            wr.branchid = wb.id AND
-            wb.state = 1 AND
-            wr.userid = #{userId}
-        </where>
+        <choose>
+            <when test="userId != '2015121200000000' ">
+                SELECT
+                    wb.id,
+                    wb.name,
+                    wb.areaid,
+                    wb.contacts,
+                    wb.contactway,
+                    wb.lastoperator,
+                    wb.operatetime,
+                    wb.state
+                FROM wh_user_branch_rel wr,wh_branch wb
+                <where>
+                    wr.branchid = wb.id AND wb.state = 1 AND wr.userid = #{userId}
+                </where>
+            </when>
+            <otherwise>
+                SELECT
+                    wb.id,
+                    wb.name,
+                    wb.areaid,
+                    wb.contacts,
+                    wb.contactway,
+                    wb.lastoperator,
+                    wb.operatetime,
+                    wb.state
+                FROM wh_branch wb
+                <where>
+                    wb.state = 1
+                </where>
+            </otherwise>
+        </choose>
     </select>
 
     <delete id="clearBranch">
