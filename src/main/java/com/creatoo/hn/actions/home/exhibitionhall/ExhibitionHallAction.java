@@ -91,12 +91,17 @@ public class ExhibitionHallAction {
         return modelAndView;
     }
 
-    @RequestMapping("/getExhibitList")
+    @RequestMapping(value = "/getExhibitList",method = RequestMethod.POST)
+    @CrossOrigin
     public ResponseBean getExhibitList(HttpServletRequest request){
         ResponseBean responseBean = new ResponseBean();
         String id = request.getParameter("id");
         String page = request.getParameter("page");
         String rows = request.getParameter("rows");
+        if (id == null && !"".equals(id)) {
+            responseBean.setErrormsg("参数错误");
+            return responseBean;
+        }
         if(null == page || page.isEmpty()){
             page = "1";
         }
@@ -111,6 +116,7 @@ public class ExhibitionHallAction {
             }else {
                 responseBean.setRows((List)myPage.getList());
                 responseBean.setTotal(myPage.getTotal());
+                responseBean.setPageSize(Integer.parseInt(rows));
             }
         }catch (Exception e){
             logger.error(e.toString());

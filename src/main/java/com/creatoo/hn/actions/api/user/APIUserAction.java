@@ -1226,13 +1226,56 @@ public class APIUserAction {
             Map<String, Object> param = ReqParamsUtil.parseRequest(req);
             param.put("userid", param.get("userId"));
             rtnMap = this.service.findOrder(param);
-
+            rtnMap.put("code", 0);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            rtnMap.put("code", 1);
             rtnMap.put("total", 0);
             rtnMap.put("rows", new ArrayList<Map<String, Object>>(0));
         }
         return rtnMap;
+    }
+
+    /**
+     * 判断用户是否点亮收藏(web端)
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/selectColle",method = RequestMethod.POST)
+    @CrossOrigin
+    public Object isColle(WebRequest request) {
+        Map<String, Object> map = new HashMap<>();
+        String success = "0";
+        String errMsg = "";
+        int scNum = 0;
+        try {
+            //取得收藏关联参数
+            String reftyp = request.getParameter("reftyp"); // 收藏关联类型
+            String refid = request.getParameter("refid"); // 收藏关联id
+            String userId = request.getParameter("userId"); // 收藏关联id
+            //获取收藏数
+            scNum = this.colleService.shouCanShu(reftyp, refid);
+
+            // 判断用户是是否登录
+            if (userId == null) {
+                success = "2";
+                errMsg = "请登录后再收藏";
+            } else {
+                // 判断用户是否已收藏
+                boolean iscolle = this.colleService.isColle(userId, reftyp, refid);
+                if (iscolle) {
+                    success = "1"; // 已收藏
+                }
+            }
+        } catch (Exception e) {
+            success = "3";
+            errMsg = e.getMessage();
+        }
+        map.put("scNum",scNum );
+        map.put("errMsg", errMsg);
+        map.put("success", success);
+        return map;
     }
 
     /**
@@ -1684,14 +1727,13 @@ public class APIUserAction {
     /**
      * 判断用户是否点亮点赞
      *
-     * @param session
      * @param request
      * @return
      */
     @RequestMapping(value = "/isDianZan",method = RequestMethod.POST)
     @CrossOrigin
-    public Object IsGood(HttpServletRequest servletRequest,HttpSession session, WebRequest request) {
-        Map<String, Object> map = new HashMap<String, Object>();
+    public Object IsGood(HttpServletRequest servletRequest,WebRequest request) {
+        Map<String, Object> map = new HashMap<>();
         String success = "0";
         String errMsg = "";
         String num = "0";
@@ -1897,6 +1939,27 @@ public class APIUserAction {
         } catch (Exception e) {
             log.error(e.getMessage());
             res.put("error","加载失败");
+        }
+        return res;
+    }
+
+    /**
+     * 评论回复
+     * @param rmids
+     * @return
+     */
+    @RequestMapping(value = "/commentHuifu",method = RequestMethod.POST)
+    @CrossOrigin
+    public Object commentHuifu(String rmids) {
+        Map<String, Object> res = new HashMap<>();
+        List<Object> list;
+        try {
+            list = this.commentSerice.searchCommentHuifu(rmids);
+            res.put("code", 0);
+            res.put("data", list);
+        } catch (Exception e) {
+            res.put("code", 101);
+            log.error(e.getMessage(), e);
         }
         return res;
     }
