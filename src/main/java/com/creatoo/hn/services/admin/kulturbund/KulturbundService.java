@@ -1,6 +1,10 @@
 package com.creatoo.hn.services.admin.kulturbund;
 
+import com.creatoo.hn.mapper.WhgCultureActMapper;
+import com.creatoo.hn.mapper.WhgCultureActfragMapper;
 import com.creatoo.hn.mapper.WhgCultureUnitMapper;
+import com.creatoo.hn.model.WhgCultureAct;
+import com.creatoo.hn.model.WhgCultureActfrag;
 import com.creatoo.hn.model.WhgCultureUnit;
 import com.creatoo.hn.services.comm.CommService;
 import com.github.pagehelper.PageHelper;
@@ -10,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +29,12 @@ public class KulturbundService {
 
     @Autowired
     private WhgCultureUnitMapper whgCultureUnitMapper;
+
+    @Autowired
+    private WhgCultureActMapper whgCultureActMapper;
+
+    @Autowired
+    private WhgCultureActfragMapper whgCultureActfragMapper;
 
     @Autowired
     private CommService commService;
@@ -46,6 +57,40 @@ public class KulturbundService {
         }
         example.setOrderByClause("unitcreatetime desc");
         List<WhgCultureUnit> list = whgCultureUnitMapper.selectByExample(example);
+        return new PageInfo(list);
+    }
+
+    /**
+     * 获取文化联盟大型活动数据，支持分页
+     * @param page
+     * @param rows
+     * @param name
+     * @param state
+     * @return
+     */
+    public PageInfo getCultureAct(Integer page,Integer rows,String name,String state){
+        PageHelper.startPage(page,rows);
+        Example example = new Example(WhgCultureAct.class);
+        Example.Criteria criteria = example.createCriteria();
+        if(null != name){
+            criteria.andLike("culactname","%"+name+"%");
+        }
+        if(null != state){
+            if("edit".equals(state)){
+                criteria.andIn("culactstate", Arrays.asList(0));
+                criteria.andEqualTo("isdel",2);
+            }else if("check".equals(state)){
+                criteria.andIn("culactstate", Arrays.asList(1));
+                criteria.andEqualTo("isdel",2);
+            }else if("publish".equals(state)){
+                criteria.andIn("culactstate", Arrays.asList(2,3));
+                criteria.andEqualTo("isdel",2);
+            }else if("cycle".equals(state)){
+                criteria.andEqualTo("isdel",1);
+            }
+        }
+        example.setOrderByClause("culactcreattime desc");
+        List<WhgCultureAct> list = whgCultureActMapper.selectByExample(example);
         return new PageInfo(list);
     }
 
@@ -115,6 +160,34 @@ public class KulturbundService {
     public WhgCultureUnit getOne(WhgCultureUnit whgCultureUnit){
         try {
             return whgCultureUnitMapper.selectOne(whgCultureUnit);
+        }catch (Exception e){
+            logger.error(e.toString());
+            return null;
+        }
+    }
+
+    /**
+     * 查询一个文化联盟大型活动
+     * @param whgCultureAct
+     * @return
+     */
+    public WhgCultureAct getOne(WhgCultureAct whgCultureAct){
+        try {
+            return whgCultureActMapper.selectOne(whgCultureAct);
+        }catch (Exception e){
+            logger.error(e.toString());
+            return null;
+        }
+    }
+
+    /**
+     * 查询多个文化联盟大型活动片段
+     * @param whgCultureActfrag
+     * @return
+     */
+    public List<WhgCultureActfrag> getAll(WhgCultureActfrag whgCultureActfrag){
+        try {
+            return whgCultureActfragMapper.select(whgCultureActfrag);
         }catch (Exception e){
             logger.error(e.toString());
             return null;
