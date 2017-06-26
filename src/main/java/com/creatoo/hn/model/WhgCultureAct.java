@@ -37,6 +37,11 @@ public class WhgCultureAct {
     private String culactuser;
 
     /**
+     * 删除状态
+     */
+    private Integer isdel;
+
+    /**
      * 获取主键PK
      *
      * @return id - 主键PK
@@ -142,5 +147,23 @@ public class WhgCultureAct {
      */
     public void setCulactuser(String culactuser) {
         this.culactuser = culactuser;
+    }
+
+    /**
+     * 获取删除状态
+     *
+     * @return isdel - 删除状态
+     */
+    public Integer getIsdel() {
+        return isdel;
+    }
+
+    /**
+     * 设置删除状态
+     *
+     * @param isdel 删除状态
+     */
+    public void setIsdel(Integer isdel) {
+        this.isdel = isdel;
     }
 }

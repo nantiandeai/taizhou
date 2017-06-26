@@ -24,7 +24,7 @@
 </head>
 <body>
 <table id="whgdg" title="${pageTitle}" class="easyui-datagrid" style="display: none"
-       data-options="fit:true, striped:true, rownumbers:true, fitColumns:true, singleSelect:false, checkOnSelect:true, selectOnCheck:true, pagination:true, toolbar:'#whgdg-tb', url:'${basePath}/admin/cultureact/srchList4p'">
+       data-options="fit:true, striped:true, rownumbers:true, fitColumns:true, singleSelect:false, checkOnSelect:true, selectOnCheck:true, pagination:true, toolbar:'#whgdg-tb', url:'${basePath}/admin/cultureact/srchList4p?listType=${listType}'">
     <thead>
         <tr>
             <th data-options="field:'unitname',width:80">活动标题</th>
@@ -45,7 +45,7 @@
     <div class="whgdg-tb-srch" style="padding-top: 8px">
         <input class="easyui-textbox" style="width: 200px;" name="name" data-options="prompt:'请输入名称', validType:'length[1,32]'" />
         <select class="easyui-combobox" name="state" prompt="请选择状态" panelHeight="auto" limitToList="true"
-                data-options="width:120, value:'', valueField:'id', textField:'text', data:myStateAll()">
+                data-options="width:120, value:'', valueField:'id', textField:'text', data:WhgComm.getBizState()">
         </select>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="WhgComm.search('#whgdg', '#whgdg-tb');">查 询</a>
     </div>
