@@ -23,6 +23,7 @@
     <script type="text/javascript" src="${basePath}/static/plupload/lib/plupload-2.1.2/js/plupload.full.min.js"></script>
     <script type="text/javascript" src="${basePath}/static/plupload/upload-img.js"></script>
     <script type="text/javascript" src="${basePath}/static/plupload/upload-moreimg.js"></script>
+    <script type="text/javascript" src="${basePath}/static/common/js/whg.maps.js"></script>
     <!-- 图片上传相关-END -->
 </head>
 <body>
@@ -54,6 +55,26 @@
         <div class="whgff-row-input">
             <input class="easyui-textbox" name="summary"
                    style="width: 500px; height: 100px" data-options="required:true,multiline:true,validType:['length[1,512]']"/>
+        </div>
+    </div>
+
+    <div class="whgff-row">
+        <div class="whgff-row-label">
+            <label style="color: red">*</label>地址：
+        </div>
+        <div class="whgff-row-input">
+            <input class="easyui-textbox" name="address" id="address" style="width: 500px; height: 32px" data-options="required:true,validType:['length[0,60]']">
+        </div>
+    </div>
+
+    <div class="whgff-row">
+        <div class="whgff-row-label">
+            <label style="color: red">*</label>坐标：
+        </div>
+        <div class="whgff-row-input">
+            <input class="easyui-numberbox" name="actlon" id="actlon" style="width: 150px; height: 32px" data-options="required:true, precision:6,readonly:true,prompt:'X轴'">
+            <input class="easyui-numberbox" name="actlat" id="actlat" style="width: 150px; height: 32px" data-options="required:true, precision:6,readonly:true,prompt:'Y轴'">
+            <a class="easyui-linkbutton whg-maps" map-addr="#address" vm-x="actlon" vm-y="actlat" id="getXYPointBtn" text="选择坐标"></a>
         </div>
     </div>
 
@@ -106,6 +127,9 @@ var ue_catalog = UE.getEditor('catalog', ueConfig);
 
 $(function () {
     setBranch();
+
+    //根据地址取坐标
+    WhgMap.init({basePath:'${basePath}', addrFieldId:'address', xpointFieldId:'actlon', ypointFieldId:'actlat', getPointBtnId:'getXYPointBtn'});
 
     WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn1', hiddenFieldId: 'cult_picture1', previewImgId: 'previewImg1'});
 

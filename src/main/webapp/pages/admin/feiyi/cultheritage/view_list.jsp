@@ -32,7 +32,7 @@
 <body>
 <!-- 表格 -->
 <table id="whgdg" title="${pageTitle}" class="easyui-datagrid" style="display: none"
-       data-options="fit:true, striped:true, rownumbers:true, fitColumns:true, singleSelect:false, checkOnSelect:true, selectOnCheck:true, pagination:true, toolbar:'#whgdg-tb', url:'${basePath}/admin/cultureunit/srchList4p?type=${type}'">
+       data-options="fit:true, striped:true, rownumbers:true, fitColumns:true, singleSelect:false, checkOnSelect:true, selectOnCheck:true, pagination:true, toolbar:'#whgdg-tb', url:'${basePath}/admin/cultheritage/srchList4p?type=${type}'">
     <thead>
     <tr>
         <th data-options="field:'name',width:80">名称</th>
@@ -74,6 +74,8 @@
     <shiro:hasPermission name="${resourceid}:checkon"><a href="javascript:void(0)" class="easyui-linkbutton" validFun="_checkoff" plain="true" method="checkoff">审核不通过</a></shiro:hasPermission>
     <shiro:hasPermission name="${resourceid}:publish"><a href="javascript:void(0)" class="easyui-linkbutton" validFun="_publish" plain="true" method="publish">发布</a></shiro:hasPermission>
     <shiro:hasPermission name="${resourceid}:publishoff"><a href="javascript:void(0)" class="easyui-linkbutton" validFun="_publishoff" plain="true" method="publishoff">撤销发布</a></shiro:hasPermission>
+    <shiro:hasPermission name="${resourceid}:recommend"> <a href="javascript:void(0)" class="easyui-linkbutton" plain="true" validFun="validRecommendOn" method="doCommend">推荐</a></shiro:hasPermission>
+    <shiro:hasPermission name="${resourceid}:recommendoff"> <a href="javascript:void(0)" class="easyui-linkbutton" plain="true" validFun="validRecommendOff" method="commendOff">取消推荐</a></shiro:hasPermission>
     <shiro:hasPermission name="${resourceid}:undel"><a href="javascript:void(0)" class="easyui-linkbutton" validFun="_undel" plain="true" method="undel">还原</a></shiro:hasPermission>
     <shiro:hasPermission name="${resourceid}:del"> <a href="javascript:void(0)" class="easyui-linkbutton" validFun="_del" plain="true" method="del">${type == 'recycle'?'删除':'回收'}</a></shiro:hasPermission>
 
@@ -118,7 +120,23 @@
         var row = $("#whgdg").datagrid("getRows")[idx];
         return row.state == 2 || row.state == 9 || row.state == 1 || row.state == 4;
     }
+    function validRecommendOn(idx){
+        var is = false;
+        var curRow = $('#whgdg').datagrid('getRows')[idx];
+        if(curRow.state == 6 && curRow.isrecommend == 0){
+            is = true;
+        }
+        return is;
+    }
 
+    function validRecommendOff(idx){
+        var is = false;
+        var curRow = $('#whgdg').datagrid('getRows')[idx];
+        if(curRow.state == 6 && curRow.isrecommend == 1){
+            is = true;
+        }
+        return is;
+    }
     /**
      * 添加
      */
@@ -275,6 +293,49 @@
             }
             $.messager.progress('close');
         }, 'json');
+    }
+
+    /**
+     * 推荐状态变更
+     * 0-1
+     * @param idx
+     */
+    function _updCommend(ids, fromState, toState){
+        $.messager.progress();
+        var params = {ids: ids, fromState: fromState, toState: toState};
+        $.post('${basePath}/admin/cultheritage/updCommend', params, function(data){
+            $("#whgdg").datagrid('reload');
+            if (!data.success || data.success != "1"){
+                $.messager.alert("错误", data.errormsg||'操作失败', 'error');
+            }
+            $.messager.progress('close');
+        }, 'json');
+    }
+
+    /**
+     * 推荐状态变更 [0]->1
+     * @param idx
+     */
+    function doCommend(idx){
+        var row = $("#whgdg").datagrid("getRows")[idx];
+        $.messager.confirm("确认信息", "确定要推荐选中的项吗？", function(r){
+            if (r){
+                _updCommend(row.id, 0, 1);
+            }
+        })
+    }
+
+    /**
+     * 推荐状态变更 [1]->0
+     * @param idx
+     */
+    function commendOff(idx){
+        var row = $("#whgdg").datagrid("getRows")[idx];
+        $.messager.confirm("确认信息", "确定要取消推荐选中的项吗？", function(r){
+            if (r){
+                _updCommend(row.id, 1, 0);
+            }
+        })
     }
 
 </script>

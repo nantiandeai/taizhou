@@ -203,19 +203,19 @@
             <menu id="DIR1210_U001" type="0" state="1" text="文化遗产管理">
                 <menu id="DIR1210_L001" type="1" state="1" text="文化遗产编辑列表"  href="/admin/cultheritage/view/edit" opts="view,add,edit,checkgo,del"/>
                 <menu id="DIR1210_L002" type="1" state="1" text="文化遗产审核列表"  href="/admin/cultheritage/view/check" opts="view,checkon,checkoff,del"/>
-                <menu id="DIR1210_L003" type="1" state="1" text="文化遗产发布列表"  href="/admin/cultheritage/view/publish" opts="view,publish,publishoff,del"/>
+                <menu id="DIR1210_L003" type="1" state="1" text="文化遗产发布列表"  href="/admin/cultheritage/view/publish" opts="view,publish,publishoff,recommend,recommendoff,del"/>
                 <menu id="DIR1210_L004" type="1" state="1" text="回收站"  href="/admin/cultheritage/view/recycle" opts="view,del,undel"/>
             </menu>
             <menu id="DIR1200_U001" type="0" state="1" text="重点文物管理">
                 <menu id="DIR1220_L001" type="1" state="1" text="重点文物编辑列表"  href="/admin/historical/view/edit" opts="view,add,edit,checkgo,del"/>
                 <menu id="DIR1220_L002" type="1" state="1" text="重点文物审核列表"  href="/admin/historical/view/check" opts="view,checkon,checkoff,del"/>
-                <menu id="DIR1220_L003" type="1" state="1" text="重点文物发布列表"  href="/admin/historical/view/publish" opts="view,publish,publishoff,del"/>
+                <menu id="DIR1220_L003" type="1" state="1" text="重点文物发布列表"  href="/admin/historical/view/publish" opts="view,publish,publishoff,recommend,recommendoff,del"/>
                 <menu id="DIR1220_L004" type="1" state="1" text="回收站"  href="/admin/historical/view/recycle" opts="view,del,undel"/>
             </menu>
             <menu id="DIR1200_U001" type="0" state="1" text="文化人才管理">
                 <menu id="DIR1230_L001" type="1" state="1" text="文化人才编辑列表"  href="/admin/cultalents/view/edit" opts="view,add,edit,checkgo,del"/>
                 <menu id="DIR1230_L002" type="1" state="1" text="文化人才审核列表"  href="/admin/cultalents/view/check" opts="view,checkon,checkoff,del"/>
-                <menu id="DIR1230_L003" type="1" state="1" text="文化人才发布列表"  href="/admin/cultalents/view/publish" opts="view,publish,publishoff,del"/>
+                <menu id="DIR1230_L003" type="1" state="1" text="文化人才发布列表"  href="/admin/cultalents/view/publish" opts="view,publish,publishoff,recommend,recommendoff,del"/>
                 <menu id="DIR1230_L004" type="1" state="1" text="回收站"  href="/admin/cultalents/view/recycle" opts="view,del,undel"/>
             </menu>
         </menu>
