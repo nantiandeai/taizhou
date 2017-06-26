@@ -154,7 +154,7 @@ public class RegistAction{
 			//当前时间
 			Date now = new Date();
 			//验证码的最新时间
-			Date codetime = null;
+			Date codetime;
 			
 			//获取页面参数
 			String msgcontent = request.getParameter("msgcontent");
@@ -173,12 +173,16 @@ public class RegistAction{
 					codetime = codeList.get(0).getMsgtime();
 					if(((now.getTime() - codetime.getTime())/1000) > 300){
 						success = "2";	//验证码失效
+						errMsg = "验证码失效";
 					}
 				}else{
 					success = "1";	//验证码输入错误
+					errMsg = "验证码输入错误";
 				}
 			}else{
-				throw new Exception("未输入验证码");
+				success = "3";
+				errMsg = "参数错误";
+				throw new Exception("参数错误");
 			}
 		} catch (Exception e) {
 			errMsg = e.getMessage();
