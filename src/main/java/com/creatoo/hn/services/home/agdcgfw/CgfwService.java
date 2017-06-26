@@ -134,17 +134,6 @@ public class CgfwService {
         example.createCriteria().andEqualTo(venRoom);
         example.orderBy("statemdfdate").desc();
         List<WhgVenRoom> list = this.whgVenRoomMapper.selectByExample(example);
-//        for (WhgVenRoom room : list) {
-//            String facility = room.getFacility();
-//            String [] cc = facility.split(",");
-//            if(cc.length>0){
-//                for (String s : cc) {
-//                    WhgYwiType whgYwiType = whgYunweiTypeService.findWhgYwiType4Id(s);
-//                    s = whgYwiType.getName();
-//                }
-//            }
-//
-//        }
          return list;
     }
 
