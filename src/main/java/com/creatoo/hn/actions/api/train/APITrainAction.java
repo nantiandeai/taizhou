@@ -2,15 +2,19 @@ package com.creatoo.hn.actions.api.train;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.model.WhgTraEnrol;
+import com.creatoo.hn.model.WhgYwiLbt;
 import com.creatoo.hn.services.home.agdpxyz.PxbmService;
+import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -166,6 +170,29 @@ public class APITrainAction {
         return res;
     }
 
+    /**
+     * 获取培训首页数据
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @SuppressWarnings("all")
+    @RequestMapping(value = "/indexData",method = RequestMethod.POST)
+    public ResponseBean indexData(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        Map map = new HashMap();
+        List<WhgYwiLbt> whgYwiLbtList = service.getLbt("12");
+        if(null != whgYwiLbtList && !whgYwiLbtList.isEmpty()){
+            map.put("whgYwiLbtList",whgYwiLbtList);
+        }
+        PageInfo pageInfo = service.getTraList(1,6,new HashMap());
+        if(null != pageInfo){
+            List list = pageInfo.getList();
+            map.put("whgTraList",list);
+        }
+        responseBean.setData(map);
+        return responseBean;
+    }
 
     /**
      * 所有日期类型使用指定格式转换
