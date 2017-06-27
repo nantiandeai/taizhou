@@ -1,6 +1,7 @@
 package com.creatoo.hn.actions.api.train;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
+import com.creatoo.hn.model.WhgTra;
 import com.creatoo.hn.model.WhgTraEnrol;
 import com.creatoo.hn.model.WhgYwiLbt;
 import com.creatoo.hn.services.home.agdpxyz.PxbmService;
@@ -199,6 +200,7 @@ public class APITrainAction {
     @RequestMapping(value = "/traListPt",method = RequestMethod.POST)
     public ResponseBean traListPt(HttpServletRequest request){
         ResponseBean responseBean = new ResponseBean();
+        String userId = getParamValue(request,"userId",null);
         String index = getParamValue(request,"index","1");
         String size = getParamValue(request,"size","10");
         String type = getParamValue(request,"type",null);
@@ -222,7 +224,8 @@ public class APITrainAction {
                 responseBean.setErrormsg("获取培训列表失败");
                 return responseBean;
             }
-            responseBean.setRows((List)pageInfo.getList());
+            List traList = service.judgeCanSign(userId,(List)pageInfo.getList());
+            responseBean.setRows(traList);
             responseBean.setPage(pageInfo.getPageNum());
             responseBean.setPageSize(pageInfo.getPageSize());
             responseBean.setTotal(pageInfo.getTotal());
@@ -240,6 +243,7 @@ public class APITrainAction {
     @RequestMapping(value = "/traListCulMarket",method = RequestMethod.POST)
     public ResponseBean traListCulMarket(HttpServletRequest request){
         ResponseBean responseBean = new ResponseBean();
+        String userId = getParamValue(request,"userId",null);
         String index = getParamValue(request,"index","1");
         String size = getParamValue(request,"size","10");
         String type = getParamValue(request,"type",null);
@@ -263,7 +267,15 @@ public class APITrainAction {
                 responseBean.setErrormsg("获取培训列表失败");
                 return responseBean;
             }
-            responseBean.setRows((List)pageInfo.getList());
+            List list = (List)pageInfo.getList();
+            if(null != list && !list.isEmpty()){
+                for(Object item : list){
+                    WhgTra whgTra = (WhgTra)item;
+
+                }
+            }
+            List traList = service.judgeCanSign(userId,(List)pageInfo.getList());
+            responseBean.setRows(traList);
             responseBean.setPage(pageInfo.getPageNum());
             responseBean.setPageSize(pageInfo.getPageSize());
             responseBean.setTotal(pageInfo.getTotal());
