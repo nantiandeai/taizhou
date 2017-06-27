@@ -324,17 +324,24 @@
     <div class="whgff-row">
         <div class="whgff-row-label"><label style="color: red">*</label>是否普通培训：</div>
         <div class="whgff-row-input">
-            <div class="radio radio-primary whg-js-data" onclick="showEnrollOdds()" value="${whgTra.isbasictra}"  name="isbasictra" js-data='[{"id":"0","text":"普通培训"},{"id":"1","text":"文化超市"}]'></div>
-            <span id="enrollodds" style="display:none">录取几率:百分之<input class="easyui-numberspinner" name="enrollodds" value="${whgTra.enrollodds}" style="width: 50px; height: 25px" data-options="required:false,min:0,max:100"></span>
+            <div class="radio radio-primary whg-js-data" value="${whgTra.isbasictra}"  name="isbasictra" js-data='[{"id":"0","text":"普通培训"},{"id":"1","text":"文化超市"}]'></div>
         </div>
     </div>
 
     <div class="whgff-row">
         <div class="whgff-row-label"><label style="color: red">*</label>录取规则：</div>
         <div class="whgff-row-input">
-            <div class="radio radio-primary whg-js-data" value="${whgTra.isbasicclass}"  name="isbasicclass" js-data='[{"id":"0","text":"需要面试"},{"id":"1","text":"需人工录取"},{"id":"2","text":"即报即得"}]'></div>
+            <div class="radio radio-primary whg-js-data" onclick="showEnrollOdds()" value="${whgTra.isbasicclass}"  name="isbasicclass" js-data='[{"id":"0","text":"需要面试"},{"id":"1","text":"需人工录取"},{"id":"2","text":"即报即得"}]'></div>
         </div>
     </div>
+
+    <div class="whgff-row" id="enrollodds">
+        <div class="whgff-row-label"><label style="color: red">*</label>录取几率：</div>
+        <div class="whgff-row-input">
+            <span>百分之<input class="easyui-numberspinner" name="enrollodds" value="${whgTra.enrollodds}" style="width: 50px; height: 25px" data-options="required:false,min:0,max:100"></span>
+        </div>
+    </div>
+
     <div class="whgff-row">
         <div class="whgff-row-label"><label style="color: red">*</label>培训场次：</div>
         <div class="whgff-row-input">
@@ -497,11 +504,10 @@
     });
 
     function showEnrollOdds(){
-        var val=$('input:radio[name="isbasictra"]:checked').val();
-        if(1 == val){
+        var val=$('input:radio[name="isbasicclass"]:checked').val();
+        if(2 == val){
             $("#enrollodds").show();
-        }
-        if(0 == val){
+        } else{
             $("#enrollodds").hide();
         }
     }

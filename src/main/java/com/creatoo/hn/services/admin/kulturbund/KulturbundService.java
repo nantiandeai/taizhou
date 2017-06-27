@@ -94,6 +94,8 @@ public class KulturbundService {
         return new PageInfo(list);
     }
 
+
+
     /**
      * 添加文化联盟单位
      * @param whgCultureUnit

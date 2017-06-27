@@ -7,7 +7,8 @@ import com.creatoo.hn.mapper.*;
 import com.creatoo.hn.model.*;
 import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.services.comm.SMSService;
-import com.creatoo.hn.utils.IdUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -53,6 +54,12 @@ public class PxbmService {
 
     @Autowired
     private SMSService smsService;
+
+    @Autowired
+    private WhgYwiLbtMapper whgYwiLbtMapper;
+
+    @Autowired
+    private WhgTraMapper whgTraMapper;
 
     private final  String SUCCESS="0";//成功
     /**
@@ -291,5 +298,75 @@ public class PxbmService {
             return null;
         }
         return str;
+    }
+
+    /**
+     * 获取培训首页轮播图
+     * @param type
+     * @return
+     */
+    public List<WhgYwiLbt> getLbt(String type){
+        try {
+            Example example = new Example(WhgYwiLbt.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("type",type);
+            criteria.andEqualTo("state",1);
+            return whgYwiLbtMapper.selectByExample(example);
+        }catch (Exception e){
+            log.error(e.toString());
+            return null;
+        }
+    }
+
+    /**
+     * 多维度获取培训
+     * @param page
+     * @param rows
+     * @param param
+     * @return
+     */
+    public PageInfo getTraList(Integer page, Integer rows, Map param){
+        if(null == page){
+            page = 1;
+        }
+        if(null == rows){
+            rows = 10;
+        }
+        try {
+            PageHelper.startPage(page,rows);
+            Example example = new Example(WhgTra.class);
+            Example.Criteria criteria = example.createCriteria();
+            String arttype = (String) param.get("arttype");
+            if(null != arttype){
+                criteria.andLike("arttype","%" + arttype + "%");
+            }
+            String area = (String)param.get("area");
+            if(null != area){
+                criteria.andEqualTo("area",area);
+            }
+            String sdate = (String)param.get("sdate");
+            if(null != sdate){
+                if("1".equals(sdate)){
+                    criteria.andLessThan("starttime",new Date());
+                    criteria.andGreaterThan("endtime",new Date());
+                }else if("2".equals(sdate)){
+                    criteria.andGreaterThanOrEqualTo("starttime",new Date());
+                }else if("3".equals(sdate)){
+                    criteria.andLessThan("endtime",new Date());
+                }
+            }
+            String isbasictra = (String)param.get("isbasictra");
+            if(null != isbasictra){
+                criteria.andEqualTo("isbasictra",isbasictra);
+            }
+            criteria.andEqualTo("state",6);
+            criteria.andEqualTo("delstate",0);
+            example.setOrderByClause("statemdfdate desc");
+            List<WhgTra> whgTraList = whgTraMapper.selectByExample(example);
+            return new PageInfo(whgTraList);
+        }catch (Exception e){
+            log.error(e.toString());
+            return null;
+        }
     }
 }

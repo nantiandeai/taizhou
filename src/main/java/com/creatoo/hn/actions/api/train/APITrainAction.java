@@ -1,24 +1,23 @@
 package com.creatoo.hn.actions.api.train;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.creatoo.hn.ext.bean.ResponseBean;
+import com.creatoo.hn.model.WhgTra;
+import com.creatoo.hn.model.WhgTraEnrol;
+import com.creatoo.hn.model.WhgYwiLbt;
+import com.creatoo.hn.services.home.agdpxyz.PxbmService;
+import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.creatoo.hn.ext.bean.ResponseBean;
-import com.creatoo.hn.model.WhgTraEnrol;
-import com.creatoo.hn.services.home.agdpxyz.PxbmService;
+import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 提供培训报名接口
@@ -69,14 +68,6 @@ public class APITrainAction {
     /**
      * 报名(POST提交数据)
      * 访问路径 /api/tra/enrol
-     * @param traid        -培训ID(whg_tra.id)
-     * @param realname     -真实姓名
-     * @param birthday     -出生年月日（yyyy-MM-dd）
-     * @param sex          -性别(2-女； 1-男; 3-保密)
-     * @param certtype     -证件类型(1-身份证,2-户口本,其它)
-     * @param cardno       -证件号码
-     * @param contactphone -联系手机号码
-     * @param userId        -报名的用户Id
      * @return JSON : {
      * "success" : "1"                        //1表示报名成功，其它失败
      * "errormsg" : "100|101|102|103|104|105|106|107"
@@ -180,6 +171,137 @@ public class APITrainAction {
         return res;
     }
 
+    /**
+     * 获取培训首页数据
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @SuppressWarnings("all")
+    @RequestMapping(value = "/indexData",method = RequestMethod.POST)
+    public ResponseBean indexData(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        Map map = new HashMap();
+        List<WhgYwiLbt> whgYwiLbtList = service.getLbt("12");
+        if(null != whgYwiLbtList && !whgYwiLbtList.isEmpty()){
+            map.put("whgYwiLbtList",whgYwiLbtList);
+        }
+        PageInfo pageInfo = service.getTraList(1,6,new HashMap());
+        if(null != pageInfo){
+            List list = pageInfo.getList();
+            map.put("whgTraList",list);
+        }
+        responseBean.setData(map);
+        return responseBean;
+    }
+
+    @CrossOrigin
+    @SuppressWarnings("all")
+    @RequestMapping(value = "/traListPt",method = RequestMethod.POST)
+    public ResponseBean traListPt(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        String userId = getParamValue(request,"userId",null);
+        String index = getParamValue(request,"index","1");
+        String size = getParamValue(request,"size","10");
+        String type = getParamValue(request,"type",null);
+        String district = getParamValue(request,"district",null);
+        String sdate = getParamValue(request,"sdate",null);
+        Map map = new HashMap();
+        if(null != type){
+            map.put("arttype",type);
+        }
+        if(null != district){
+            map.put("area",district);
+        }
+        if(null != sdate){
+            map.put("sdate",sdate);
+        }
+        map.put("isbasictra","0");
+        try {
+            PageInfo pageInfo = service.getTraList(Integer.valueOf(index),Integer.valueOf(size),map);
+            if(null == pageInfo){
+                responseBean.setSuccess(ResponseBean.FAIL);
+                responseBean.setErrormsg("获取培训列表失败");
+                return responseBean;
+            }
+            List traList = service.judgeCanSign(userId,(List)pageInfo.getList());
+            responseBean.setRows(traList);
+            responseBean.setPage(pageInfo.getPageNum());
+            responseBean.setPageSize(pageInfo.getPageSize());
+            responseBean.setTotal(pageInfo.getTotal());
+            return responseBean;
+        }catch (Exception e){
+            log.error(e.toString());
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("获取培训列表失败");
+            return responseBean;
+        }
+    }
+
+    @CrossOrigin
+    @SuppressWarnings("all")
+    @RequestMapping(value = "/traListCulMarket",method = RequestMethod.POST)
+    public ResponseBean traListCulMarket(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        String userId = getParamValue(request,"userId",null);
+        String index = getParamValue(request,"index","1");
+        String size = getParamValue(request,"size","10");
+        String type = getParamValue(request,"type",null);
+        String district = getParamValue(request,"district",null);
+        String sdate = getParamValue(request,"sdate",null);
+        Map map = new HashMap();
+        if(null != type){
+            map.put("arttype",type);
+        }
+        if(null != district){
+            map.put("area",district);
+        }
+        if(null != sdate){
+            map.put("sdate",sdate);
+        }
+        map.put("isbasictra","1");
+        try {
+            PageInfo pageInfo = service.getTraList(Integer.valueOf(index),Integer.valueOf(size),map);
+            if(null == pageInfo){
+                responseBean.setSuccess(ResponseBean.FAIL);
+                responseBean.setErrormsg("获取培训列表失败");
+                return responseBean;
+            }
+            List list = (List)pageInfo.getList();
+            if(null != list && !list.isEmpty()){
+                for(Object item : list){
+                    WhgTra whgTra = (WhgTra)item;
+
+                }
+            }
+            List traList = service.judgeCanSign(userId,(List)pageInfo.getList());
+            responseBean.setRows(traList);
+            responseBean.setPage(pageInfo.getPageNum());
+            responseBean.setPageSize(pageInfo.getPageSize());
+            responseBean.setTotal(pageInfo.getTotal());
+            return responseBean;
+        }catch (Exception e){
+            log.error(e.toString());
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("获取培训列表失败");
+            return responseBean;
+        }
+    }
+
+    /**
+     * 获取请求的参数
+     * @param request
+     * @param paramName
+     * @param defaultValue
+     * @return
+     */
+    private String getParamValue(HttpServletRequest request,String paramName,String defaultValue){
+        String value = request.getParameter(paramName);
+        if(null == value || value.trim().isEmpty()){
+            return defaultValue;
+        }
+        return value;
+    }
 
     /**
      * 所有日期类型使用指定格式转换

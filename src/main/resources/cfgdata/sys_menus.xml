@@ -93,6 +93,7 @@
                 <!--<menu type="1" state="1" href="/admin/yunwei/lbt/view/list/8" id="M_YWI_ADV_PC_VOL" text="PC志愿服务首页广告图配置" opts="view, add, edit, on, off,del"/>-->
                 <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/9" id="M_YWI_ADV_READING" text="数字阅读页大图配置" opts="view, add, edit, on, off"/>
                 <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/10" id="M_YWI_ADV_HALL" text="数字展馆页大图配置" opts="view, add, edit, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/12" id="M_YWI_TRAN_CULMARKET" text="文化超市首页大图配置" opts="view, add, edit, on, off"/>
                 <!--<menu type="1" state="1" href="/admin/yunwei/lbt/view/list/11" id="M_YWI_LB_PC_FY" text="PC非遗首页轮播图配置" opts="view, add, edit, on, off,del"/>-->
             </menu>
 
