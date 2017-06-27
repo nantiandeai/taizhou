@@ -278,6 +278,18 @@
             <script id="remark" name="remark" type="text/plain" style="width: 600px; height: 300px;">${act.remark}</script>
         </div>
     </div>
+    <div class="whgff-row">
+        <div class="whgff-row-label">
+            上传附件：
+        </div>
+        <div class="whgff-row-input">
+            <input  id="act_filepath1" name="filepath" value="${act.filepath }" data-options="required:true" style="width:600px;height:32px;" readonly="readonly">
+            <div class="whgff-row-input-file" id="filepath">
+                <i><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" id="fileUploadBtn1">选择文件</a></i>
+                <i>附件格式为doc,docx,xls,zip,xlsx，建议图文件大小为10MB以内</i>
+            </div>
+        </div>
+    </div>
 </form>
 
 <div id="whgwin-edit-btn" class="whgff-but" style="width: 400px; margin:20px 0px 50px 350px">

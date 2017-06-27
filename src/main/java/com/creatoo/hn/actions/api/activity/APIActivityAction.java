@@ -331,6 +331,7 @@ public class APIActivityAction {
 				param.put("timeList", myTimeList);
 				param.put("actdetail", actdetail);
 				param.put("acttj", acttj);
+				param.put("data", new Date());
 				res.setData(param);
 			}
 		} catch (Exception e) {
