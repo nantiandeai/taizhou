@@ -181,7 +181,7 @@
 
     /**获取分馆数据*/
     function getBranchData() {
-        debugger;
+//        debugger;
         var _data = [];
         $.ajaxSettings.async = false;
         $.getJSON('${basePath}/admin/branch/branchListStarted',function (data) {

@@ -92,8 +92,8 @@
 
         <shiro:hasPermission name="${resourceid}:edit"><a plain="true" method="whgListTool.resource">资源管理</a></shiro:hasPermission>
 
-        <shiro:hasPermission name="${resourceid}:recommend"><a plain="true" method="whgListTool.venRecommend" validFun="whgListTool.recommendVfun">推荐</a></shiro:hasPermission>
-        <shiro:hasPermission name="${resourceid}:recommendoff"><a plain="true" method="whgListTool.venRecommendoff" validFun="whgListTool.recommendOffVfun">取消推荐</a></shiro:hasPermission>
+        <shiro:hasPermission name="${resourceid}:recommend"><a plain="true" method="doCommend" validFun="whgListTool.recommendVfun">推荐</a></shiro:hasPermission>
+        <shiro:hasPermission name="${resourceid}:recommendoff"><a plain="true" method="commendOff" validFun="whgListTool.recommendOffVfun">取消推荐</a></shiro:hasPermission>
 
         <shiro:hasPermission name="${resourceid}:undel"><a plain="true" method="whgListTool.undel" validKey="delstate" validVal="1">还原</a></shiro:hasPermission>
         <c:choose>
@@ -119,6 +119,54 @@
     Gridopts.prototype.resource = function (idx) {
         var row = this.__getGridRow(idx);
         WhgComm.editDialog('${basePath}/admin/train/resource/view/list?reftype=3&id=' + row.id);
+    };
+
+    /**
+     * 推荐状态变更
+     * 0-1
+     * @param idx
+     */
+    function _updCommend(ids, fromState, toState){
+        $.messager.progress();
+        var params = {ids: ids, fromState: fromState, toState: toState};
+        $.ajax({
+            dataType:"json",
+            url:'${basePath}/admin/venue/updCommend',
+            data:params,
+            success:function (data) {
+                $("#whgdg").datagrid('reload');
+                if (!data.success || data.success != "1"){
+                    $.messager.alert("错误", data.errormsg||'操作失败', 'error');
+                }
+                $.messager.progress('close');
+            }
+        });
+    }
+
+    /**
+     * 推荐状态变更 [0]->1
+     * @param idx
+     */
+    function doCommend(idx){
+        var row = $("#whgdg").datagrid("getRows")[idx];
+        $.messager.confirm("确认信息", "确定要推荐选中的项吗？", function(r){
+            if (r){
+                _updCommend(row.id, 0, 1);
+            }
+        })
+    }
+
+    /**
+     * 推荐状态变更 [1]->0
+     * @param idx
+     */
+    function commendOff(idx){
+        var row = $("#whgdg").datagrid("getRows")[idx];
+        $.messager.confirm("确认信息", "确定要取消推荐选中的项吗？", function(r){
+            if (r){
+                _updCommend(row.id, 1, 0);
+            }
+        })
     }
 
 </script>
