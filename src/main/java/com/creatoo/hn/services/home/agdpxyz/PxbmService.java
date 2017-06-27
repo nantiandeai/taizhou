@@ -355,6 +355,10 @@ public class PxbmService {
                     criteria.andLessThan("endtime",new Date());
                 }
             }
+            String isbasictra = (String)param.get("isbasictra");
+            if(null != isbasictra){
+                criteria.andEqualTo("isbasictra",isbasictra);
+            }
             criteria.andEqualTo("state",6);
             criteria.andEqualTo("delstate",0);
             example.setOrderByClause("statemdfdate desc");
