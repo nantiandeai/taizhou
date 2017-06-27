@@ -70,7 +70,18 @@ public class WhgHistorical {
      * 重点文物类型
      */
     private String type;
-
+    /**
+     * 地址
+     */
+    private  String address;
+    /**
+     * 经度
+     */
+    private String actlon;
+    /**
+     * 纬度
+     */
+    private String actlat;
     /**
      * 获取主键
      *
@@ -293,5 +304,29 @@ public class WhgHistorical {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getActlon() {
+        return actlon;
+    }
+
+    public void setActlon(String actlon) {
+        this.actlon = actlon;
+    }
+
+    public String getActlat() {
+        return actlat;
+    }
+
+    public void setActlat(String actlat) {
+        this.actlat = actlat;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

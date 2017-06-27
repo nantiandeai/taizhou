@@ -256,4 +256,26 @@ public class WhgCultHeritageService {
         this.whgCultHeritageMapper.updateByExampleSelective(cultHeritage, example);
         return rb;
     }
+
+    /**
+     * 更新推荐状态
+     * @param ids 活动ID，多个用逗号分隔
+     * @param fromState 改状态之前的限制状态
+     * @param toState 修改后的状态
+     * @throws Exception
+     */
+    public int t_updCommend(String ids, String fromState, String toState, WhgSysUser user)throws Exception{
+        if(ids != null && toState != null){
+            WhgCultHeritage record = whgCultHeritageMapper.selectByPrimaryKey(ids);
+            record.setIsrecommend(Integer.parseInt(toState));
+            if(Integer.parseInt(toState) == 1){
+                Date now = new Date();
+                record.setStatemdfdate(now);
+            }
+            record.setStatemdfuser(user.getId());
+            return this.whgCultHeritageMapper.updateByPrimaryKey(record);
+        }else {
+            return 0;
+        }
+    }
 }

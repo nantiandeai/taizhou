@@ -1,6 +1,8 @@
 package com.creatoo.hn.actions.admin.feiyi;
 
+import com.creatoo.hn.ext.annotation.WhgOPT;
 import com.creatoo.hn.ext.bean.ResponseBean;
+import com.creatoo.hn.ext.emun.EnumOptType;
 import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.model.WhBranchRel;
 import com.creatoo.hn.model.WhgCultHeritage;
@@ -208,6 +210,30 @@ public class WhgCultHeritageAction {
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg("状态更改失败");
             log.error(res.getErrormsg() + " formstate: " + formstates + " tostate:" + tostate + " ids: " + ids, e);
+        }
+        return res;
+    }
+
+    /**
+     * 推荐状态修改
+     * @param request 请求对象
+     * @param ids 用逗号分隔的多个ID
+     * @param fromState 修改之前的状态
+     * @param toState 修改后的状态
+     * @return 执行操作返回结果的JSON信息
+     */
+    @RequestMapping(value = "/updCommend")
+    public ResponseBean updCommend(HttpServletRequest request, String ids, String fromState, String toState){
+        ResponseBean res = new ResponseBean();
+        try {
+            int c = this.whgCultHeritageService.t_updCommend(ids, fromState, toState, (WhgSysUser)request.getSession().getAttribute("user"));
+            if(c != 1){
+                res.setErrormsg("推荐失败");
+            }
+        }catch (Exception e){
+            res.setSuccess(ResponseBean.FAIL);
+            res.setErrormsg(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return res;
     }
