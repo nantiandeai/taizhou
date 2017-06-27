@@ -37,9 +37,14 @@ public class WhgCultureAct {
     private String culactuser;
 
     /**
-     * 删除状态
+     * 删除状态：1、已删除；2、未删除
      */
     private Integer isdel;
+
+    /**
+     * 大型活动类型
+     */
+    private String culactcontent;
 
     /**
      * 获取主键PK
@@ -150,20 +155,38 @@ public class WhgCultureAct {
     }
 
     /**
-     * 获取删除状态
+     * 获取删除状态：1、已删除；2、未删除
      *
-     * @return isdel - 删除状态
+     * @return isdel - 删除状态：1、已删除；2、未删除
      */
     public Integer getIsdel() {
         return isdel;
     }
 
     /**
-     * 设置删除状态
+     * 设置删除状态：1、已删除；2、未删除
      *
-     * @param isdel 删除状态
+     * @param isdel 删除状态：1、已删除；2、未删除
      */
     public void setIsdel(Integer isdel) {
         this.isdel = isdel;
+    }
+
+    /**
+     * 获取大型活动类型
+     *
+     * @return culactcontent - 大型活动类型
+     */
+    public String getCulactcontent() {
+        return culactcontent;
+    }
+
+    /**
+     * 设置大型活动类型
+     *
+     * @param culactcontent 大型活动类型
+     */
+    public void setCulactcontent(String culactcontent) {
+        this.culactcontent = culactcontent;
     }
 }

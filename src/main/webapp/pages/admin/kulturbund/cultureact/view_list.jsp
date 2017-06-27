@@ -82,7 +82,7 @@
     }
     
     function add() {
-        WhgComm.editDialog("${basePath}/admin/cultureunit/edit/add");
+        WhgComm.editDialog("${basePath}/admin/cultureact/edit/add");
     }
 
     function view(idx) {

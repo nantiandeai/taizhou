@@ -2,7 +2,6 @@ package com.creatoo.hn.actions.admin.kulturbund;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.model.WhgCultureAct;
-import com.creatoo.hn.model.WhgCultureActfrag;
 import com.creatoo.hn.services.admin.kulturbund.KulturbundService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -85,11 +84,6 @@ public class CultureActManager {
             WhgCultureAct whgCultureAct = kulturbundService.getOne(param);
             if(null != whgCultureAct){
                 modelAndView.addObject("whgCultureAct",whgCultureAct);
-                WhgCultureActfrag whgCultureActfrag = new WhgCultureActfrag();
-                whgCultureActfrag.setCulactid(whgCultureAct.getId());
-                whgCultureActfrag.setFragstate(1);
-                List<WhgCultureActfrag> whgCultureActfragList = kulturbundService.getAll(whgCultureActfrag);
-                modelAndView.addObject("whgCultureActfragList",whgCultureActfragList);
             }
         }
         modelAndView.setViewName("admin/kulturbund/cultureact/view_edit");
