@@ -360,6 +360,16 @@ public class APITrainAction {
     @RequestMapping(value = "/getRecommendTra",method = RequestMethod.POST)
     public ResponseBean getRecommendTra(HttpServletRequest request){
         ResponseBean responseBean = new ResponseBean();
+        PageInfo pageInfo = service.getRecommendTra(1,10);
+        if(null == pageInfo){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("获取推荐培训失败");
+            return responseBean;
+        }
+        responseBean.setRows((List)pageInfo.getList());
+        responseBean.setPage(pageInfo.getPageNum());
+        responseBean.setPageSize(pageInfo.getPageSize());
+        responseBean.setTotal(pageInfo.getTotal());
         return responseBean;
     }
 

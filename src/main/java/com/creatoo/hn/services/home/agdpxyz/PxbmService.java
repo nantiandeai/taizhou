@@ -549,4 +549,26 @@ public class PxbmService {
             return null;
         }
     }
+
+    /**
+     * 获取推荐的培训
+     * @param page
+     * @param rows
+     * @return
+     */
+    public PageInfo getRecommendTra(Integer page,Integer rows){
+        PageHelper.startPage(page,rows);
+        try {
+            Example example = new Example(WhgTra.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("state",6);
+            criteria.andEqualTo("recommend",1);
+            example.setOrderByClause("statemdfdate desc");
+            List<WhgTra> whgTraList = whgTraMapper.selectByExample(example);
+            return new PageInfo(whgTraList);
+        }catch (Exception e){
+            log.error(e.toString());
+            return null;
+        }
+    }
 }
