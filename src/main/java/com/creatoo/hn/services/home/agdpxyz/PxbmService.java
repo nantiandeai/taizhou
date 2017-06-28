@@ -475,6 +475,12 @@ public class PxbmService {
         }
     }
 
+    /**
+     * 判断用户是否可以报名培训
+     * @param userId
+     * @param traList
+     * @return
+     */
     public List judgeCanSign(String userId,List traList){
         List list = new ArrayList();
         if(null == traList){
@@ -488,5 +494,34 @@ public class PxbmService {
             list.add(jsonObject);
         }
         return list;
+    }
+
+    /**
+     * 获取一个培训数据
+     * @param traId
+     * @return
+     */
+    public WhgTra getOneTra(String traId){
+        WhgTra whgTra = new WhgTra();
+        whgTra.setId(traId);
+        try {
+            WhgTra res = whgTraMapper.selectOne(whgTra);
+            return res;
+        }catch (Exception e){
+            log.error(e.toString());
+            return null;
+        }
+    }
+
+    public List<WhgTraCourse> getCourseByTraId(String traId){
+        WhgTraCourse whgTraCourse = new WhgTraCourse();
+        whgTraCourse.setTraid(traId);
+        try {
+            List<WhgTraCourse> whgTraCourseList = whgTraCourseMapper.select(whgTraCourse);
+            return whgTraCourseList;
+        }catch (Exception e){
+            log.error(e.toString());
+            return null;
+        }
     }
 }
