@@ -6,7 +6,7 @@ import com.creatoo.hn.model.WhgCultTalents;
 import com.creatoo.hn.model.WhgHistorical;
 import com.creatoo.hn.model.WhgYwiType;
 import com.creatoo.hn.services.admin.yunwei.WhgYunweiTypeService;
-import com.creatoo.hn.services.api.user.APIFeiYiService;
+import com.creatoo.hn.services.api.feiyi.APIFeiYiService;
 import com.creatoo.hn.services.comm.CommService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;

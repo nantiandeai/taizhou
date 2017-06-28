@@ -94,6 +94,7 @@
                 <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/9" id="M_YWI_ADV_READING" text="数字阅读页大图配置" opts="view, add, edit, on, off"/>
                 <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/10" id="M_YWI_ADV_HALL" text="数字展馆页大图配置" opts="view, add, edit, on, off"/>
                 <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/12" id="M_YWI_TRAN_CULMARKET" text="文化超市首页大图配置" opts="view, add, edit, on, off"/>
+                <menu type="1" state="1" href="/admin/yunwei/lbt/view/list/13" id="M_YWI_SHOWSTYLE" text="秀我风采首页大图配置" opts="view, add, edit, on, off"/>
                 <!--<menu type="1" state="1" href="/admin/yunwei/lbt/view/list/11" id="M_YWI_LB_PC_FY" text="PC非遗首页轮播图配置" opts="view, add, edit, on, off,del"/>-->
             </menu>
 
@@ -105,6 +106,10 @@
                 <!--<menu type="1" state="1" href="/admin/yunwei/comment/view/list/5" id="M_YWI_COMMENT_TRA_VOLUNTARY" text="志愿培训评论管理" opts="view, add, edit, del, publish, publishoff"/>-->
                 <menu type="1" state="1" href="/admin/yunwei/comment/view/list/6" id="M_YWI_COMMENT_VEN" text="场馆评论管理" opts="view, add, edit, del, publish, publishoff"/>
                 <menu type="1" state="1" href="/admin/yunwei/comment/view/list/7" id="M_YWI_COMMENT_ROOM" text="场馆活动室评论管理" opts="view, add, edit, del, publish, publishoff"/>
+                <menu type="1" state="1" href="/admin/yunwei/comment/view/list/8" id="M_YWI_COMMENT_CULT" text="文化遗产评论管理" opts="view, add, edit, del, publish, publishoff"/>
+                <menu type="1" state="1" href="/admin/yunwei/comment/view/list/9" id="M_YWI_COMMENT_HISTORY" text="重点文物评论管理" opts="view, add, edit, del, publish, publishoff"/>
+                <menu type="1" state="1" href="/admin/yunwei/comment/view/list/10" id="M_YWI_COMMENT_TALENT" text="文化人才评论管理" opts="view, add, edit, del, publish, publishoff"/>
+                <menu type="1" state="1" href="/admin/yunwei/comment/view/list/11" id="M_YWI_COMMENT_STYLE" text="秀我风采评论管理" opts="view, add, edit, del, publish, publishoff"/>
             </menu>
             <menu type="1" state="1" href="/admin/yunwei/whpp/view/list" id="M_YWI_WHPP" text="文化品牌配置" opts="view, add, edit, del, on, off"/>
 
