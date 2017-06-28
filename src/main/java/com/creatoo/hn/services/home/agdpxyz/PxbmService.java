@@ -513,12 +513,37 @@ public class PxbmService {
         }
     }
 
+    /**
+     * 获取所有的课程
+     * @param traId
+     * @return
+     */
     public List<WhgTraCourse> getCourseByTraId(String traId){
         WhgTraCourse whgTraCourse = new WhgTraCourse();
         whgTraCourse.setTraid(traId);
         try {
             List<WhgTraCourse> whgTraCourseList = whgTraCourseMapper.select(whgTraCourse);
             return whgTraCourseList;
+        }catch (Exception e){
+            log.error(e.toString());
+            return null;
+        }
+    }
+
+    /**
+     * 为分页展示课程
+     * @param page
+     * @param rows
+     * @param traId
+     * @return
+     */
+    public PageInfo getCourseByTraId(Integer page,Integer rows,String traId){
+        PageHelper.startPage(page,rows);
+        WhgTraCourse whgTraCourse = new WhgTraCourse();
+        whgTraCourse.setTraid(traId);
+        try {
+            List<WhgTraCourse> whgTraCourseList = whgTraCourseMapper.select(whgTraCourse);
+            return new PageInfo(whgTraCourseList);
         }catch (Exception e){
             log.error(e.toString());
             return null;

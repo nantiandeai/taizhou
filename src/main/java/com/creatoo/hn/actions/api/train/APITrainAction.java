@@ -282,6 +282,11 @@ public class APITrainAction {
         }
     }
 
+    /**
+     * 获取培训详情
+     * @param request
+     * @return
+     */
     @CrossOrigin
     @SuppressWarnings("all")
     @RequestMapping(value = "/traDetail",method = RequestMethod.POST)
@@ -311,6 +316,50 @@ public class APITrainAction {
             map.put("canSign",canSign);
         }
         responseBean.setData(map);
+        return responseBean;
+    }
+
+    /**
+     * 获取培训课程
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @SuppressWarnings("all")
+    @RequestMapping(value = "/traCourseList",method = RequestMethod.POST)
+    public ResponseBean traCourseList(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        String id = getParamValue(request,"id",null);
+        String index = getParamValue(request,"index","1");
+        String size = getParamValue(request,"size","10");
+        if(null == id){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("培训ID不能为空");
+            return responseBean;
+        }
+        PageInfo pageInfo = service.getCourseByTraId(Integer.valueOf(index),Integer.valueOf(size),id);
+        if(null == pageInfo){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("查询培训课程失败");
+            return responseBean;
+        }
+        responseBean.setRows((List)pageInfo.getList());
+        responseBean.setPage(pageInfo.getPageNum());
+        responseBean.setPageSize(pageInfo.getPageSize());
+        responseBean.setTotal(pageInfo.getTotal());
+        return responseBean;
+    }
+
+    /**
+     * 获取推荐的培训
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @SuppressWarnings("all")
+    @RequestMapping(value = "/getRecommendTra",method = RequestMethod.POST)
+    public ResponseBean getRecommendTra(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
         return responseBean;
     }
 
