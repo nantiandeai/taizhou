@@ -55,22 +55,22 @@
 <div id="whgdg-opt" style="display: none;">
     <shiro:hasPermission name="${resourceid}:view"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2,3" method="view">查看</a></shiro:hasPermission>
     <c:choose>
-        <c:when test="${pageTitle eq 'edit'}">
+        <c:when test="${listType eq 'edit'}">
             <shiro:hasPermission name="${resourceid}:edit"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0" method="edit">编辑</a></shiro:hasPermission>
             <shiro:hasPermission name="${resourceid}:checkgo"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0" method="checkgo">送审</a></shiro:hasPermission>
             <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2" method="del">删除</a></shiro:hasPermission>
         </c:when>
-        <c:when test="${pageTitle eq 'check'}">
+        <c:when test="${listType eq 'check'}">
             <shiro:hasPermission name="${resourceid}:checkon"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="1" method="checkon">审核通过</a></shiro:hasPermission>
             <shiro:hasPermission name="${resourceid}:checkoff"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="1" method="checkoff">审核不通过</a></shiro:hasPermission>
             <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2" method="del">删除</a></shiro:hasPermission>
         </c:when>
-        <c:when test="${pageTitle eq 'publish'}">
+        <c:when test="${listType eq 'publish'}">
             <shiro:hasPermission name="${resourceid}:publish"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="2" method="publish">发布</a></shiro:hasPermission>
             <shiro:hasPermission name="${resourceid}:publishoff"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="3" method="publishoff">取消发布</a></shiro:hasPermission>
             <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2" method="del">删除</a></shiro:hasPermission>
         </c:when>
-        <c:when test="${pageTitle eq 'cycle'}">
+        <c:when test="${listType eq 'cycle'}">
             <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2,3" method="del">删除</a></shiro:hasPermission>
             <shiro:hasPermission name="${resourceid}:undel"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2,3" method="undel">还原</a></shiro:hasPermission>
         </c:when>
