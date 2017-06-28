@@ -431,6 +431,27 @@ public class WhhdService {
 	}
 
 	/**
+	 * dg 活动详情推荐
+	 * @param actId
+	 * @return
+	 * @throws Exception taizhou
+	 */
+	public List<WhgActActivity> acttjianfortz(String actId)throws Exception{
+		WhgActActivity activity = new WhgActActivity();
+		activity.setIsrecommend(1);
+		activity.setState(6);
+		activity.setDelstate(0);
+		Example example = new Example(WhgActActivity.class);
+		Example.Criteria c = example.createCriteria().andEqualTo(activity);
+		if (actId != null) {
+			c.andNotEqualTo("id", actId);
+		}
+		example.setOrderByClause("statemdfdate desc");
+		return activityMapper.selectByExample(example);
+	}
+
+
+	/**
 	 * 文化活动  根据活动id获取活动详情
 	 * @param actvid
 	 * @return

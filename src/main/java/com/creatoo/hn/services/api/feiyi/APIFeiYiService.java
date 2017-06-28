@@ -1,4 +1,4 @@
-package com.creatoo.hn.services.api.user;
+package com.creatoo.hn.services.api.feiyi;
 
 import com.creatoo.hn.mapper.WhgCultHeritageMapper;
 import com.creatoo.hn.mapper.WhgCultTalentsMapper;

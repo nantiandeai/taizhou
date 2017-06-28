@@ -267,7 +267,7 @@ public class APIActivityAction {
 						param.put("scState", 1);
 					}
 				}
-				List<WhActivity> acttj = this.whhdService.acttjian(request);
+				List<WhgActActivity> acttj = this.whhdService.acttjianfortz(actvid);
 				List<Object> userList =  new ArrayList<Object>();
 				//活动场次信息
 				List<String> dateList = whhdService.getActDate(actvid);
