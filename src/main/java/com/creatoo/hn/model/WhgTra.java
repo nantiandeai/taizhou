@@ -2,8 +2,9 @@ package com.creatoo.hn.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "whg_tra")
 public class WhgTra {
@@ -260,6 +261,7 @@ public class WhgTra {
      * 培训老师介绍
      */
     private String teacherdesc;
+
 
     /**
      * 获取培训ID

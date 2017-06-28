@@ -1,5 +1,7 @@
 package com.creatoo.hn.services.home.agdpxyz;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.creatoo.hn.ext.emun.EnumBMState;
 import com.creatoo.hn.ext.emun.EnumDelState;
 import com.creatoo.hn.ext.emun.EnumState;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 /**
@@ -319,6 +323,107 @@ public class PxbmService {
     }
 
     /**
+     * 判断用户是否能报名
+     * @param userId
+     * @param whgTra
+     * @return:
+     *  0:可报名
+     *  100:未登录
+     *  101:未实名认证
+     *  102:年龄段不合适
+     *  103:超过报名人数
+     *  104:还未到报名时间
+     *  105:报名时间已过
+     */
+    public Integer canSign(String userId,WhgTra whgTra){
+        if(null == userId){
+            return 100;
+        }
+        WhUser whUser = new WhUser();
+        whUser.setId(userId);
+        WhUser userTemp = userMapper.selectOne(whUser);
+        if(1 == whgTra.getIsrealname()){
+            if(1 != whUser.getIsrealname()){
+                return 101;
+            }
+        }
+        if(null != whgTra.getAge()){
+            Integer userAge = getUserAge(whUser);
+            if(null == userAge){
+                return 102;
+            }
+            if(!ageIsIn(whgTra.getAge(),userAge)){
+                return 102;
+            }
+        }
+        Integer enrolCount = countTraEnrol(whgTra.getId());
+        if(null != enrolCount){
+            if(enrolCount >= whgTra.getMaxnumber()){
+                return 103;
+            }
+        }
+        Date enrolStart = whgTra.getEnrollstarttime();
+        Date enrolEnd = whgTra.getEnrollendtime();
+        if(isAfter(enrolStart,new Date())){
+            return 104;
+        }
+        if(isAfter(new Date(),enrolEnd)){
+            return 105;
+        }
+        return 0;
+    }
+
+    private Boolean isAfter(Date date1,Date date2){
+        LocalDate localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDate2 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        if(localDate1.isAfter(localDate2)){
+            return true;
+        }
+        return false;
+    }
+
+    private Integer countTraEnrol(String traId){
+        try {
+            Example example = new Example(WhgTraEnrol.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("traid",traId);
+            List<WhgTraEnrol> whgTraEnrolList = WhgTraEnrolMapper.selectByExample(example);
+            if(null == whgTraEnrolList){
+                return null;
+            }
+            return whgTraEnrolList.size();
+        }catch (Exception e){
+            log.error(e.toString());
+            return null;
+        }
+    }
+
+    private Boolean ageIsIn(String ageGrades,Integer userAge){
+        try {
+            Integer minAge = Integer.valueOf(ageGrades.substring(0,ageGrades.indexOf(",")));
+            Integer maxAge = Integer.valueOf(ageGrades.substring(ageGrades.indexOf(",") + 1));
+            if(minAge <= userAge && minAge <= maxAge){
+                return true;
+            }else {
+                return false;
+            }
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    private Integer getUserAge(WhUser whUser){
+        Date brithDaty = whUser.getBirthday();
+        Date now = new Date();
+        if(null == brithDaty){
+            return null;
+        }
+        int brithYear = brithDaty.getYear();
+        int nowYear = now.getYear();
+        return nowYear - brithYear;
+    }
+
+    /**
      * 多维度获取培训
      * @param page
      * @param rows
@@ -368,5 +473,20 @@ public class PxbmService {
             log.error(e.toString());
             return null;
         }
+    }
+
+    public List judgeCanSign(String userId,List traList){
+        List list = new ArrayList();
+        if(null == traList){
+            return null;
+        }
+        for(Object item : traList){
+            WhgTra whgTra = (WhgTra)item;
+            Integer canSign = this.canSign(userId,whgTra);
+            JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(whgTra));
+            jsonObject.put("canSign",canSign);
+            list.add(jsonObject);
+        }
+        return list;
     }
 }
