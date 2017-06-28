@@ -475,6 +475,12 @@ public class PxbmService {
         }
     }
 
+    /**
+     * 判断用户是否可以报名培训
+     * @param userId
+     * @param traList
+     * @return
+     */
     public List judgeCanSign(String userId,List traList){
         List list = new ArrayList();
         if(null == traList){
@@ -488,5 +494,81 @@ public class PxbmService {
             list.add(jsonObject);
         }
         return list;
+    }
+
+    /**
+     * 获取一个培训数据
+     * @param traId
+     * @return
+     */
+    public WhgTra getOneTra(String traId){
+        WhgTra whgTra = new WhgTra();
+        whgTra.setId(traId);
+        try {
+            WhgTra res = whgTraMapper.selectOne(whgTra);
+            return res;
+        }catch (Exception e){
+            log.error(e.toString());
+            return null;
+        }
+    }
+
+    /**
+     * 获取所有的课程
+     * @param traId
+     * @return
+     */
+    public List<WhgTraCourse> getCourseByTraId(String traId){
+        WhgTraCourse whgTraCourse = new WhgTraCourse();
+        whgTraCourse.setTraid(traId);
+        try {
+            List<WhgTraCourse> whgTraCourseList = whgTraCourseMapper.select(whgTraCourse);
+            return whgTraCourseList;
+        }catch (Exception e){
+            log.error(e.toString());
+            return null;
+        }
+    }
+
+    /**
+     * 为分页展示课程
+     * @param page
+     * @param rows
+     * @param traId
+     * @return
+     */
+    public PageInfo getCourseByTraId(Integer page,Integer rows,String traId){
+        PageHelper.startPage(page,rows);
+        WhgTraCourse whgTraCourse = new WhgTraCourse();
+        whgTraCourse.setTraid(traId);
+        try {
+            List<WhgTraCourse> whgTraCourseList = whgTraCourseMapper.select(whgTraCourse);
+            return new PageInfo(whgTraCourseList);
+        }catch (Exception e){
+            log.error(e.toString());
+            return null;
+        }
+    }
+
+    /**
+     * 获取推荐的培训
+     * @param page
+     * @param rows
+     * @return
+     */
+    public PageInfo getRecommendTra(Integer page,Integer rows){
+        PageHelper.startPage(page,rows);
+        try {
+            Example example = new Example(WhgTra.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("state",6);
+            criteria.andEqualTo("recommend",1);
+            example.setOrderByClause("statemdfdate desc");
+            List<WhgTra> whgTraList = whgTraMapper.selectByExample(example);
+            return new PageInfo(whgTraList);
+        }catch (Exception e){
+            log.error(e.toString());
+            return null;
+        }
     }
 }

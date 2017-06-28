@@ -2,6 +2,7 @@ package com.creatoo.hn.actions.api.train;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.model.WhgTra;
+import com.creatoo.hn.model.WhgTraCourse;
 import com.creatoo.hn.model.WhgTraEnrol;
 import com.creatoo.hn.model.WhgYwiLbt;
 import com.creatoo.hn.services.home.agdpxyz.PxbmService;
@@ -267,13 +268,6 @@ public class APITrainAction {
                 responseBean.setErrormsg("获取培训列表失败");
                 return responseBean;
             }
-            List list = (List)pageInfo.getList();
-            if(null != list && !list.isEmpty()){
-                for(Object item : list){
-                    WhgTra whgTra = (WhgTra)item;
-
-                }
-            }
             List traList = service.judgeCanSign(userId,(List)pageInfo.getList());
             responseBean.setRows(traList);
             responseBean.setPage(pageInfo.getPageNum());
@@ -286,6 +280,97 @@ public class APITrainAction {
             responseBean.setErrormsg("获取培训列表失败");
             return responseBean;
         }
+    }
+
+    /**
+     * 获取培训详情
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @SuppressWarnings("all")
+    @RequestMapping(value = "/traDetail",method = RequestMethod.POST)
+    public ResponseBean traDetail(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        String id = getParamValue(request,"id",null);
+        String userId = getParamValue(request,"userId",null);
+        if(null == id){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("培训ID不能为空");
+            return responseBean;
+        }
+        WhgTra whgTra = service.getOneTra(id);
+        if(null == whgTra){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("查询培训数据失败");
+            return responseBean;
+        }
+        List<WhgTraCourse> whgTraCourseList = service.getCourseByTraId(whgTra.getId());
+        Integer canSign = service.canSign(userId,whgTra);
+        Map map = new HashMap();
+        map.put("whgTra",whgTra);
+        if(null != whgTraCourseList && !whgTraCourseList.isEmpty()){
+            map.put("whgTraCourseList",whgTraCourseList);
+        }
+        if(null != canSign){
+            map.put("canSign",canSign);
+        }
+        responseBean.setData(map);
+        return responseBean;
+    }
+
+    /**
+     * 获取培训课程
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @SuppressWarnings("all")
+    @RequestMapping(value = "/traCourseList",method = RequestMethod.POST)
+    public ResponseBean traCourseList(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        String id = getParamValue(request,"id",null);
+        String index = getParamValue(request,"index","1");
+        String size = getParamValue(request,"size","10");
+        if(null == id){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("培训ID不能为空");
+            return responseBean;
+        }
+        PageInfo pageInfo = service.getCourseByTraId(Integer.valueOf(index),Integer.valueOf(size),id);
+        if(null == pageInfo){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("查询培训课程失败");
+            return responseBean;
+        }
+        responseBean.setRows((List)pageInfo.getList());
+        responseBean.setPage(pageInfo.getPageNum());
+        responseBean.setPageSize(pageInfo.getPageSize());
+        responseBean.setTotal(pageInfo.getTotal());
+        return responseBean;
+    }
+
+    /**
+     * 获取推荐的培训
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @SuppressWarnings("all")
+    @RequestMapping(value = "/getRecommendTra",method = RequestMethod.POST)
+    public ResponseBean getRecommendTra(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        PageInfo pageInfo = service.getRecommendTra(1,10);
+        if(null == pageInfo){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("获取推荐培训失败");
+            return responseBean;
+        }
+        responseBean.setRows((List)pageInfo.getList());
+        responseBean.setPage(pageInfo.getPageNum());
+        responseBean.setPageSize(pageInfo.getPageSize());
+        responseBean.setTotal(pageInfo.getTotal());
+        return responseBean;
     }
 
     /**
