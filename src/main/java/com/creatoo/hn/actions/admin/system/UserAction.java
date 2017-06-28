@@ -7,6 +7,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.creatoo.hn.ext.bean.ResponseBean;
+import com.creatoo.hn.model.WhgSysUser;
+import com.creatoo.hn.services.admin.system.WhgSystemUserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +46,8 @@ public class UserAction {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private WhgSystemUserService whgSystemUserService;
 	/**
 	 * 用户列表界面
 	 */
@@ -61,6 +66,32 @@ public class UserAction {
 	@RequestMapping("/lookUser")
 	public Object lookUser(String id){
 		return this.userService.getUserId(id);
+	}
+
+	@RequestMapping("/getUser")
+	public ResponseBean getUser(HttpServletRequest request){
+		ResponseBean responseBean = new ResponseBean();
+		String id = request.getParameter("id");
+		if(null == id || id.trim().isEmpty()){
+			responseBean.setSuccess(ResponseBean.FAIL);
+			responseBean.setErrormsg("参数不足");
+			return responseBean;
+		}
+		try {
+			WhgSysUser whgSysUser = whgSystemUserService.t_srchOne(id);
+			if(null == whgSysUser){
+				responseBean.setSuccess(ResponseBean.FAIL);
+				responseBean.setErrormsg("查询系统用户失败");
+				return responseBean;
+			}
+			responseBean.setData(whgSysUser);
+			return responseBean;
+		}catch (Exception e){
+			log.error(e.toString());
+			responseBean.setSuccess(ResponseBean.FAIL);
+			responseBean.setErrormsg("查询系统用户失败");
+			return responseBean;
+		}
 	}
 	
 	/**

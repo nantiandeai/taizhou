@@ -95,7 +95,7 @@
 
     $('#whgff').form({
         novalidate: true,
-        url : getFullUrl('/admin/cultureunit/doEdit'),
+        url : getFullUrl('/admin/cultureact/doEdit/${editType}'),
         onSubmit : function(param) {
             var _valid = $(this).form('enableValidation').form('validate');
             if(_valid){
@@ -103,13 +103,19 @@
                 if(null == act_imgurl1 || "" == act_imgurl1){
                     $.messager.alert("错误", '封面图片不能为空！', 'error');
                     _valid = false;
-                    $('#whgwin-edit-btn-save').off('click').one('click',submitFun);
+                    $('#whgwin-edit-btn-save').off('click').one('click',saveFun);
+                    return _valid;
+                }
+                if (!remark.hasContents()){
+                    $.messager.alert("错误", '活动内容不能为空', 'error');
+                    _valid = false;
+                    $('#whgwin-edit-btn-save').off('click').one('click',saveFun);
                     return _valid;
                 }
                 $.messager.progress();
             }else{
                 //失败时再注册提交事件
-                $('#whgwin-edit-btn-save').off('click').one('click',submitFun);
+                $('#whgwin-edit-btn-save').off('click').one('click',saveFun);
             }
             return _valid;
         },

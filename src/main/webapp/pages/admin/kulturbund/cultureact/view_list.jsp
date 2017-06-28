@@ -27,10 +27,10 @@
        data-options="fit:true, striped:true, rownumbers:true, fitColumns:true, singleSelect:false, checkOnSelect:true, selectOnCheck:true, pagination:true, toolbar:'#whgdg-tb', url:'${basePath}/admin/cultureact/srchList4p?listType=${listType}'">
     <thead>
         <tr>
-            <th data-options="field:'unitname',width:80">活动标题</th>
-            <th data-options="field:'unitdesc',width:80">创建人</th>
-            <th data-options="field:'unitcreatetime', width:60,formatter:WhgComm.FMTDateTime">创建时间</th>
-            <th data-options="field:'unitstate', width:50,formatter:myState" >状态</th>
+            <th data-options="field:'culactname',width:80">活动标题</th>
+            <th data-options="field:'culactuser',width:80,formatter:getUserName">创建人</th>
+            <th data-options="field:'culactcreattime', width:60,formatter:WhgComm.FMTDateTime">创建时间</th>
+            <th data-options="field:'culactstate', width:50,formatter:myState" >状态</th>
             <th data-options="field:'_opt', width:450, formatter:WhgComm.FMTOpt,fixed:true, optDivId:'whgdg-opt'">操作</th>
         </tr>
     </thead>
@@ -53,11 +53,33 @@
 
 <!-- 操作按钮 -->
 <div id="whgdg-opt" style="display: none;">
-    <shiro:hasPermission name="${resourceid}:view"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="unitstate" validVal="1,2" method="view">查看</a></shiro:hasPermission>
-    <shiro:hasPermission name="${resourceid}:edit"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="unitstate" validVal="2" method="edit">编辑</a></shiro:hasPermission>
-    <shiro:hasPermission name="${resourceid}:on"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="unitstate" validVal="2" method="doOn">启用</a></shiro:hasPermission>
-    <shiro:hasPermission name="${resourceid}:off"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="unitstate" validVal="1" method="doOff">停用</a></shiro:hasPermission>
-    <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="unitstate" validVal="2" method="del">删除</a></shiro:hasPermission>
+    <shiro:hasPermission name="${resourceid}:view"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2,3" method="view">查看</a></shiro:hasPermission>
+    <c:choose>
+        <c:when test="${pageTitle eq 'edit'}">
+            <shiro:hasPermission name="${resourceid}:edit"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0" method="edit">编辑</a></shiro:hasPermission>
+            <shiro:hasPermission name="${resourceid}:checkgo"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0" method="checkgo">送审</a></shiro:hasPermission>
+            <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2" method="del">删除</a></shiro:hasPermission>
+        </c:when>
+        <c:when test="${pageTitle eq 'check'}">
+            <shiro:hasPermission name="${resourceid}:checkon"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="1" method="checkon">审核通过</a></shiro:hasPermission>
+            <shiro:hasPermission name="${resourceid}:checkoff"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="1" method="checkoff">审核不通过</a></shiro:hasPermission>
+            <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2" method="del">删除</a></shiro:hasPermission>
+        </c:when>
+        <c:when test="${pageTitle eq 'publish'}">
+            <shiro:hasPermission name="${resourceid}:publish"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="2" method="publish">发布</a></shiro:hasPermission>
+            <shiro:hasPermission name="${resourceid}:publishoff"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="3" method="publishoff">取消发布</a></shiro:hasPermission>
+            <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2" method="del">删除</a></shiro:hasPermission>
+        </c:when>
+        <c:when test="${pageTitle eq 'cycle'}">
+            <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2,3" method="del">删除</a></shiro:hasPermission>
+            <shiro:hasPermission name="${resourceid}:undel"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2,3" method="undel">还原</a></shiro:hasPermission>
+        </c:when>
+    </c:choose>
+
+
+
+
+
 </div>
 <!-- 操作按钮-END -->
 
@@ -72,14 +94,42 @@
             return "未知";
         }
     }
-    
-    function myStateAll() {
-        var _myState = [];
-        _myState.push({id:0,text:"全部"});
-        _myState.push({id:1,text:"已启用"});
-        _myState.push({id:2,text:"已停用"});
-        return _myState;
+
+    function getUserName(userId) {
+        $.ajaxSetup({
+            async: false
+        });
+        var account = "";
+        $.getJSON("${basePath}/admin/getUser?id="+userId,function (data) {
+            if("1" != data.success){
+                $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                return "未知"
+            }
+            account = data.data.account;
+        });
+        $.ajaxSetup({
+            async: true
+        });
+        return account;
     }
+
+    function myState(state) {
+        if(0 == state){
+            return "可编辑";
+        }
+        if(1 == state){
+            return "待审核";
+        }
+        if(2 == state){
+            return "待发布";
+        }
+        if(3 == state){
+            return "已发布";
+        }
+        return "未知状态";
+    }
+
+
     
     function add() {
         WhgComm.editDialog("${basePath}/admin/cultureact/edit/add");
@@ -87,18 +137,18 @@
 
     function view(idx) {
         var curRow = $('#whgdg').datagrid('getRows')[idx];
-        WhgComm.editDialog('${basePath}/admin/cultureunit/edit/view?id='+curRow.id);
+        WhgComm.editDialog('${basePath}/admin/cultureact/edit/view?id='+curRow.id);
     }
 
     function edit(idx) {
         var curRow = $('#whgdg').datagrid('getRows')[idx];
-        WhgComm.editDialog('${basePath}/admin/cultureunit/edit/edit?id='+curRow.id);
+        WhgComm.editDialog('${basePath}/admin/cultureact/edit/edit?id='+curRow.id);
     }
 
-    function doOn(idx) {
+    function checkgo(idx) {
         var curRow = $('#whgdg').datagrid('getRows')[idx];
-        $.messager.confirm("确认信息", "确定要启用选中的项吗？", function(r){
-            $.getJSON("${basePath}/admin/cultureunit/updateState?id=" + curRow.id + "&state=1",function (data) {
+        $.messager.confirm("确认信息", "确定要送审吗？", function(r){
+            $.getJSON("${basePath}/admin/cultureact/doUpdateState?id=" + curRow.id +"&state=checkpending",function (data) {
                 if("1" != data.success){
                     $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
                     return;
@@ -106,13 +156,12 @@
                 $('#whgdg').datagrid('reload');
             });
         });
-
     }
 
-    function doOff(idx) {
+    function checkon(idx) {
         var curRow = $('#whgdg').datagrid('getRows')[idx];
-        $.messager.confirm("确认信息", "确定要停用选中的项吗？", function(r){
-            $.getJSON("${basePath}/admin/cultureunit/updateState?id=" + curRow.id + "&state=2",function (data) {
+        $.messager.confirm("确认信息", "确定送审通过吗？", function(r){
+            $.getJSON("${basePath}/admin/cultureact/doUpdateState?id=" + curRow.id +"&state=checked",function (data) {
                 if("1" != data.success){
                     $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
                     return;
@@ -120,13 +169,77 @@
                 $('#whgdg').datagrid('reload');
             });
         });
+    }
 
+    function checkoff(idx) {
+        var curRow = $('#whgdg').datagrid('getRows')[idx];
+        $.messager.confirm("确认信息", "确定审核不通过吗？", function(r){
+            $.getJSON("${basePath}/admin/cultureact/doUpdateState?id=" + curRow.id +"&state=initial",function (data) {
+                if("1" != data.success){
+                    $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                    return;
+                }
+                $('#whgdg').datagrid('reload');
+            });
+        });
+    }
+
+    function publish(idx) {
+        var curRow = $('#whgdg').datagrid('getRows')[idx];
+        $.messager.confirm("确认信息", "确定发布吗？", function(r){
+            $.getJSON("${basePath}/admin/cultureact/doUpdateState?id=" + curRow.id +"&state=published",function (data) {
+                if("1" != data.success){
+                    $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                    return;
+                }
+                $('#whgdg').datagrid('reload');
+            });
+        });
+    }
+
+    function publishoff(idx) {
+        var curRow = $('#whgdg').datagrid('getRows')[idx];
+        $.messager.confirm("确认信息", "确定取消发布吗？", function(r){
+            $.getJSON("${basePath}/admin/cultureact/doUpdateState?id=" + curRow.id +"&state=initial",function (data) {
+                if("1" != data.success){
+                    $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                    return;
+                }
+                $('#whgdg').datagrid('reload');
+            });
+        });
     }
 
     function del(idx) {
         var curRow = $('#whgdg').datagrid('getRows')[idx];
         $.messager.confirm("确认信息", "确定要删除选中的项吗？", function(r){
-            $.getJSON("${basePath}/admin/cultureunit/delUnit?id=" + curRow.id,function (data) {
+            $.getJSON("${basePath}/admin/cultureact/doDel?id=" + curRow.id + "&state=del",function (data) {
+                if("1" != data.success){
+                    $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                    return;
+                }
+                $('#whgdg').datagrid('reload');
+            });
+        });
+    }
+
+    function undel(idx) {
+        var curRow = $('#whgdg').datagrid('getRows')[idx];
+        $.messager.confirm("确认信息", "确定要还原选中的项吗？", function(r){
+            $.getJSON("${basePath}/admin/cultureact/doDel?id=" + curRow.id + "&state=undel",function (data) {
+                if("1" != data.success){
+                    $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                    return;
+                }
+                $('#whgdg').datagrid('reload');
+            });
+        });
+    }
+
+    function doDelForver(idx) {
+        var curRow = $('#whgdg').datagrid('getRows')[idx];
+        $.messager.confirm("确认信息", "确定要永久删除选中的项吗？", function(r){
+            $.getJSON("${basePath}/admin/cultureact/doDel?id=" + curRow.id + "&state=delforever",function (data) {
                 if("1" != data.success){
                     $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
                     return;
