@@ -133,4 +133,8 @@ public class WhgYunweiTagService {
             throw new Exception("删除数据失败！");
         }
     }
+
+    public List dict(){
+        return this.whgYwiTagMapper.selectAll();
+    }
 }

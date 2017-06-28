@@ -83,6 +83,7 @@ public class CgfwService {
         rtnMap.put("total", pageInfo.getTotal());
         rtnMap.put("rows", rowsList);
         rtnMap.put("pager", pager);
+        rtnMap.put("date", new Date());
         return rtnMap;
     }
 

@@ -196,7 +196,7 @@
 
     function setBranch() {
         $.getJSON("${basePath}/admin/branch/branchListUser",function (data) {
-            debugger;
+//            debugger;
             if("1" != data.success){
                 $.messager.alert("错误", data.errormsg, 'error');
                 return;
@@ -204,7 +204,7 @@
             var rows = data.rows;
             $("#branch").combobox("loadData",rows);
 
-            debugger;
+//            debugger;
             var branchId = "${whBranchRel.branchid}";
             if(0 < rows.length){
                 branchId = branchId != ""?branchId:rows[0].id;

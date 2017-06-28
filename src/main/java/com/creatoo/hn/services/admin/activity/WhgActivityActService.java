@@ -73,8 +73,13 @@ public class WhgActivityActService {
     }
     
     public PageInfo getActivityScreenings(int page,int rows,WhgActTime whgActTime) throws  Exception{
+
+        Example example = new Example(WhgActTime.class);
+        Example.Criteria c = example.createCriteria();
+        c.andEqualTo(whgActTime);
+        example.setOrderByClause("playdate");
         PageHelper.startPage(page,rows);
-        List list = whgActTimeMapper.select(whgActTime);
+        List list = whgActTimeMapper.selectByExample(example);
         return new PageInfo<Object>(list);
     }
 

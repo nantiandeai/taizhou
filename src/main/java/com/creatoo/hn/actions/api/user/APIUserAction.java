@@ -7,6 +7,8 @@ import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.ext.bean.RetMobileEntity;
 import com.creatoo.hn.ext.bean.RetMobileEntity.Pager;
 import com.creatoo.hn.model.*;
+import com.creatoo.hn.services.admin.yunwei.WhgYunweiTagService;
+import com.creatoo.hn.services.admin.yunwei.WhgYunweiTypeService;
 import com.creatoo.hn.services.api.user.ApiUserService;
 import com.creatoo.hn.services.comm.CommPropertiesService;
 import com.creatoo.hn.services.comm.CommService;
@@ -90,6 +92,12 @@ public class APIUserAction {
 
     @Autowired
     private UserRealService realService;
+
+    @Autowired
+    private WhgYunweiTypeService whgYunweiTypeService;
+
+    @Autowired
+    private WhgYunweiTagService whgYunweiTagService;
     /**
      * 发送手机验证码
      * @param request
@@ -1955,6 +1963,46 @@ public class APIUserAction {
         List<Object> list;
         try {
             list = this.commentSerice.searchCommentHuifu(rmids);
+            res.put("code", 0);
+            res.put("data", list);
+        } catch (Exception e) {
+            res.put("code", 101);
+            log.error(e.getMessage(), e);
+        }
+        return res;
+    }
+
+    /**
+     * 类型字点
+     * @return
+     */
+    @RequestMapping(value = "/dict",method = RequestMethod.POST)
+    @CrossOrigin
+    public Object dict() {
+        Map<String, Object> res = new HashMap<>();
+        List<WhgYwiType> list;
+        try {
+            list = this.whgYunweiTypeService.findWhgYwiTypeList(null);
+            res.put("code", 0);
+            res.put("data", list);
+        } catch (Exception e) {
+            res.put("code", 101);
+            log.error(e.getMessage(), e);
+        }
+        return res;
+    }
+
+    /**
+     * 标签字点
+     * @return
+     */
+    @RequestMapping(value = "/tagdict",method = RequestMethod.POST)
+    @CrossOrigin
+    public Object tagdict() {
+        Map<String, Object> res = new HashMap<>();
+        List list;
+        try {
+            list = this.whgYunweiTagService.dict();
             res.put("code", 0);
             res.put("data", list);
         } catch (Exception e) {
