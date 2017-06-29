@@ -20,7 +20,8 @@
     <script type="text/javascript" src="${basePath }/static/admin/easyui/locale/easyui-lang-zh_CN.js"></script>
 
 
-    <script type="text/javascript" src="https://cdn.hcharts.cn/highcharts/highcharts.src.js"></script>
+    <%--<script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>--%>
+    <script type="text/javascript" src="${basePath }/static/admin/js/highcharts.src.js"></script>
 
 
 
