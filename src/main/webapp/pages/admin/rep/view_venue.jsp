@@ -16,7 +16,8 @@
     <script type="text/javascript" src="${basePath }/static/admin/easyui/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="${basePath }/static/admin/easyui/locale/easyui-lang-zh_CN.js"></script>
 
-    <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+    <%--<script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>--%>
+    <script type="text/javascript" src="${basePath }/static/admin/js/highcharts.src.js"></script>
     <style>
         h4{padding-top: 15px}
     </style>
