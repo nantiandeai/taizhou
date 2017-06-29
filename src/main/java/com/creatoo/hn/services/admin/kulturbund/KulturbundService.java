@@ -3,9 +3,11 @@ package com.creatoo.hn.services.admin.kulturbund;
 import com.creatoo.hn.mapper.WhgCultureActMapper;
 import com.creatoo.hn.mapper.WhgCultureActfragMapper;
 import com.creatoo.hn.mapper.WhgCultureUnitMapper;
+import com.creatoo.hn.mapper.WhgCultureZxMapper;
 import com.creatoo.hn.model.WhgCultureAct;
 import com.creatoo.hn.model.WhgCultureActfrag;
 import com.creatoo.hn.model.WhgCultureUnit;
+import com.creatoo.hn.model.WhgCultureZx;
 import com.creatoo.hn.services.comm.CommService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -35,6 +37,9 @@ public class KulturbundService {
 
     @Autowired
     private WhgCultureActfragMapper whgCultureActfragMapper;
+
+    @Autowired
+    private WhgCultureZxMapper whgCultureZxMapper;
 
     @Autowired
     private CommService commService;
@@ -94,7 +99,39 @@ public class KulturbundService {
         return new PageInfo(list);
     }
 
-
+    /**
+     * 获取文化联盟大型资讯数据，支持分页
+     * @param page
+     * @param rows
+     * @param name
+     * @param state
+     * @return
+     */
+    public PageInfo getCultureInfo(Integer page,Integer rows,String name,String state){
+        PageHelper.startPage(page,rows);
+        Example example = new Example(WhgCultureZx.class);
+        Example.Criteria criteria = example.createCriteria();
+        if(null != name){
+            criteria.andLike("culzxtitle","%"+name+"%");
+        }
+        if(null != state){
+            if("edit".equals(state)){
+                criteria.andIn("culzxstate", Arrays.asList(0));
+                criteria.andEqualTo("isdel",2);
+            }else if("check".equals(state)){
+                criteria.andIn("culzxstate", Arrays.asList(1));
+                criteria.andEqualTo("isdel",2);
+            }else if("publish".equals(state)){
+                criteria.andIn("culzxstate", Arrays.asList(2,3));
+                criteria.andEqualTo("isdel",2);
+            }else if("cycle".equals(state)){
+                criteria.andEqualTo("isdel",1);
+            }
+        }
+        example.setOrderByClause("culzxcreattime desc");
+        List<WhgCultureZx> list = whgCultureZxMapper.selectByExample(example);
+        return new PageInfo(list);
+    }
 
     /**
      * 添加文化联盟单位
@@ -134,6 +171,25 @@ public class KulturbundService {
     }
 
     /**
+     * 添加文化联盟资讯
+     * @param whgCultureZx
+     * @return
+     */
+    public int doAdd(WhgCultureZx whgCultureZx){
+        try {
+            whgCultureZx.setId(commService.getKey("whg_culture_zx"));
+            whgCultureZx.setCulzxstate(0);
+            whgCultureZx.setCulzxcreattime(new Date());
+            whgCultureZx.setIsdel(2);
+            whgCultureZxMapper.insert(whgCultureZx);
+            return 0;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return 1;
+        }
+    }
+
+    /**
      * 修改文化联盟单位
      * @param whgCultureUnit
      * @return
@@ -145,6 +201,28 @@ public class KulturbundService {
                 whgCultureUnit.setUnitcreatetime(temp.getUnitcreatetime());
                 whgCultureUnit.setUnitstate(temp.getUnitstate());
                 whgCultureUnitMapper.updateByPrimaryKey(whgCultureUnit);
+            }
+            return 0;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return 1;
+        }
+    }
+
+    /**
+     * 修改文化联盟资讯
+     * @param whgCultureZx
+     * @return
+     */
+    public int doEdit(WhgCultureZx whgCultureZx){
+        try {
+            WhgCultureZx temp = whgCultureZxMapper.selectByPrimaryKey(whgCultureZx.getId());
+            if(null != temp){
+                whgCultureZx.setCulzxcreattime(temp.getCulzxcreattime());
+                whgCultureZx.setCulzxstate(temp.getCulzxstate());
+                whgCultureZx.setCulzxcreator(temp.getCulzxcreator());
+                whgCultureZx.setIsdel(temp.getIsdel());
+                whgCultureZxMapper.updateByPrimaryKey(whgCultureZx);
             }
             return 0;
         }catch (Exception e){
@@ -215,6 +293,26 @@ public class KulturbundService {
     }
 
     /**
+     * 修改文化联盟资讯状态
+     * @param whgCultureZx
+     * @return
+     */
+    public int updateState(WhgCultureZx whgCultureZx){
+        try {
+            WhgCultureZx tmp = whgCultureZxMapper.selectByPrimaryKey(whgCultureZx);
+            if(null == tmp){
+                return 1;
+            }
+            tmp.setCulzxstate(whgCultureZx.getCulzxstate());
+            whgCultureZxMapper.updateByPrimaryKey(tmp);
+            return 0;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return 1;
+        }
+    }
+
+    /**
      * 查询一个文化联盟单位
      * @param whgCultureUnit
      * @return
@@ -230,6 +328,20 @@ public class KulturbundService {
 
     /**
      * 查询一个文化联盟大型活动
+     * @param whgCultureZx
+     * @return
+     */
+    public WhgCultureZx getOne(WhgCultureZx whgCultureZx){
+        try {
+            return whgCultureZxMapper.selectOne(whgCultureZx);
+        }catch (Exception e){
+            logger.error(e.toString());
+            return null;
+        }
+    }
+
+    /**
+     * 查询一个文化联盟资讯
      * @param whgCultureAct
      * @return
      */
@@ -274,6 +386,23 @@ public class KulturbundService {
     }
 
     /**
+     * 修改删除状态
+     * @param whgCultureZx
+     * @return
+     */
+    public int doDel(WhgCultureZx whgCultureZx){
+        try {
+            WhgCultureZx tmp = whgCultureZxMapper.selectByPrimaryKey(whgCultureZx);
+            tmp.setIsdel(whgCultureZx.getIsdel());
+            whgCultureZxMapper.updateByPrimaryKey(tmp);
+            return 0;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return 1;
+        }
+    }
+
+    /**
      * 删除一个文化联盟单位
      * @param whgCultureUnit
      * @return
@@ -296,6 +425,21 @@ public class KulturbundService {
     public int delOne(WhgCultureAct whgCultureAct){
         try {
             whgCultureActMapper.deleteByPrimaryKey(whgCultureAct);
+            return 0;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return 1;
+        }
+    }
+
+    /**
+     * 删除一个文化联盟资讯
+     * @param whgCultureZx
+     * @return
+     */
+    public int delOne(WhgCultureZx whgCultureZx){
+        try {
+            whgCultureZxMapper.deleteByPrimaryKey(whgCultureZx);
             return 0;
         }catch (Exception e){
             logger.error(e.toString());

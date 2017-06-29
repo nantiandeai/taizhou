@@ -1,6 +1,9 @@
 package com.creatoo.hn.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.Date;
 
 @Table(name = "whg_culture_zx")
 public class WhgCultureZx {
@@ -39,7 +42,12 @@ public class WhgCultureZx {
     /**
      * 资讯创建时间
      */
-    private String culzxcreattime;
+    private Date culzxcreattime;
+
+    /**
+     * 删除状态：1、已删除；2、未删除
+     */
+    private Integer isdel;
 
     /**
      * 获取主键PK
@@ -154,7 +162,7 @@ public class WhgCultureZx {
      *
      * @return culzxcreattime - 资讯创建时间
      */
-    public String getCulzxcreattime() {
+    public Date getCulzxcreattime() {
         return culzxcreattime;
     }
 
@@ -163,7 +171,25 @@ public class WhgCultureZx {
      *
      * @param culzxcreattime 资讯创建时间
      */
-    public void setCulzxcreattime(String culzxcreattime) {
+    public void setCulzxcreattime(Date culzxcreattime) {
         this.culzxcreattime = culzxcreattime;
+    }
+
+    /**
+     * 获取删除状态：1、已删除；2、未删除
+     *
+     * @return isdel - 删除状态：1、已删除；2、未删除
+     */
+    public Integer getIsdel() {
+        return isdel;
+    }
+
+    /**
+     * 设置删除状态：1、已删除；2、未删除
+     *
+     * @param isdel 删除状态：1、已删除；2、未删除
+     */
+    public void setIsdel(Integer isdel) {
+        this.isdel = isdel;
     }
 }
