@@ -568,6 +568,8 @@ public class WhhdAction {
 			try {
 				String id = this.commservice.getKey("WhgActOrder");
 				whhdService.saveActOrder(id,actId, actOrder.getEventid(), user.getId(), actOrder.getOrderphoneno(), mySelectSeat, seatNum, actOrder.getOrdername());
+
+				this.commservice.addRepOrder(actId, actOrder.getId(), EnumTypeClazz.TYPE_ACTIVITY.getValue(), 0);
 				Map<String,Object> map_ = whhdService.findOrderInfo4Id(id);
 				view.addObject("order", map_);
 			}

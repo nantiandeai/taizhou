@@ -1,7 +1,9 @@
 package com.creatoo.hn.actions.home.agdpxyz;
 
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.model.WhUser;
 import com.creatoo.hn.model.WhgTraEnrol;
+import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.services.home.agdpxyz.PxbmService;
 import com.creatoo.hn.services.home.agdpxyz.PxyzService;
 import com.creatoo.hn.utils.WhConstance;
@@ -26,6 +28,9 @@ public class PxbmAction {
 
     @Autowired
     private PxbmService service;
+
+    @Autowired
+    private CommService commService;
 
     private final  String SUCCESS="0";//成功
     /**
@@ -83,6 +88,8 @@ public class PxbmAction {
         if(checkResult.equals(SUCCESS)){
             try {
                 service.addTranEnrol(enrol,enrolBirthdayStr,userSess.getId());
+
+                this.commService.addRepOrder(enrol.getTraid(),enrol.getId(), EnumTypeClazz.TYPE_TRAIN.getValue(),0);
                 return SUCCESS;
             } catch (Exception e) {
                 log.error(e.getMessage());

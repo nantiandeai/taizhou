@@ -14,10 +14,7 @@ import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.Criteria;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 生成主键值的服务类
@@ -545,4 +542,38 @@ public class CommService {
 		return list;
 	}
 	 */
+
+
+    @Autowired
+    private WhgRepOrderMapper whgRepOrderMapper;
+
+    /**
+     * 保存活动室订单来源记录信息到 whg_rep_order
+     * @param entid
+     * @param orderid
+     * @param devtype
+     */
+    public void addRepOrder(String entid, String orderid, String enttype, Integer devtype){
+        try {
+            if (entid==null || orderid==null || enttype ==null) {
+                return;
+            }
+
+            if (devtype == null){
+                devtype = 0;
+            }
+
+            WhgRepOrder recode = new WhgRepOrder();
+            recode.setId(this.getKey("whg_rep_order"));
+            recode.setCrtdate(new Date());
+            recode.setDevtype(devtype);
+            recode.setEntid(entid);
+            recode.setOrderid(orderid);
+            recode.setEnttype(enttype);
+
+            this.whgRepOrderMapper.insert(recode);
+        } catch (Exception e){
+            log.error("add repOrder info error", e);
+        }
+    }
 }
