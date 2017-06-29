@@ -335,6 +335,7 @@ public class CgfwService {
         order.setTimeday(time.getTimeday());
         order.setTimestart(time.getTimestart());
         order.setTimeend(time.getTimeend());
+        order.setTimelong(time.getTimelong());
         order.setState(0);
 
         order.setCrtdate(new Date());
