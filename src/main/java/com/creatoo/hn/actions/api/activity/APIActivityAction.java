@@ -2,6 +2,7 @@ package com.creatoo.hn.actions.api.activity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.creatoo.hn.ext.bean.RetMobileEntity;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.model.*;
 import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.services.comm.SMSService;
@@ -190,6 +191,9 @@ public class APIActivityAction {
 				res.setCode(0);
 				String id = this.commservice.getKey("WhgActOrder");
 				whhdService.saveActOrder(id,actId, eventId, userId, orderPhoneNo, seatStr, seats, name);
+
+
+				this.commservice.addRepOrder(actId, id, EnumTypeClazz.TYPE_ACTIVITY.getValue(), 1);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
