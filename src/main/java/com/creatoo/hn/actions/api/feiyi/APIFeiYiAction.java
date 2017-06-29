@@ -1,6 +1,7 @@
 package com.creatoo.hn.actions.api.feiyi;
 
 import com.creatoo.hn.ext.bean.RetMobileEntity;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.model.WhgCultHeritage;
 import com.creatoo.hn.model.WhgCultTalents;
 import com.creatoo.hn.model.WhgHistorical;
@@ -137,11 +138,15 @@ public class APIFeiYiAction {
 		//文化人才
 		List<WhgYwiType> talents = whgYunweiTypeService.findWhgYwiTypeList("18");
 		//区域
-//		List<WhgYwiType> areaList = whgYunweiTypeService.findWhgYwiTypeList("6");
+		List<WhgYwiType> areaList = whgYunweiTypeService.findWhgYwiTypeList("6");
+		//艺术类型
+		List<WhgYwiType> artList = whgYunweiTypeService.findWhgYwiTypeList("1");
+
 		rest.put("cultTheritage", cultTheritage);
-//		rest.put("areaList", areaList);
+		rest.put("areaList", areaList);
 		rest.put("historical", historical);
 		rest.put("talents", talents);
+		rest.put("artList", artList);
 		res.setCode(0);
 		res.setData(rest);
 		return res;
