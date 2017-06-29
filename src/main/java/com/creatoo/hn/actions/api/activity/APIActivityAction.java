@@ -1,7 +1,9 @@
 package com.creatoo.hn.actions.api.activity;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.creatoo.hn.ext.bean.RetMobileEntity;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.model.*;
 import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.services.comm.SMSService;
@@ -190,6 +192,9 @@ public class APIActivityAction {
 				res.setCode(0);
 				String id = this.commservice.getKey("WhgActOrder");
 				whhdService.saveActOrder(id,actId, eventId, userId, orderPhoneNo, seatStr, seats, name);
+
+
+				this.commservice.addRepOrder(actId, id, EnumTypeClazz.TYPE_ACTIVITY.getValue(), 1);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -228,8 +233,10 @@ public class APIActivityAction {
 			retMobileEntity.setMsg("获取活动列表失败");
 			return retMobileEntity;
 		}
+		List<Map<String,Object>> list = pageInfo.getList();
+		List actList = whhdService.judgeCanSign(list);
 		retMobileEntity.setCode(0);
-		retMobileEntity.setData((List)pageInfo.getList());
+		retMobileEntity.setData(actList);
 		RetMobileEntity.Pager pager = new RetMobileEntity.Pager();
 		pager.setIndex(pageInfo.getPageNum());
 		pager.setTotal(Long.valueOf(pageInfo.getTotal()).intValue());
@@ -259,7 +266,14 @@ public class APIActivityAction {
 				res.setMsg("活动Id不允许为空");//活动Id不允许为空
 			}else{
 				//活动详情
-				WhgActActivity actdetail = this.whhdService.getActDetail(actvid);
+				WhgActActivity actdetail1 = this.whhdService.getActDetail(actvid);
+				//判断活动报名时间
+				Date enterstrtime = actdetail1.getEnterstrtime();
+				Date enterendtime = actdetail1.getEnterendtime();
+				Integer canSign = whhdService.canSign(enterstrtime,enterendtime);
+				JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(actdetail1));
+				jsonObject.put("canSign",canSign);
+
 				//判断该活动是否已经收藏
 				if(userId !=null && userId != "0"){
 					List<WhCollection> collectionList = whhdService.findCollection4UserIdAndItemId(userId, actvid,"4");
@@ -329,7 +343,7 @@ public class APIActivityAction {
 				 }
 				 */
 				param.put("timeList", myTimeList);
-				param.put("actdetail", actdetail);
+				param.put("actdetail", jsonObject);
 				param.put("acttj", acttj);
 				param.put("data", new Date());
 				res.setData(param);

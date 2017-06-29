@@ -776,6 +776,8 @@ SELECT s.suorid,s.suorpic,s.suorname,s.suorjs,d.mlproshortitel
 			waa.actsummary AS actsummary,
 			waa.starttime as starttime,
 			waa.endtime as endtime,
+			waa.enterstrtime as enterstrtime,
+			waa.enterendtime as enterendtime,
 			waa.address,
 			(SELECT COUNT(wc.cmid) FROM wh_collection wc WHERE wc.cmrefid = waa.id  AND wc.cmopttyp = 2) as dianzan,
 			(SELECT COUNT(wc.cmid) FROM wh_collection wc WHERE wc.cmrefid = waa.id  AND wc.cmopttyp = 0) as shoucang

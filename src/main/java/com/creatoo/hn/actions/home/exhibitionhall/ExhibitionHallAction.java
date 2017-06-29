@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +52,7 @@ public class ExhibitionHallAction {
     public ResponseBean getHallList(HttpServletRequest request){
         ResponseBean responseBean = new ResponseBean();
         String page = request.getParameter("page");
-        String rows = request.getParameter("rows");
+        String rows = request.getParameter("pageSize");
         if(null == page || page.isEmpty()){
             page = "1";
         }
@@ -97,7 +98,7 @@ public class ExhibitionHallAction {
         ResponseBean responseBean = new ResponseBean();
         String id = request.getParameter("id");
         String page = request.getParameter("page");
-        String rows = request.getParameter("rows");
+        String rows = request.getParameter("pageSize");
         if (id == null && !"".equals(id)) {
             responseBean.setErrormsg("参数错误");
             return responseBean;

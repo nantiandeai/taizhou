@@ -82,6 +82,11 @@ public class WhUser {
     private String origo;
 
     /**
+     * 注册时间
+     */
+    private Date registtime;
+
+    /**
      * 工作单位
      */
     private String company;
@@ -719,5 +724,13 @@ public class WhUser {
      */
     public void setHeadurl(String headurl) {
         this.headurl = headurl;
+    }
+
+    public Date getRegisttime() {
+        return registtime;
+    }
+
+    public void setRegisttime(Date registtime) {
+        this.registtime = registtime;
     }
 }

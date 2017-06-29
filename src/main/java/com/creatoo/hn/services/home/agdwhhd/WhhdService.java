@@ -1,8 +1,8 @@
 package com.creatoo.hn.services.home.agdwhhd;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.ext.bean.RetMobileEntity;
 import com.creatoo.hn.ext.bean.RetMobileEntity.Pager;
 import com.creatoo.hn.ext.emun.EnumOrderType;
@@ -26,6 +26,8 @@ import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.Criteria;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 /**
@@ -101,7 +103,11 @@ public class WhhdService {
 	 */
 	@Autowired
 	private WhActivitybmMapper bmMapper;
-
+	/**
+	 * 用户
+	 */
+	@Autowired
+	private WhUserMapper userMapper;
 	/**
 	 * 活动资源
 	 */
@@ -986,6 +992,66 @@ public class WhhdService {
 		}
 	}
 
+	/**
+	 * 判断用户是否可以报名活动
+	 * @param actList
+	 * @return
+	 */
+	public List judgeCanSign(List<Map<String,Object>> actList){
+		List list = new ArrayList();
+		if(null == actList){
+			return null;
+		}
+		for(Map<String,Object> item : actList){
+			Date enterstrtime = (Date) item.get("enterstrtime");
+			Date enterendtime = (Date) item.get("enterendtime");
+			Integer canSign = this.canSign(enterstrtime,enterendtime);
+			JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(item));
+			jsonObject.put("canSign",canSign);
+			list.add(jsonObject);
+		}
+		return list;
+	}
+
+
+	/**
+	 * 判断用户是否能报名
+	 * @param enterstrtime
+	 * @return:
+	 *  0:可报名
+	 *  100:未登录
+	 *  101:未实名认证
+	 *  102:年龄段不合适
+	 *  103:超过报名人数
+	 *  104:还未到报名时间
+	 *  105:报名时间已过
+	 */
+	public Integer canSign(Date enterstrtime,Date enterendtime){
+//		Integer enrolCount = countTraEnrol(whgTra.getId());
+//		if(null != enrolCount){
+//			if(enrolCount >= whgTra.getMaxnumber()){
+//				return 103;
+//			}
+//		}
+//		Date enrolStart = act.getEnterstrtime();
+//		Date enrolEnd = act.getEnterendtime();
+		if(isAfter(enterstrtime,new Date())){
+			return 104;
+		}
+		if(isAfter(new Date(),enterendtime)){
+			return 105;
+		}
+		return 0;
+	}
+
+	private Boolean isAfter(Date date1,Date date2){
+		LocalDate localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate localDate2 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		if(localDate1.isAfter(localDate2)){
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * 根据用户Id和活动(场馆)Id查询该用户是否收藏该活动
 	 */

@@ -156,6 +156,7 @@ public class APIWechatAction {
             whgUsrWeixin.setHeadimgurl(snsUserInfo.getHeadImgUrl());
             whgUsrWeixin.setProvince(snsUserInfo.getProvince());
             whgUsrWeixin.setSex(snsUserInfo.getSex());
+            whgUsrWeixin.setCrtdate(new Date());
             //应对测试环境没有unionid的情况
             if(null == whgUsrWeixin.getUnionid()){
                 whgUsrWeixin.setUnionid(whgUsrWeixin.getOpenid());

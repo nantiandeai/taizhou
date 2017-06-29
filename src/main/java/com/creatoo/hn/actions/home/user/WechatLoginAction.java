@@ -1,6 +1,7 @@
 package com.creatoo.hn.actions.home.user;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,6 +151,7 @@ public class WechatLoginAction {
 						whuser.setWxopenid(openId);
 						whuser.setIsrealname(0);
 						whuser.setIsperfect(0);
+						whuser.setRegisttime(new Date());
 						whuser.setIsinner(0);
 						this.regService.saveRegist(whuser);
 						//根据openid查找用户信息并存入会话

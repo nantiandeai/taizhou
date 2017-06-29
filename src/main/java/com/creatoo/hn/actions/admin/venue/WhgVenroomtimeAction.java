@@ -84,16 +84,28 @@ public class WhgVenroomtimeAction {
     @RequestMapping("/edit")
     @ResponseBody
     @WhgOPT(optType = EnumOptType.ROOM, optDesc = {"编辑活动室时段"})
-    public Object edit(HttpSession session, WhgVenRoomTime roomTime){
+    public Object edit(HttpSession session, WhgVenRoomTime roomTime,
+                       @DateTimeFormat(pattern="HH:mm") Date timeStart,
+                       @DateTimeFormat(pattern="HH:mm") Date timeEnd ){
         ResponseBean rb = new ResponseBean();
         if (roomTime.getId() == null){
             rb.setSuccess(ResponseBean.FAIL);
             rb.setErrormsg("预定时段主键信息丢失");
             return rb;
         }
+        if (timeStart==null || timeEnd==null){
+            rb.setSuccess(ResponseBean.FAIL);
+            rb.setErrormsg("预定时段开始或结束时间丢失");
+            return rb;
+        }
+
         try {
             WhgSysUser sysUser = (WhgSysUser) session.getAttribute("user");
-            this.whgVenroomtimeService.t_edit(roomTime, sysUser);
+
+            roomTime.setTimestart(timeStart);
+            roomTime.setTimeend(timeEnd);
+
+            rb = this.whgVenroomtimeService.t_edit(roomTime, sysUser);
         }catch (Exception e){
             rb.setSuccess(ResponseBean.FAIL);
             rb.setErrormsg("预定时段信息保存失败");

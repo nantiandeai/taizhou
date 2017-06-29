@@ -258,6 +258,13 @@
         <!-- 环市民文化联盟END-->
 
 
+        <menu id="M_REP" type="0" state="1" text="统计" iconcls="p-11">
+            <menu id="M_REP_L003" type="1" state="1" text="活动统计"  href="/admin/rep/view/activ" opts="view"/>
+            <menu id="M_REP_L004" type="1" state="1" text="培训统计"  href="/admin/rep/view/train" opts="view"/>
+            <menu id="M_REP_L005" type="1" state="1" text="场馆统计"  href="/admin/rep/view/venue" opts="view"/>
+            <menu id="M_REP_L002" type="1" state="1" text="短信和资讯统计"  href="/admin/rep/view/sms" opts="view"/>
+        </menu>
+
     </menus>
 
 </configs>

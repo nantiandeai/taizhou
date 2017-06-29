@@ -135,7 +135,7 @@ public class APIFeiYiService {
             c.andNotEqualTo("id", notId);
         }
         example.orderBy("statemdfdate").desc();
-        return this.whgCultHeritageMapper.selectByExampleAndRowBounds(example, new RowBounds(0, size));
+        return this.whgHistoricalMapper.selectByExampleAndRowBounds(example, new RowBounds(0, size));
     }
 
     /**
@@ -189,7 +189,7 @@ public class APIFeiYiService {
             c.andNotEqualTo("id", notId);
         }
         example.orderBy("statemdfdate").desc();
-        return this.whgCultHeritageMapper.selectByExampleAndRowBounds(example, new RowBounds(0, size));
+        return this.whgCultTalentsMapper.selectByExampleAndRowBounds(example, new RowBounds(0, size));
     }
 
 }

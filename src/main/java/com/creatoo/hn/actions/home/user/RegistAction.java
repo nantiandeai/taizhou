@@ -452,6 +452,7 @@ public class RegistAction{
 			if(password != null && !"".equals(password)){
 		        whuser.setPassword(password);
 			}
+			whuser.setRegisttime(new Date());  //注册时间
 			whuser.setNickname(nickname);
 			whuser.setIsrealname(0);
 			whuser.setIsperfect(0);

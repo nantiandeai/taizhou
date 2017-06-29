@@ -1,10 +1,12 @@
 package com.creatoo.hn.actions.api.train;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.model.WhgTra;
 import com.creatoo.hn.model.WhgTraCourse;
 import com.creatoo.hn.model.WhgTraEnrol;
 import com.creatoo.hn.model.WhgYwiLbt;
+import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.services.home.agdpxyz.PxbmService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -37,6 +39,9 @@ public class APITrainAction {
      */
     @Autowired
     private PxbmService service;
+
+    @Autowired
+    private CommService commService;
 
     /**
      * 检查能否报名
@@ -93,6 +98,7 @@ public class APITrainAction {
                         res.setErrormsg(validCode);
                     }else{
                         service.addTranEnrol(enrol, "", userId);
+                        this.commService.addRepOrder(enrol.getTraid(),enrol.getId(), EnumTypeClazz.TYPE_TRAIN.getValue(),1);
                     }
                 }catch (Exception e){
                     res.setSuccess(ResponseBean.FAIL);

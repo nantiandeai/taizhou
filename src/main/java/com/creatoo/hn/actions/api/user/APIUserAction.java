@@ -438,6 +438,7 @@ public class APIUserAction {
             whUser1.setPassword(password);
             whUser1.setSex(sex);
             whUser1.setBirthday(sdf.parse(birthday));
+            whUser1.setRegisttime(new Date());
             if(0 != apiUserService.register(whUser1)){
                 responseBean.setSuccess("104");
                 responseBean.setErrormsg("注册失败");
