@@ -489,8 +489,12 @@ public class PxbmService {
         for(Object item : traList){
             WhgTra whgTra = (WhgTra)item;
             Integer canSign = this.canSign(userId,whgTra);
+            WhgTraEnrol whgTraEnrol = new WhgTraEnrol();
+            whgTraEnrol.setTraid(whgTra.getId());
+            Integer signCount = WhgTraEnrolMapper.selectCount(whgTraEnrol);
             JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(whgTra));
             jsonObject.put("canSign",canSign);
+            jsonObject.put("signCount",signCount);
             list.add(jsonObject);
         }
         return list;
