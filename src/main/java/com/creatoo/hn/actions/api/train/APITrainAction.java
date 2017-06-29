@@ -17,10 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 提供培训报名接口
@@ -384,6 +381,12 @@ public class APITrainAction {
     @RequestMapping(value = "/traSign",method = RequestMethod.POST)
     public ResponseBean traSign(HttpServletRequest request){
         ResponseBean responseBean = new ResponseBean();
+        Enumeration<String> paramNames = request.getParameterNames();
+
+        while(paramNames.hasMoreElements()){
+            String name = paramNames.nextElement();
+            System.out.println(name + " = " + request.getParameter(name));
+        }
         String userId = getParamValue(request,"userId",null);
         if(null == userId){
             responseBean.setSuccess(ResponseBean.FAIL);
