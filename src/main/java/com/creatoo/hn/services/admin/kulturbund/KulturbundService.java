@@ -115,6 +115,25 @@ public class KulturbundService {
     }
 
     /**
+     * 添加文化联盟大型活动
+     * @param whgCultureAct
+     * @return
+     */
+    public int doAdd(WhgCultureAct whgCultureAct){
+        try {
+            whgCultureAct.setId(commService.getKey("whg_culture_act"));
+            whgCultureAct.setCulactcreattime(new Date());
+            whgCultureAct.setCulactstate(0);
+            whgCultureAct.setIsdel(2);
+            whgCultureActMapper.insert(whgCultureAct);
+            return 0;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return 1;
+        }
+    }
+
+    /**
      * 修改文化联盟单位
      * @param whgCultureUnit
      * @return
@@ -126,6 +145,27 @@ public class KulturbundService {
                 whgCultureUnit.setUnitcreatetime(temp.getUnitcreatetime());
                 whgCultureUnit.setUnitstate(temp.getUnitstate());
                 whgCultureUnitMapper.updateByPrimaryKey(whgCultureUnit);
+            }
+            return 0;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return 1;
+        }
+    }
+
+    /**
+     * 修改文化联盟活动
+     * @param whgCultureUnit
+     * @return
+     */
+    public int doEdit(WhgCultureAct whgCultureAct){
+        try {
+            WhgCultureAct temp = whgCultureActMapper.selectByPrimaryKey(whgCultureAct.getId());
+            if(null != temp){
+                whgCultureAct.setCulactcreattime(temp.getCulactcreattime());
+                whgCultureAct.setCulactstate(temp.getCulactstate());
+                whgCultureAct.setIsdel(temp.getIsdel());
+                whgCultureActMapper.updateByPrimaryKey(whgCultureAct);
             }
             return 0;
         }catch (Exception e){
@@ -147,6 +187,26 @@ public class KulturbundService {
             }
             tmp.setUnitstate(whgCultureUnit.getUnitstate());
             whgCultureUnitMapper.updateByPrimaryKey(tmp);
+            return 0;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return 1;
+        }
+    }
+
+    /**
+     * 修改文化联盟活动状态
+     * @param whgCultureAct
+     * @return
+     */
+    public int updateState(WhgCultureAct whgCultureAct){
+        try {
+            WhgCultureAct tmp = whgCultureActMapper.selectByPrimaryKey(whgCultureAct);
+            if(null == tmp){
+                return 1;
+            }
+            tmp.setCulactstate(whgCultureAct.getCulactstate());
+            whgCultureActMapper.updateByPrimaryKey(tmp);
             return 0;
         }catch (Exception e){
             logger.error(e.toString());
@@ -197,6 +257,23 @@ public class KulturbundService {
     }
 
     /**
+     * 修改删除状态
+     * @param whgCultureAct
+     * @return
+     */
+    public int doDel(WhgCultureAct whgCultureAct){
+        try {
+            WhgCultureAct tmp = whgCultureActMapper.selectByPrimaryKey(whgCultureAct);
+            tmp.setIsdel(whgCultureAct.getIsdel());
+            whgCultureActMapper.updateByPrimaryKey(tmp);
+            return 0;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return 1;
+        }
+    }
+
+    /**
      * 删除一个文化联盟单位
      * @param whgCultureUnit
      * @return
@@ -204,6 +281,21 @@ public class KulturbundService {
     public int delOne(WhgCultureUnit whgCultureUnit){
         try {
             whgCultureUnitMapper.deleteByPrimaryKey(whgCultureUnit);
+            return 0;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return 1;
+        }
+    }
+
+    /**
+     * 删除一个文化联盟活动
+     * @param whgCultureAct
+     * @return
+     */
+    public int delOne(WhgCultureAct whgCultureAct){
+        try {
+            whgCultureActMapper.deleteByPrimaryKey(whgCultureAct);
             return 0;
         }catch (Exception e){
             logger.error(e.toString());

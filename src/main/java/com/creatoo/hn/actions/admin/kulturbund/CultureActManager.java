@@ -2,6 +2,7 @@ package com.creatoo.hn.actions.admin.kulturbund;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.model.WhgCultureAct;
+import com.creatoo.hn.model.WhgSysUser;
 import com.creatoo.hn.services.admin.kulturbund.KulturbundService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -88,6 +89,123 @@ public class CultureActManager {
         }
         modelAndView.setViewName("admin/kulturbund/cultureact/view_edit");
         return modelAndView;
+    }
+
+    /**
+     * 编辑提交操作
+     * @param request
+     * @param type
+     * @return
+     */
+    @RequestMapping("/doEdit/{type}")
+    public ResponseBean doEdit(HttpServletRequest request,@PathVariable("type") String type){
+        ResponseBean responseBean = new ResponseBean();
+        String id = getParam(request,"id",null);
+        String culactname = getParam(request,"culactname",null);
+        String culactcover = getParam(request,"culactcover",null);
+        String remark = getParam(request,"remark",null);
+        WhgSysUser whgSysUser = (WhgSysUser)request.getSession().getAttribute("user");
+        try {
+            if("add".equals(type)){
+                WhgCultureAct whgCultureAct = new WhgCultureAct();
+                whgCultureAct.setCulactname(culactname);
+                whgCultureAct.setCulactcover(culactcover);
+                whgCultureAct.setCulactcontent(remark);
+                whgCultureAct.setCulactuser(whgSysUser.getId());
+                if(0 != kulturbundService.doAdd(whgCultureAct)){
+                    responseBean.setSuccess(ResponseBean.FAIL);
+                    responseBean.setErrormsg("添加失败");
+                }
+            }else if("edit".equals(type)){
+                WhgCultureAct whgCultureAct = new WhgCultureAct();
+                whgCultureAct.setId(id);
+                whgCultureAct.setCulactname(culactname);
+                whgCultureAct.setCulactcover(culactcover);
+                whgCultureAct.setCulactcontent(remark);
+                whgCultureAct.setCulactuser(whgSysUser.getId());
+                if(0 != kulturbundService.doEdit(whgCultureAct)){
+                    responseBean.setSuccess(ResponseBean.FAIL);
+                    responseBean.setErrormsg("编辑失败");
+                }
+            }else {
+                responseBean.setSuccess(ResponseBean.FAIL);
+                responseBean.setErrormsg("无此操作");
+            }
+            return responseBean;
+        }catch (Exception e){
+            logger.error(e.toString());
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("操作失败");
+            return responseBean;
+        }
+    }
+
+    /**
+     * 修改状态操作
+     * @param request
+     * @return
+     */
+    @RequestMapping("/doUpdateState")
+    public ResponseBean doUpdateState(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        String id = getParam(request,"id",null);
+        String state = getParam(request,"state",null);
+        if(null == id || null == state){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("参数不足");
+            return responseBean;
+        }
+        WhgCultureAct whgCultureAct = new WhgCultureAct();
+        whgCultureAct.setId(id);
+        if("initial".equals(state)){
+            whgCultureAct.setCulactstate(0);
+        }else if("checkpending".equals(state)){
+            whgCultureAct.setCulactstate(1);
+        }else if("checked".equals(state)){
+            whgCultureAct.setCulactstate(2);
+        }else if("published".equals(state)){
+            whgCultureAct.setCulactstate(3);
+        }
+        if(0 != kulturbundService.updateState(whgCultureAct)){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("修改状态失败");
+        }
+        return responseBean;
+    }
+
+    /**
+     * 修改状态操作
+     * @param request
+     * @return
+     */
+    @RequestMapping("/doDel")
+    public ResponseBean doDel(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        String id = getParam(request,"id",null);
+        String state = getParam(request,"state",null);
+        if(null == id || null == state){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("参数不足");
+            return responseBean;
+        }
+        WhgCultureAct whgCultureAct = new WhgCultureAct();
+        whgCultureAct.setId(id);
+        if("del".equals(state)){
+            whgCultureAct.setIsdel(1);
+        }else if("undel".equals(state)){
+            whgCultureAct.setIsdel(2);
+        }else if("delforever".equals(state)){
+            if(0 != kulturbundService.doDel(whgCultureAct)){
+                responseBean.setSuccess(ResponseBean.FAIL);
+                responseBean.setErrormsg("删除失败");
+            }
+            return responseBean;
+        }
+        if(0 != kulturbundService.doDel(whgCultureAct)){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("修改状态失败");
+        }
+        return responseBean;
     }
 
     /**

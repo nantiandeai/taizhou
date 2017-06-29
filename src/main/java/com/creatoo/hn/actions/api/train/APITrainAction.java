@@ -373,6 +373,21 @@ public class APITrainAction {
         return responseBean;
     }
 
+    @CrossOrigin
+    @SuppressWarnings("all")
+    @RequestMapping(value = "/traSign",method = RequestMethod.POST)
+    public ResponseBean traSign(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        String userId = getParamValue(request,"userId",null);
+        if(null == userId){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("未登录");
+            return responseBean;
+        }
+        
+        return responseBean;
+    }
+
     /**
      * 获取请求的参数
      * @param request

@@ -243,10 +243,10 @@
                 <menu id="DIR1410_L001" type="1" state="1" text="联盟单位编辑列表"  href="/admin/cultureunit/view/list" opts="view,add,edit,on,off,del"/>
             </menu>
             <menu id="DIR1420_U001" type="0" state="1" text="大型联盟活动管理">
-                <menu id="DIR1420_L001" type="1" state="1" text="大型联盟活动编辑列表"  href="/admin/cultureact/list/edit" opts="view,add,edit,checkgo,del"/>
+                <menu id="DIR1420_L001" type="1" state="1" text="大型联盟活动编辑列表"  href="/admin/cultureact/list/edit" opts="view,add,edit,checkgo"/>
                 <menu id="DIR1420_L002" type="1" state="1" text="大型联盟活动审核列表"  href="/admin/cultureact/list/check" opts="view,checkon,checkoff,del"/>
                 <menu id="DIR1420_L003" type="1" state="1" text="大型联盟活动发布列表"  href="/admin/cultureact/list/publish" opts="view,publish,publishoff,del"/>
-                <menu id="DIR1420_L004" type="1" state="1" text="回收站"  href="/admin/cultureact/view/recycle" opts="view,del,undel"/>
+                <menu id="DIR1420_L004" type="1" state="1" text="回收站"  href="/admin/cultureact/list/cycle" opts="view,del,undel"/>
             </menu>
             <menu id="DIR1430_U001" type="0" state="1" text="联盟资讯管理">
                 <menu id="DIR1430_L001" type="1" state="1" text="联盟资讯编辑列表"  href="/admin/specialResource/view/edit" opts="view,add,edit,checkgo,del"/>
