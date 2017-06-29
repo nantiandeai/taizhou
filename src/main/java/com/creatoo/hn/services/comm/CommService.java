@@ -95,6 +95,9 @@ public class CommService {
 	@Autowired
 	private WhgYwiWhppMapper whgYwiWhppMapper;
 
+	@Autowired
+	private WhgRepLoginMapper whgRepLoginMapper;
+
 	/**
 	 * 资源管理mapper
 	 */
@@ -576,4 +579,13 @@ public class CommService {
             log.error("add repOrder info error", e);
         }
     }
+
+	/**
+	 * 添加用户登录时间表记录
+	 * @param whgRepLogin
+	 */
+	public void insertLoginTime(WhgRepLogin whgRepLogin) throws Exception{
+		this.whgRepLoginMapper.insertSelective(whgRepLogin);
+	}
+
 }

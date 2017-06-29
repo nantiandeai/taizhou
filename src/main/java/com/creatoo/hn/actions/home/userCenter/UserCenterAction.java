@@ -1,10 +1,7 @@
 package com.creatoo.hn.actions.home.userCenter;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
-import com.creatoo.hn.model.WhCode;
-import com.creatoo.hn.model.WhUser;
-import com.creatoo.hn.model.WhUserAlerts;
-import com.creatoo.hn.model.WhgActOrder;
+import com.creatoo.hn.model.*;
 import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.services.home.agdindex.IndexPageService;
 import com.creatoo.hn.services.home.userCenter.UserCenterService;
@@ -88,6 +85,20 @@ public class UserCenterAction {
 				//重定向
 				mav.setViewName("redirect:/login");
 				success = "success";
+
+				//插入用户登录时间信息
+				try {
+					String logintimeId = this.commService.getKey("whg_rep_login");
+					WhgRepLogin whgRepLogin = new WhgRepLogin();
+					whgRepLogin.setId(logintimeId);
+					whgRepLogin.setDevtype(0);
+					whgRepLogin.setLogintime(new Date());
+
+					whgRepLogin.setUserid(id);
+					this.commService.insertLoginTime(whgRepLogin);
+				}catch (Exception e){
+					log.error(e.getMessage(),e);
+				}
 			}
 		} catch (Exception e) {
 			log.debug(e.getMessage(),e);

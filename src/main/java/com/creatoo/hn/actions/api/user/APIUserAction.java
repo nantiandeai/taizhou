@@ -493,6 +493,19 @@ public class APIUserAction {
                 map.put("userHeadImgUrl",findResult.get("headurl"));
                 map.put("staticServerUrl",commPropertiesService.getUploadLocalServerAddr());
                 responseBean.setData(map);
+
+                //插入用户登录时间信息
+                try {
+                    String logintimeId = this.commService.getKey("whg_rep_login");
+                    WhgRepLogin whgRepLogin = new WhgRepLogin();
+                    whgRepLogin.setId(logintimeId);
+                    whgRepLogin.setDevtype(0);
+                    whgRepLogin.setLogintime(new Date());
+                    whgRepLogin.setUserid((String)findResult.get("id"));
+                    this.commService.insertLoginTime(whgRepLogin);
+                }catch (Exception e){
+                    log.error(e.getMessage(),e);
+                }
             } else {
                 responseBean.setCode("1");
                 responseBean.setErrormsg("用户名或密码错误");
