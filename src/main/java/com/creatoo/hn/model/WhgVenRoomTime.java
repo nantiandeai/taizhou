@@ -37,6 +37,11 @@ public class WhgVenRoomTime {
     private Integer state;
 
     /**
+     * 时长（分钟）
+     */
+    private Float timelong;
+
+    /**
      * 获取PK
      *
      * @return id - PK
@@ -142,5 +147,24 @@ public class WhgVenRoomTime {
      */
     public void setState(Integer state) {
         this.state = state;
+    }
+
+
+    /**
+     * 获取时长（分钟）
+     *
+     * @return timelong - 时长（分钟）
+     */
+    public Float getTimelong() {
+        return timelong;
+    }
+
+    /**
+     * 设置时长（分钟）
+     *
+     * @param timelong 时长（分钟）
+     */
+    public void setTimelong(Float timelong) {
+        this.timelong = timelong;
     }
 }

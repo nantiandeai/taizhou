@@ -1,9 +1,11 @@
 package com.creatoo.hn.actions.api.venue;
 
 import com.creatoo.hn.ext.bean.RetMobileEntity;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
 import com.creatoo.hn.mapper.WhUserMapper;
 import com.creatoo.hn.model.*;
 import com.creatoo.hn.services.admin.yunwei.WhgYunweiTypeService;
+import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.services.home.agdcgfw.CgfwService;
 import com.creatoo.hn.services.home.agdwhhd.WhhdService;
 import com.creatoo.hn.services.home.userCenter.VenueOrderService;
@@ -45,6 +47,9 @@ public class APIVenueAction {
 
 	@Autowired
 	private WhhdService  whhdService;
+
+    @Autowired
+    private CommService commService;
 
 
 
@@ -323,6 +328,7 @@ public class APIVenueAction {
 			rest.put("data", order);
 			res.setData(rest);
 			res.setCode(0);
+            this.commService.addRepOrder(order.getRoomid(), order.getId(), EnumTypeClazz.TYPE_ROOM.getValue(), 1);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			res.setCode(101);

@@ -186,9 +186,19 @@ public class WhgVenroomtimeService {
                             vrt.setTimeday(c.getTime());
                             vrt.setTimestart( tms );
                             vrt.setTimeend( tme );
-                            vrt.setState(0);
                             vrt.setRoomid(roomid);
+                            int count = this.whgVenRoomTimeMapper.selectCount(vrt);
+                            if (count > 0){
+                                continue;
+                            }
+
+                            vrt.setState(0);
                             vrt.setId(commService.getKey("whgvenroomtime"));
+
+                            //计算时长分钟
+                            float timeSum = (tme.getTime() - tms.getTime())/(1000*60);
+                            vrt.setTimelong(timeSum);
+
                             this.whgVenRoomTimeMapper.insert(vrt);
                         } catch (Exception e) {
                             log.debug("处理添加预定时段项出错：Day="+sdfday.format(c.getTime())+" week="+wdayInt, e);
@@ -206,8 +216,38 @@ public class WhgVenroomtimeService {
       return rb;
     }
 
-    public void t_edit(WhgVenRoomTime roomTime, WhgSysUser user) throws Exception{
+    public ResponseBean t_edit(WhgVenRoomTime roomTime, WhgSysUser user) throws Exception{
+        ResponseBean rb = new ResponseBean();
+
+        WhgVenRoomTime target = this.whgVenRoomTimeMapper.selectByPrimaryKey(roomTime.getId());
+        //验证时段在 此活动室 此天 除自己之外 有无与其它有交叉
+        Example example = new Example(WhgVenRoomTime.class);
+        example.or().andEqualTo("roomid", roomTime.getRoomid()).andEqualTo("timeday", target.getTimeday()).andNotEqualTo("id", roomTime.getId())
+                .andBetween("timestart", roomTime.getTimestart(), roomTime.getTimeend());
+        example.or().andEqualTo("roomid", roomTime.getRoomid()).andEqualTo("timeday", target.getTimeday()).andNotEqualTo("id", roomTime.getId())
+                .andBetween("timeend", roomTime.getTimestart(), roomTime.getTimeend());
+        example.or().andEqualTo("roomid", roomTime.getRoomid()).andEqualTo("timeday", target.getTimeday()).andNotEqualTo("id", roomTime.getId())
+                .andGreaterThanOrEqualTo("timestart", roomTime.getTimestart())
+                .andLessThanOrEqualTo("timeend", roomTime.getTimeend());
+
+        int count = this.whgVenRoomTimeMapper.selectCountByExample(example);
+        if (count > 0){
+            rb.setSuccess(ResponseBean.FAIL);
+            rb.setErrormsg("设置的活动室时段同天内与其它时段有重复!");
+            return rb;
+        }
+
+        //计算时长分钟
+        Date tme = roomTime.getTimeend();
+        Date tms = roomTime.getTimestart();
+        if (tme!=null && tms!=null){
+            float timeSum = (tme.getTime() - tms.getTime())/(1000*60);
+            roomTime.setTimelong(timeSum);
+        }
+
         this.whgVenRoomTimeMapper.updateByPrimaryKeySelective(roomTime);
+
+        return rb;
     }
 
     private WhgVenRoomTime getMaxDayTime4RoomId(String roomid) throws Exception{

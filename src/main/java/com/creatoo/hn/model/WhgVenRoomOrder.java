@@ -97,6 +97,11 @@ public class WhgVenRoomOrder {
     private String purpose;
 
     /**
+     * 时长（分钟）
+     */
+    private Float timelong;
+
+    /**
      * 获取PK
      *
      * @return id - PK
@@ -418,5 +423,23 @@ public class WhgVenRoomOrder {
      */
     public void setPurpose(String purpose) {
         this.purpose = purpose;
+    }
+
+    /**
+     * 获取时长（分钟）
+     *
+     * @return timelong - 时长（分钟）
+     */
+    public Float getTimelong() {
+        return timelong;
+    }
+
+    /**
+     * 设置时长（分钟）
+     *
+     * @param timelong 时长（分钟）
+     */
+    public void setTimelong(Float timelong) {
+        this.timelong = timelong;
     }
 }

@@ -281,9 +281,10 @@ public class CgfwAction {
         try {
             WhUser user = (WhUser) session.getAttribute(WhConstance.SESS_USER_KEY);
 
-            this.service.saveUserVenroomtimeInfo(roomtimeid, user, userphone, username, purpose);
+            WhgVenRoomOrder order = this.service.saveUserVenroomtimeInfo(roomtimeid, user, userphone, username, purpose);
             rest.put("success", true);
 
+            this.commservice.addRepOrder(order.getRoomid(), order.getId(), EnumTypeClazz.TYPE_ROOM.getValue(), 0);
         } catch (Exception e) {
             log.error("roomOrder3 error", e);
             rest.put("success", false);
