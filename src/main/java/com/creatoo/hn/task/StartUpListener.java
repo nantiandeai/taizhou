@@ -33,7 +33,7 @@ public class StartUpListener implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        scheduledExecutorService.scheduleAtFixedRate(myRunner, 3600, 3600, TimeUnit.SECONDS);//每小时一次
+        scheduledExecutorService.scheduleAtFixedRate(myRunner, 600, 600, TimeUnit.SECONDS);//每小时一次
     }
 
     private Runnable myRunner = new Runnable() {
