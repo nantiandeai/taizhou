@@ -2,6 +2,7 @@ package com.creatoo.hn.actions.api.sms;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.services.api.sms.APISmsService;
+import com.creatoo.hn.services.comm.SMSService;
 import com.creatoo.hn.utils.SmsTmpEnum;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class APISmsAction {
      */
     Logger log = Logger.getLogger(this.getClass().getName());
     @Autowired
-    private APISmsService smsService;
+    private SMSService smsService;
 
     /**
      * 发送短信
@@ -45,7 +46,8 @@ public class APISmsAction {
             String tempCode= SmsTmpEnum.getTempCode(type);
             Map<String,String> data=new HashMap<String,String>();
             //此处数据封装待编写
-            smsService.sendMsg(tempCode,mobile,data);
+            smsService.t_sendSMS(tempCode,mobile,data,userId);
+
         } catch (Exception e) {
             log.error(e.getMessage(),e);
             res.setSuccess(ResponseBean.FAIL);

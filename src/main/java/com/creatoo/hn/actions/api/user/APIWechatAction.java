@@ -1,5 +1,6 @@
 package com.creatoo.hn.actions.api.user;
 
+import com.creatoo.hn.model.WhgRepLogin;
 import com.creatoo.hn.model.WhgUsrWeixin;
 import com.creatoo.hn.services.comm.CommPropertiesService;
 import com.creatoo.hn.services.comm.CommService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -217,6 +220,24 @@ public class APIWechatAction {
                 state = getState(snsUserInfo.getOpenId());
                 path = getPageForState(req,resp,state,openId);
                 mav.setViewName(path);
+                //插入用户登录时间信息
+                try {
+                    if(snsUserInfo.getOpenId() != null){
+                        List<WhgUsrWeixin> wxUser = this.wechatService.selUser(snsUserInfo.getOpenId());
+                        if(wxUser != null && wxUser.size() > 0){
+                            String logintimeId = this.commService.getKey("whg_rep_login");
+                            WhgRepLogin whgRepLogin = new WhgRepLogin();
+                            whgRepLogin.setId(logintimeId);
+                            whgRepLogin.setDevtype(0);
+                            whgRepLogin.setLogintime(new Date());
+                            whgRepLogin.setUserid(wxUser.get(0).getUserid());
+                            this.commService.insertLoginTime(whgRepLogin);
+                        }
+
+                    }
+                }catch (Exception e){
+                    log.error(e.getMessage(),e);
+                }
                 return mav;
                 //resp.sendRedirect(baseUrl+path);
             }else {
@@ -225,6 +246,7 @@ public class APIWechatAction {
                 mav.setViewName(path);
                 return mav;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             rtnMap.put("exception", e.getMessage());

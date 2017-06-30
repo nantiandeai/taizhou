@@ -177,7 +177,8 @@ public class PxbmService {
             _map.put("starttime",DateFormatUtils.format(train.getStarttime(),"yyyy-MM-dd HH:mm:ss"));
             _map.put("endtime",DateFormatUtils.format(train.getStarttime(),"yyyy-MM-dd HH:mm:ss"));
             String tempCode = "TRA_VIEW_PASS";
-            this.smsService.t_sendSMS(enrol.getContactphone(),tempCode,_map);
+            //this.smsService.t_sendSMS(enrol.getContactphone(),tempCode,_map);
+            this.smsService.t_sendSMS(enrol.getContactphone(),tempCode,_map, enrol.getTraid());
         }
         return result;
     }
@@ -339,16 +340,21 @@ public class PxbmService {
         if(null == userId){
             return 100;
         }
-        WhUser whUser = new WhUser();
-        whUser.setId(userId);
-        WhUser userTemp = userMapper.selectOne(whUser);
+        Example example = new Example(WhUser.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("id",userId);
+        List<WhUser> whUserList = userMapper.selectByExample(example);
+        WhUser userTemp = 0 < whUserList.size()?whUserList.get(0):null;
+        if(null == userTemp){
+            return 100;
+        }
         if(1 == whgTra.getIsrealname()){
-            if(1 != whUser.getIsrealname()){
+            if(1 != userTemp.getIsrealname()){
                 return 101;
             }
         }
-        if(null != whgTra.getAge()){
-            Integer userAge = getUserAge(whUser);
+        if(null != whgTra.getAge() && !whgTra.getAge().trim().isEmpty()){
+            Integer userAge = getUserAge(userTemp);
             if(null == userAge){
                 return 102;
             }
@@ -399,6 +405,9 @@ public class PxbmService {
     }
 
     private Boolean ageIsIn(String ageGrades,Integer userAge){
+        if(ageGrades.trim().isEmpty()){
+            return true;
+        }
         try {
             Integer minAge = Integer.valueOf(ageGrades.substring(0,ageGrades.indexOf(",")));
             Integer maxAge = Integer.valueOf(ageGrades.substring(ageGrades.indexOf(",") + 1));
@@ -489,11 +498,29 @@ public class PxbmService {
         for(Object item : traList){
             WhgTra whgTra = (WhgTra)item;
             Integer canSign = this.canSign(userId,whgTra);
+            WhgTraEnrol whgTraEnrol = new WhgTraEnrol();
+            whgTraEnrol.setTraid(whgTra.getId());
+            Integer signCount = WhgTraEnrolMapper.selectCount(whgTraEnrol);
             JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(whgTra));
             jsonObject.put("canSign",canSign);
+            jsonObject.put("signCount",signCount);
             list.add(jsonObject);
         }
         return list;
+    }
+
+    public WhgYwiLbt getCulturalMarketLbt(){
+        Example example = new Example(WhgYwiLbt.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("type","12");
+        criteria.andEqualTo("state",1);
+        criteria.andEqualTo("delstate",0);
+        example.setOrderByClause("statemdfdate desc");
+        List<WhgYwiLbt> whgYwiLbtList = whgYwiLbtMapper.selectByExample(example);
+        if(whgYwiLbtList.isEmpty()){
+            return null;
+        }
+        return whgYwiLbtList.get(0);
     }
 
     /**
@@ -539,10 +566,12 @@ public class PxbmService {
      */
     public PageInfo getCourseByTraId(Integer page,Integer rows,String traId){
         PageHelper.startPage(page,rows);
-        WhgTraCourse whgTraCourse = new WhgTraCourse();
-        whgTraCourse.setTraid(traId);
+        Example example = new Example(WhgTraCourse.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("traid",traId);
+        example.setOrderByClause("starttime");
         try {
-            List<WhgTraCourse> whgTraCourseList = whgTraCourseMapper.select(whgTraCourse);
+            List<WhgTraCourse> whgTraCourseList = whgTraCourseMapper.selectByExample(example);
             return new PageInfo(whgTraCourseList);
         }catch (Exception e){
             log.error(e.toString());

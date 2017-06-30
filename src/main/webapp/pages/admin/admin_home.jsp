@@ -48,7 +48,7 @@
             <h2>场馆总数</h2>
         </li>
     </ul>
-    <div class="data-info-cont-row" style="display: none">
+    <div class="data-info-cont-row">
         <div class="leftCont">
             <div id="data-sys-1"></div>
         </div>
@@ -56,7 +56,7 @@
             <div id="data-sys-2"></div>
         </div>
     </div>
-    <div class="data-info-cont-row" style="display: none">
+    <div class="data-info-cont-row">
         <div class="leftCont">
             <div id="data-sys-3"></div>
         </div>
@@ -64,13 +64,13 @@
             <div id="data-sys-4"></div>
         </div>
     </div>
-    <div class="data-info-cont-row" style="display: none">
+    <div class="data-info-cont-row">
         <div id="data-sys-5"></div>
         <%--<div class="leftCont">--%>
-            <%--<div id="data-sys-5"></div>--%>
+        <%--<div id="data-sys-5"></div>--%>
         <%--</div>--%>
     </div>
-    <div class="data-info-cont-row" style="display: none">
+    <div class="data-info-cont-row">
         <div id="data-sys-6"></div>
         <%--<div class="leftCont">--%>
         <%--<div id="data-sys-5"></div>--%>
@@ -115,6 +115,17 @@
         }());
 
         //图型列表
+        var xArr1 = ['文艺范诗歌剧场《随黄公望游富春山》', '我们和“星星”在一起', '大型民族歌舞剧《康定情歌》', '“魔指爷爷的古典万花筒”2017钢琴巡演', '东莞市文化志愿者大舞台', '新中式·探索——冯璐服饰艺术展', '久石让&宫崎骏经典动漫作品视听音乐会', '2017年东城新春粤剧黄金周活动', '“我们在黄旗山下”东城街道社区合唱比赛', '东莞市文化志愿者大舞台第119期'];
+        var xArr2 = [];
+        var yArr1 = [103, 100, 90, 88, 84, 80, 50, 45, 44, 36];
+        for (var c in xArr1) {
+            if (xArr1[c].length > 5) {
+                xArr2.push(xArr1[c].substr(0, 5) + '..')
+            } else {
+                xArr2.push(xArr1[c])
+            }
+        }
+
         var chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'data-sys-2',
@@ -128,7 +139,7 @@
                 }
             },
             title: {
-                text: '台州市热门活动统计TOP10'
+                text: '广东省热门活动统计TOP10'
             },
             plotOptions: {
                 column: {
@@ -136,16 +147,24 @@
                 }
             },
             xAxis: {
-                categories: ['文艺范诗歌剧场《随黄公望游富春山》', '我们和“星星”在一起', '大型民族歌舞剧《康定情歌》', '“魔指爷爷的古典万花筒”2017钢琴巡演','东莞市文化志愿者大舞台','新中式·探索——冯璐服饰艺术展','久石让&宫崎骏经典动漫作品视听音乐会','2017年东城新春粤剧黄金周活动','“我们在黄旗山下”东城街道社区合唱比赛','东莞市文化志愿者大舞台第119期']
+                categories: xArr2
             },
             series: [{
-                data: [
-                    103,100,90, 88, 84, 80, 50,45,44,36
-                ]
+                data: yArr1
             }]
         });
 
         //图型列表
+        var xArr1 = ['文艺范诗歌剧场《随黄公望游富春山》', '我们和“星星”在一起', '大型民族歌舞剧《康定情歌》', '“魔指爷爷的古典万花筒”2017钢琴巡演', '东莞市文化志愿者大舞台', '新中式·探索——冯璐服饰艺术展', '久石让&宫崎骏经典动漫作品视听音乐会', '2017年东城新春粤剧黄金周活动', '“我们在黄旗山下”东城街道社区合唱比赛', '东莞市文化志愿者大舞台第119期'];
+        var yArr1 = [70, 60, 45, 23, 21, 20, 19, 18, 17, 15];
+        var xArr2=[];
+        for (var i in xArr1){
+            if(xArr1[i].length>5){
+                xArr2.push(xArr1[i].substr(0,5)+"..");
+            }else{
+                xArr2.push(xArr1[i]);
+            }
+        }
         var chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'data-sys-4',
@@ -159,7 +178,7 @@
                 }
             },
             title: {
-                text: '台州市热门培训统计TOP10'
+                text: '广东省热门培训统计TOP10'
             },
             plotOptions: {
                 column: {
@@ -167,12 +186,10 @@
                 }
             },
             xAxis: {
-                categories: ['文艺范诗歌剧场《随黄公望游富春山》', '我们和“星星”在一起', '大型民族歌舞剧《康定情歌》', '“魔指爷爷的古典万花筒”2017钢琴巡演','东莞市文化志愿者大舞台','新中式·探索——冯璐服饰艺术展','久石让&宫崎骏经典动漫作品视听音乐会','2017年东城新春粤剧黄金周活动','“我们在黄旗山下”东城街道社区合唱比赛','东莞市文化志愿者大舞台第119期']
+                categories: xArr2
             },
             series: [{
-                data: [
-                    70,60,45, 23, 21, 20, 19,18,17,15
-                ]
+                data:yArr1
             }]
         });
 
@@ -272,7 +289,7 @@
                         type: 'pie'
                     },
                     title: {
-                        text: '台州市活动数量统计'
+                        text: '广东省活动数量统计'
                     },
                     tooltip: {
                         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -315,7 +332,7 @@
                         type: 'pie'
                     },
                     title: {
-                        text: '台州市培训数量统计'
+                        text: '广东省培训数量统计'
                     },
                     tooltip: {
                         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'

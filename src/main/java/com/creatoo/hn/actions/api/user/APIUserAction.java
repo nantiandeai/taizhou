@@ -207,7 +207,7 @@ public class APIUserAction {
             //2.将短信发送至手机
             Map<String, String> smsData = new HashMap<String, String>();
             smsData.put("validCode", msgcontent);
-            smsService.t_sendSMS(mobile, "LOGIN_VALIDCODE", smsData);
+            smsService.t_sendSMS(mobile, "LOGIN_VALIDCODE", smsData, mobile);
             //将数据保存至code表
             smsService.insertWhCode(mobile,msgcontent,sessionId);
             return true;
@@ -338,7 +338,7 @@ public class APIUserAction {
                 Map<String, String> smsData = new HashMap<String, String>();
                 smsData.put("userName", newWhUser.getName());
                 smsData.put("password", newWhUser.getPassword());
-                smsService.t_sendSMS(mobile, "LOGIN_PASSWROD", smsData);
+                smsService.t_sendSMS(mobile, "LOGIN_PASSWROD", smsData,mobile);
                 responseBean.setData(newWhUser);
             }
         }catch (Exception e){
@@ -383,7 +383,7 @@ public class APIUserAction {
             Map<String, String> smsData = new HashMap<String, String>();
             smsData.put("userName", newWhUser.getName());
             smsData.put("password", newWhUser.getPassword());
-            smsService.t_sendSMS(mobile, "LOGIN_PASSWROD", smsData);
+            smsService.t_sendSMS(mobile, "LOGIN_PASSWROD", smsData,mobile);
             retMobileEntity.setCode(0);
             retMobileEntity.setMsg("注册成功");
             retMobileEntity.setData(newWhUser);
@@ -491,6 +491,19 @@ public class APIUserAction {
                 map.put("userHeadImgUrl",findResult.get("headurl"));
                 map.put("staticServerUrl",commPropertiesService.getUploadLocalServerAddr());
                 responseBean.setData(map);
+
+                //插入用户登录时间信息
+                try {
+                    String logintimeId = this.commService.getKey("whg_rep_login");
+                    WhgRepLogin whgRepLogin = new WhgRepLogin();
+                    whgRepLogin.setId(logintimeId);
+                    whgRepLogin.setDevtype(0);
+                    whgRepLogin.setLogintime(new Date());
+                    whgRepLogin.setUserid((String)findResult.get("id"));
+                    this.commService.insertLoginTime(whgRepLogin);
+                }catch (Exception e){
+                    log.error(e.getMessage(),e);
+                }
             } else {
                 responseBean.setCode("1");
                 responseBean.setErrormsg("用户名或密码错误");
@@ -724,7 +737,7 @@ public class APIUserAction {
             }else{
                 Map<String, String> smsData = new HashMap<String, String>();
                 smsData.put("validCode", code);
-                smsService.t_sendSMS(phone, "LOGIN_VALIDCODE", smsData);
+                smsService.t_sendSMS(phone, "LOGIN_VALIDCODE", smsData,phone);
                 res.setErrormsg("100");
             }
         } catch (Exception e) {

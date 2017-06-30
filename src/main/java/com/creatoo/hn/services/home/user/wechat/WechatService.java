@@ -8,6 +8,7 @@ import com.creatoo.hn.utils.social.wechat.CommonUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -112,5 +113,17 @@ public class WechatService {
             logger.error(e.toString());
             return 1;
         }
+    }
+
+    /**
+     * 根据openID查找用户
+     * @param openId
+     * @return
+     */
+    public List<WhgUsrWeixin> selUser(String openId)throws Exception {
+        Example example = new Example(WhgUsrWeixin.class);
+        example.createCriteria().andEqualTo("openid",openId);
+        List<WhgUsrWeixin> wxUser = this.whgUsrWeixinMapper.selectByExample(example);
+        return wxUser;
     }
 }

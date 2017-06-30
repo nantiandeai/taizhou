@@ -1,12 +1,11 @@
 package com.creatoo.hn.actions.home.userCenter;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
-import com.creatoo.hn.model.WhCode;
-import com.creatoo.hn.model.WhUser;
-import com.creatoo.hn.model.WhUserAlerts;
-import com.creatoo.hn.model.WhgActOrder;
+import com.creatoo.hn.model.*;
 import com.creatoo.hn.services.comm.CommService;
+import com.creatoo.hn.services.comm.SMSService;
 import com.creatoo.hn.services.home.agdindex.IndexPageService;
+import com.creatoo.hn.services.home.agdwhhd.WhhdService;
 import com.creatoo.hn.services.home.userCenter.UserCenterService;
 import com.creatoo.hn.utils.CommUtil;
 import com.creatoo.hn.utils.WhConstance;
@@ -50,6 +49,12 @@ public class UserCenterAction {
 	
 	@Autowired
 	private CommService commService;
+
+	@Autowired
+	private SMSService smsService;
+
+	@Autowired
+	private WhhdService whhdService;
 	
 	@Autowired
 	private IndexPageService indexService;
@@ -88,6 +93,20 @@ public class UserCenterAction {
 				//重定向
 				mav.setViewName("redirect:/login");
 				success = "success";
+
+				//插入用户登录时间信息
+				try {
+					String logintimeId = this.commService.getKey("whg_rep_login");
+					WhgRepLogin whgRepLogin = new WhgRepLogin();
+					whgRepLogin.setId(logintimeId);
+					whgRepLogin.setDevtype(0);
+					whgRepLogin.setLogintime(new Date());
+
+					whgRepLogin.setUserid(id);
+					this.commService.insertLoginTime(whgRepLogin);
+				}catch (Exception e){
+					log.error(e.getMessage(),e);
+				}
 			}
 		} catch (Exception e) {
 			log.debug(e.getMessage(),e);
@@ -783,6 +802,17 @@ public class UserCenterAction {
 		actOrder.setTicketstatus(3);
 		actOrder.setOrderisvalid(2);
 		userCenterService.upActOrder(actOrder);
+		//发送取消短信
+		try {
+			WhgActActivity act = whhdService.getActDetail(actOrder.getActivityid());
+			Map<String, String> smsData = new HashMap<String, String>();
+			smsData.put("userName", actOrder.getOrdername());
+			smsData.put("activityName", act.getName());
+			smsData.put("ordernumber", actOrder.getOrdernumber());
+			smsService.t_sendSMS(actOrder.getOrderphoneno(), "ACT_UNORDER", smsData, act.getId());
+		} catch (Exception e) {
+			log.error("取消活动订单短信发送失败", e);
+		}
 		return res;
 	}
 

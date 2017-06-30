@@ -26,7 +26,7 @@ public class APISmsService {
      * @param data
      * @return
      */
-    public void sendMsg(String tmpCode,String mobile,Map<String, String> data)throws Exception{
-         smsService.t_sendSMS(mobile,tmpCode,data);
-    }
+//    public void sendMsg(String tmpCode,String mobile,Map<String, String> data,)throws Exception{
+//         smsService.t_sendSMS(mobile,tmpCode,data);
+//    }
 }

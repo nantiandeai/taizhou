@@ -71,29 +71,15 @@
             <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2" method="del">删除</a></shiro:hasPermission>
         </c:when>
         <c:when test="${listType eq 'cycle'}">
-            <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2,3" method="del">删除</a></shiro:hasPermission>
+            <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2,3" method="doDelForver">删除</a></shiro:hasPermission>
             <shiro:hasPermission name="${resourceid}:undel"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="culactstate" validVal="0,1,2,3" method="undel">还原</a></shiro:hasPermission>
         </c:when>
     </c:choose>
-
-
-
-
-
 </div>
 <!-- 操作按钮-END -->
 
 </body>
 <script type="text/javascript">
-    function myState(state) {
-        if(1 == state){
-            return "已启用";
-        }else if(2 == state){
-            return "已停用";
-        }else {
-            return "未知";
-        }
-    }
 
     function getUserName(userId) {
         $.ajaxSetup({

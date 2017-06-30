@@ -118,7 +118,8 @@ public class VenueOrderService {
             data.put("userName", order.getOrdercontact());
             data.put("title", room.getTitle());
             data.put("orderNum", order.getOrderid());
-            this.smsService.t_sendSMS(order.getOrdercontactphone(), "VEN_ORDER_UNADD", data);
+            //this.smsService.t_sendSMS(order.getOrdercontactphone(), "VEN_ORDER_UNADD", data);
+            this.smsService.t_sendSMS(order.getOrdercontactphone(), "VEN_ORDER_UNADD", data, order.getRoomid());
         } catch (Exception e) {
             log.error("roomOrderUnAdd sendSMS error", e);
         }
