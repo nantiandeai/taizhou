@@ -634,7 +634,7 @@ public class WhgActivityActAction {
             smsData.put("beginTime", dateStr +" "+ actTime.getPlaystime());
             int totalSeat = whgActivityOrderService.findWhgActTicket4OrderId(orderId);
             smsData.put("number", String.valueOf(totalSeat));
-            smsService.t_sendSMS(actOrder.getOrderphoneno(), "ACT_DUE", smsData);
+            smsService.t_sendSMS(actOrder.getOrderphoneno(), "ACT_DUE", smsData, actOrder.getActivityid());
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

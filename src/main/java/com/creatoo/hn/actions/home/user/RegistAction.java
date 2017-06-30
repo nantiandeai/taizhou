@@ -393,7 +393,8 @@ public class RegistAction{
 				//2.将短信发送至手机
 				Map<String, String> smsData = new HashMap<String, String>();
 				smsData.put("validCode", msgcontent);
-				smsService.t_sendSMS(msgphone, "LOGIN_VALIDCODE", smsData);
+				//smsService.t_sendSMS(msgphone, "LOGIN_VALIDCODE", smsData);
+				smsService.t_sendSMS(msgphone, "LOGIN_VALIDCODE", smsData, msgphone);
 
 				//将数据保存至code表
 				cid = this.commService.getKey("wh_code");

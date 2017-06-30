@@ -132,7 +132,8 @@ public class WhgVenroomorderService {
             data.put("title", room.getTitle());
             data.put("orderNum", trgOrder.getOrderid());
 
-            this.smsService.t_sendSMS(phome, sempTemp, data);
+            //this.smsService.t_sendSMS(phome, sempTemp, data);
+            this.smsService.t_sendSMS(phome, sempTemp, data, trgOrder.getRoomid());
         } catch (Exception e) {
             log.error("roomOrderAdd sendSMS error", e);
         }

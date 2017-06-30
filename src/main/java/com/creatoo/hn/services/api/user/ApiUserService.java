@@ -159,7 +159,8 @@ public class ApiUserService {
 
             //发送短信，告诉密码
             Map<String, String> data = new HashMap<String, String>();
-            smsService.t_sendSMS(phone, "LOGIN_PASSWROD", data);
+            //smsService.t_sendSMS(phone, "LOGIN_PASSWROD", data);
+            smsService.t_sendSMS(phone, "LOGIN_PASSWROD", data, whUser1.getId());
 
             //修改微信用户表userid
             whgUsrWeixin.setUserid(whUser.getId());
