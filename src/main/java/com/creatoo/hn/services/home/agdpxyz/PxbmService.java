@@ -340,11 +340,16 @@ public class PxbmService {
         if(null == userId){
             return 100;
         }
-        WhUser whUser = new WhUser();
-        whUser.setId(userId);
-        WhUser userTemp = userMapper.selectOne(whUser);
+        Example example = new Example(WhUser.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("id",userId);
+        List<WhUser> whUserList = userMapper.selectByExample(example);
+        WhUser userTemp = 0 < whUserList.size()?whUserList.get(0):null;
+        if(null == userTemp){
+            return 100;
+        }
         if(1 == whgTra.getIsrealname()){
-            if(1 != whUser.getIsrealname()){
+            if(1 != userTemp.getIsrealname()){
                 return 101;
             }
         }
