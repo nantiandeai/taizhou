@@ -353,7 +353,7 @@ public class PxbmService {
                 return 101;
             }
         }
-        if(null != whgTra.getAge()){
+        if(null != whgTra.getAge() && !whgTra.getAge().trim().isEmpty()){
             Integer userAge = getUserAge(userTemp);
             if(null == userAge){
                 return 102;
