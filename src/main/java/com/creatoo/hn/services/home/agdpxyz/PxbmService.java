@@ -405,6 +405,9 @@ public class PxbmService {
     }
 
     private Boolean ageIsIn(String ageGrades,Integer userAge){
+        if(ageGrades.trim().isEmpty()){
+            return true;
+        }
         try {
             Integer minAge = Integer.valueOf(ageGrades.substring(0,ageGrades.indexOf(",")));
             Integer maxAge = Integer.valueOf(ageGrades.substring(ageGrades.indexOf(",") + 1));
