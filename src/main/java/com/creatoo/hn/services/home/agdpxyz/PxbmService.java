@@ -509,6 +509,20 @@ public class PxbmService {
         return list;
     }
 
+    public WhgYwiLbt getCulturalMarketLbt(){
+        Example example = new Example(WhgYwiLbt.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("type","12");
+        criteria.andEqualTo("state",1);
+        criteria.andEqualTo("delstate",0);
+        example.setOrderByClause("statemdfdate desc");
+        List<WhgYwiLbt> whgYwiLbtList = whgYwiLbtMapper.selectByExample(example);
+        if(whgYwiLbtList.isEmpty()){
+            return null;
+        }
+        return whgYwiLbtList.get(0);
+    }
+
     /**
      * 获取一个培训数据
      * @param traId

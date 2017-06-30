@@ -272,6 +272,10 @@ public class APITrainAction {
                 return responseBean;
             }
             List traList = service.judgeCanSign(userId,(List)pageInfo.getList());
+            WhgYwiLbt whgYwiLbt = service.getCulturalMarketLbt();
+            if(null != whgYwiLbt){
+                responseBean.setData(whgYwiLbt);
+            }
             responseBean.setRows(traList);
             responseBean.setPage(pageInfo.getPageNum());
             responseBean.setPageSize(pageInfo.getPageSize());
