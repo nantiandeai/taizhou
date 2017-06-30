@@ -262,14 +262,27 @@ public class PxbmService {
             whgTraEnrol.setId(commService.getKey("whg_tra_enrol"));
             whgTraEnrol.setOrderid(whgTraEnrol.getId());
             whgTraEnrol.setState(1);
+            whgTraEnrol.setCrttime(new Date());
             whgTraEnrolMapper.insert(whgTraEnrol);
             return 0;
         }catch (Exception e){
             log.error(e.toString());
             return 1;
         }
+    }
 
-
+    /**
+     * 查询培训报名记录
+     * @param whgTraEnrol
+     * @return
+     */
+    public WhgTraEnrol findTraEnrol(WhgTraEnrol whgTraEnrol){
+        try {
+            return whgTraEnrolMapper.selectOne(whgTraEnrol);
+        }catch (Exception e){
+            log.error(e.toString());
+            return null;
+        }
     }
 
     /**

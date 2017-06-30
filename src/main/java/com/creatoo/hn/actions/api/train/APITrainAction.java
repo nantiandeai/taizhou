@@ -425,7 +425,26 @@ public class APITrainAction {
         return responseBean;
     }
 
-
+    /**
+     * 查询一条培训报名记录
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/findTraEnrol",method = RequestMethod.POST)
+    public ResponseBean findTraEnrol(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        String traId = getParamValue(request,"traId",null);
+        String userId = getParamValue(request,"userId",null);
+        WhgTraEnrol whgTraEnrol = new WhgTraEnrol();
+        whgTraEnrol.setTraid(traId);
+        whgTraEnrol.setUserid(userId);
+        WhgTraEnrol res = service.findTraEnrol(whgTraEnrol);
+        if(null != res){
+            responseBean.setData(res);
+        }
+        return responseBean;
+    }
 
     /**
      * 获取请求的参数
