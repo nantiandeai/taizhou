@@ -18,7 +18,6 @@ import com.creatoo.hn.services.home.user.RegistService;
 import com.creatoo.hn.services.home.userCenter.*;
 import com.creatoo.hn.utils.RegistRandomUtil;
 import com.creatoo.hn.utils.ReqParamsUtil;
-import com.creatoo.hn.utils.WhConstance;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -1056,12 +1054,14 @@ public class APIUserAction {
             index = "1";
         }
         String cmreftyp = null;
-        if("1".equals(type)){
-            cmreftyp = "4";
-        }else if("2".equals(type)){
-            cmreftyp = "2";
-        }else {
-            cmreftyp = "3";
+        if ("1".equals(type)) {
+            cmreftyp = "4";  //活动
+        } else if ("2".equals(type)) {
+            cmreftyp = "2";  //场馆
+        } else if ("5".equals(type)) {
+            cmreftyp = "5";  //培训
+        } else {
+            cmreftyp = "3";  //场馆活动室
         }
         Map retData = apiUserService.getUserCollection(userId,cmreftyp,index,rows);
         PageInfo pageInfo = (PageInfo)retData.get("pageInfo");
@@ -1104,6 +1104,24 @@ public class APIUserAction {
         param.put("pager", pager);
         param.put("total", pageInfo.getTotal());
         rme.setData(param);
+        return rme;
+    }
+
+    /**
+     * 删除个人中心活动订单
+     * @param orderId 活动订单id
+     * @return res
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/delMyAct",method = RequestMethod.POST)
+    public RetMobileEntity delMyAct(String orderId){
+        RetMobileEntity rme = new RetMobileEntity();
+        int c =userCenterService.delMyAct(orderId);
+        if(c !=1){
+            rme.setMsg("删除失败");
+        }else {
+            rme.setCode(0);
+        }
         return rme;
     }
 
@@ -1259,6 +1277,24 @@ public class APIUserAction {
     }
 
     /**
+     * 删除个人中心场馆订单
+     * @param id 场馆订单表主键id
+     * @return res
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/delMyVen",method = RequestMethod.POST)
+    public RetMobileEntity delMyVen(String id){
+        RetMobileEntity rme = new RetMobileEntity();
+        int c =userCenterService.delMyVen(id);
+        if(c !=1){
+            rme.setMsg("删除失败");
+        }else {
+            rme.setCode(0);
+        }
+        return rme;
+    }
+
+    /**
      * 判断用户是否点亮收藏(web端)
      *
      * @param request
@@ -1317,11 +1353,13 @@ public class APIUserAction {
         String refurl = getParam(request,"refurl");
         String cmreftyp = null;
         if("1".equals(type)){
-            cmreftyp = "4";
+            cmreftyp = "4";  //活动
         }else if("2".equals(type)){
-            cmreftyp = "2";
+            cmreftyp = "2";  //场馆
+        }else if("5".equals(type)){
+            cmreftyp = "5";  //培训
         }else {
-            cmreftyp = "3";
+            cmreftyp = "3";  //场馆活动室
         }
         try {
             // 判断会话是否为空
@@ -1353,6 +1391,9 @@ public class APIUserAction {
                     whCollection.setCmtitle(targetObject.getString("title"));
                 }else if("3".equals(cmreftyp)){
                     //活动室
+                    whCollection.setCmtitle(targetObject.getString("title"));
+                }else if("5".equals(cmreftyp)){
+                    //培训
                     whCollection.setCmtitle(targetObject.getString("title"));
                 }
                 this.colleService.addMyColle(whCollection);

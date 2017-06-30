@@ -16,6 +16,13 @@ public interface CrtCgfwMapper {
     List selectVenList(Map params);
 
     /**
+     * 查询场馆列表web端
+     * @param params
+     * @return
+     */
+    List selectVenListWeb(Map params);
+
+    /**
      * 查询用户场馆预订列表
      * @param params
      * @return

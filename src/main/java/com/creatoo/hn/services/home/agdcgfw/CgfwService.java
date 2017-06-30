@@ -88,6 +88,33 @@ public class CgfwService {
     }
 
     /**
+     * 分页查询场馆信息
+     * @param param
+     * @return
+     */
+    public Map<String, Object> findListforweb(Map<String, Object> param)throws Exception {
+        //分页信息
+        int page = Integer.parseInt(param.get("page").toString());
+        int rows = Integer.parseInt(param.get("rows").toString());
+        //带条件的分页查询
+        PageHelper.startPage(page, rows);
+        List<Map> list = this.crtCgfwMapper.selectVenListWeb(param);
+        PageInfo<Map> pageInfo = new PageInfo<Map>(list);
+        List<Map> rowsList = pageInfo.getList();
+
+        Map<String, Object> rtnMap = new HashMap<String, Object>();
+        Pager pager = new RetMobileEntity.Pager();
+        pager.setCount(rowsList.size());
+        pager.setIndex(Integer.parseInt(param.get("page").toString()));
+        pager.setSize(Integer.parseInt(param.get("rows").toString()));
+        pager.setTotal(Integer.parseInt(String.valueOf(pageInfo.getTotal())));
+        rtnMap.put("total", pageInfo.getTotal());
+        rtnMap.put("rows", rowsList);
+        rtnMap.put("pager", pager);
+        rtnMap.put("date", new Date());
+        return rtnMap;
+    }
+    /**
      * 查询指定ID场馆
      * @param venid
      * @return
@@ -136,6 +163,26 @@ public class CgfwService {
         example.orderBy("statemdfdate").desc();
         List<WhgVenRoom> list = this.whgVenRoomMapper.selectByExample(example);
          return list;
+    }
+
+    /**
+     * 查询推荐活动室
+     * @param venid
+     * @return
+     * @throws Exception
+     */
+    public List selectVenroomtj(String roomId,String venid) throws Exception{
+        WhgVenRoom venRoom = new WhgVenRoom();
+//        venRoom.setVenid(venid);
+        venRoom.setDelstate(0);
+        venRoom.setState(6);
+        venRoom.setRecommend(1);
+
+        Example example = new Example(WhgVenRoom.class);
+        example.createCriteria().andEqualTo(venRoom).andNotEqualTo("id",roomId);
+        example.orderBy("statemdfdate").desc();
+        List<WhgVenRoom> list = this.whgVenRoomMapper.selectByExample(example);
+        return list;
     }
 
 

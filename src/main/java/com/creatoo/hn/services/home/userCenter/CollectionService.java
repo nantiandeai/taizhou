@@ -2,14 +2,8 @@ package com.creatoo.hn.services.home.userCenter;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.creatoo.hn.mapper.WhCollectionMapper;
-import com.creatoo.hn.mapper.WhgActActivityMapper;
-import com.creatoo.hn.mapper.WhgVenMapper;
-import com.creatoo.hn.mapper.WhgVenRoomMapper;
-import com.creatoo.hn.model.WhCollection;
-import com.creatoo.hn.model.WhgActActivity;
-import com.creatoo.hn.model.WhgVen;
-import com.creatoo.hn.model.WhgVenRoom;
+import com.creatoo.hn.mapper.*;
+import com.creatoo.hn.model.*;
 import com.creatoo.hn.utils.ReqParamsUtil;
 import com.creatoo.hn.utils.WhConstance;
 import com.github.pagehelper.PageHelper;
@@ -49,6 +43,9 @@ public class CollectionService {
 
 	@Autowired
 	private WhgVenRoomMapper whgVenRoomMapper;
+
+	@Autowired
+	private WhgTraMapper whgTraMapper;
 
 	/**
 	 * 我的活动收藏查询
@@ -277,7 +274,13 @@ public class CollectionService {
 				return JSON.parseObject(JSON.toJSONString(whgActActivity));
 			}else if("5".equals(cmreftyp)){
 				//培训
-				return null;
+				WhgTra whgTra = new WhgTra();
+				whgTra.setId(cmrefid);
+				whgTra = whgTraMapper.selectOne(whgTra);
+				if(whgTra == null){
+					return null;
+				}
+				return JSON.parseObject(JSON.toJSONString(whgTra));
 			}else if("2".equals(cmreftyp)){
 				//场馆
 				WhgVen whgVen = new WhgVen();
