@@ -278,7 +278,16 @@ public class PxbmService {
      */
     public WhgTraEnrol findTraEnrol(WhgTraEnrol whgTraEnrol){
         try {
-            return whgTraEnrolMapper.selectOne(whgTraEnrol);
+            Example example = new Example(WhgTraEnrol.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("traid",whgTraEnrol.getTraid());
+            criteria.andEqualTo("userid",whgTraEnrol.getUserid());
+            List<WhgTraEnrol> whgTraEnrolList = whgTraEnrolMapper.selectByExample(example);
+            if(!whgTraEnrolList.isEmpty()){
+                return whgTraEnrolList.get(0);
+            }else {
+                return null;
+            }
         }catch (Exception e){
             log.error(e.toString());
             return null;

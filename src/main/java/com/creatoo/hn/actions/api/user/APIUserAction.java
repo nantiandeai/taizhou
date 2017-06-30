@@ -2066,6 +2066,15 @@ public class APIUserAction {
         }
         return res;
     }
+
+    @CrossOrigin
+    @RequestMapping(value = "/getMyTraEnrol",method = RequestMethod.POST)
+    public ResponseBean getMyTraEnrol(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        String userId = getParam(request,"userId");
+
+        return responseBean;
+    }
 }
 
 
