@@ -6,15 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.creatoo.hn.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.creatoo.hn.mapper.WhCodeMapper;
-import com.creatoo.hn.mapper.WhUserAlertsMapper;
-import com.creatoo.hn.mapper.WhUserMapper;
-import com.creatoo.hn.mapper.WhgActActivityMapper;
-import com.creatoo.hn.mapper.WhgActOrderMapper;
-import com.creatoo.hn.mapper.WhgActTicketMapper;
 import com.creatoo.hn.model.WhCode;
 import com.creatoo.hn.model.WhUser;
 import com.creatoo.hn.model.WhUserAlerts;
@@ -52,6 +47,8 @@ public class UserCenterService {
 	
 	@Autowired
 	private WhgActOrderMapper whgActOrderMapper;
+	@Autowired
+	private WhgVenRoomOrderMapper whgVenRoomOrderMapper;
 
 	/**
 	 * 判断用户名和密码
@@ -270,7 +267,25 @@ public class UserCenterService {
 	public WhgActOrder findOrderDetail(String orderId){
 		return whgActOrderMapper.selectByPrimaryKey(orderId);
 	}
-	
+
+	/**
+	 * 删除个人中心我的活动订单
+	 * @param orderId
+	 * @return
+	 */
+	public int delMyAct(String orderId){
+		return whgActOrderMapper.deleteByPrimaryKey(orderId);
+	}
+
+	/**
+	 * 删除个人中心我的场馆订单
+	 * @param orderId
+	 * @return
+	 */
+	public int delMyVen(String orderId){
+		return whgVenRoomOrderMapper.deleteByPrimaryKey(orderId);
+	}
+
 	/**
 	 * 更新订单状态
 	 * @param actOrder

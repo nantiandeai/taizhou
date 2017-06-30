@@ -41,9 +41,50 @@
 
     </select>
 
+    <!--web端场馆查询-->
+    <select id="selectVenListWeb" resultType="hashmap">
+        SELECT v.*,
+        (SELECT COUNT(*) FROM whg_ven_room_time rt LEFT JOIN whg_ven_room r ON rt.roomid = r.id WHERE r.venid= v.id AND rt.state=1
+        <if test="cretime !=null">
+         AND rt.timeday &gt;=  #{cretime}
+        </if>
+        ) opencout
+        FROM whg_ven v
+        WHERE V.state = 6 AND V.delstate = 0
+
+        <if test="destine !=null and destine != ''">
+            AND VR.state = 6 AND VR.delstate = 0 AND VRT.state = 1
+        </if>
+
+        <if test="title != null and title != ''">
+            AND V.title like "%"#{title}"%"
+        </if>
+
+        <if test="etype != null and etype != ''">
+            AND V.etype like "%"#{etype}"%"
+        </if>
+
+        <if test="etag != null and etag != ''">
+            AND V.etag like "%"#{etag}"%"
+        </if>
+
+        <if test="cultid != null and cultid != ''">
+            AND V.cultid = #{cultid}
+        </if>
+
+        <if test="area != null and area != ''">
+            AND V.area = #{area}
+        </if>
+
+        GROUP BY V.id
+
+        ORDER BY V.statemdfdate DESC
+
+    </select>
+
     <!--查询用户场馆预订列表-->
     <select id="selectUserVenOrderList" resultType="hashmap">
-        SELECT vro.*, vr.title, v.address, v.phone
+        SELECT vro.*, vr.title, v.address, v.phone ,vr.location
         FROM whg_ven_room_order vro
         LEFT JOIN whg_ven_room vr ON vro.roomid = vr.id
         INNER JOIN whg_ven v on vr.venid = v.id

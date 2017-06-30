@@ -52,8 +52,13 @@ public class APIVenueAction {
     private CommService commService;
 
 
-
-
+	/**
+	 * 场馆列表查询微信端
+	 * @param index
+	 * @param size
+	 * @param request
+	 * @return
+	 */
 	@CrossOrigin
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
 	public RetMobileEntity list(int index,int size,WebRequest request){
@@ -74,6 +79,43 @@ public class APIVenueAction {
 		res.setData(venueList);
 		return res;
 	}
+
+	/**
+	 * web端场馆列表查询
+	 * @param index
+	 * @param size
+	 * @param request
+	 * @return
+	 */
+	@CrossOrigin
+	@RequestMapping(value = "/venList", method = RequestMethod.POST)
+	public RetMobileEntity venList(Integer index,Integer size,WebRequest request){
+		RetMobileEntity res = new RetMobileEntity();
+		String type = request.getParameter("type");
+		String area = request.getParameter("area");
+		Map<String,Object> param = new HashMap<>();
+		Map<String, Object> venueList = new HashMap<>();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String c = sdf.format(new Date());
+		Date today ;
+		try {
+			today = sdf.parse(c);
+			param.put("cretime",today);
+			param.put("page", index);
+			param.put("rows", size);
+			param.put("etype", type);
+			param.put("area", area);
+			venueList =  this.cgfwService.findListforweb(param);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		res.setData(venueList);
+		return res;
+	}
+
 
 	@CrossOrigin
 	@RequestMapping(value = "/detail", method = RequestMethod.POST)
@@ -235,7 +277,7 @@ public class APIVenueAction {
 				rest.put("seday",seday);
 				rest.put("roomOrderOK",  this.cgfwService.selectWhgVenroomorder4OK(roomId, bday_, eday_));
 			}
-			rest.put("roomlist", this.cgfwService.selectWhgVenroom4Ven(whgVenRoom.getVenid()));
+			rest.put("roomlist", this.cgfwService.selectVenroomtj(roomId,whgVenRoom.getVenid()));
 			rest.put("tjvenlist", this.cgfwService.selectWhgVen4Recommend(null,whgVenRoom.getVenid()));
 			rest.put("nowDate", new Date());
 			rest.put("whgVenRoom", whgVenRoom);
