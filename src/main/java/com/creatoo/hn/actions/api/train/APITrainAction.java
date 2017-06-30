@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 提供培训报名接口
@@ -384,22 +387,45 @@ public class APITrainAction {
     @SuppressWarnings("all")
     @RequestMapping(value = "/traSign",method = RequestMethod.POST)
     public ResponseBean traSign(HttpServletRequest request){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ResponseBean responseBean = new ResponseBean();
-        Enumeration<String> paramNames = request.getParameterNames();
-
-        while(paramNames.hasMoreElements()){
-            String name = paramNames.nextElement();
-            System.out.println(name + " = " + request.getParameter(name));
-        }
         String userId = getParamValue(request,"userId",null);
-        if(null == userId){
+        String sex = getParamValue(request,"sex",null);
+        String itemId = getParamValue(request,"itemId",null);
+        String name = getParamValue(request,"name",null);
+        String birthday = getParamValue(request,"birthday",null);
+        String idCard = getParamValue(request,"idCard",null);
+        String mobile = getParamValue(request,"mobile",null);
+
+        if(!service.isLogin(userId)){
             responseBean.setSuccess(ResponseBean.FAIL);
             responseBean.setErrormsg("未登录");
             return responseBean;
         }
-        
+        WhgTraEnrol whgTraEnrol = new WhgTraEnrol();
+        whgTraEnrol.setUserid(userId);
+        whgTraEnrol.setSex(Integer.valueOf(sex));
+        whgTraEnrol.setTraid(itemId);
+        whgTraEnrol.setCardno(idCard);
+        whgTraEnrol.setRealname(name);
+        whgTraEnrol.setContactphone(mobile);
+        try {
+            whgTraEnrol.setBirthday(simpleDateFormat.parse(birthday));
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        int res = service.addTraSign(whgTraEnrol);
+        if(1 == res){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("报名失败");
+        }else if(2 == res){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("不能重复提交");
+        }
         return responseBean;
     }
+
+
 
     /**
      * 获取请求的参数
