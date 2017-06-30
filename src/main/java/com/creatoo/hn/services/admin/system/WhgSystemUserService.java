@@ -147,6 +147,10 @@ public class WhgSystemUserService {
     public WhgSysUser t_srchOne(String id)throws Exception{
         WhgSysUser record = new WhgSysUser();
         record.setId(id);
+        if("2015121200000000".equals(id)){
+            record.setAccount("administrator");
+            return record;
+        }
         WhgSysUser user =  this.whgSysUserMapper.selectOne(record);
         if(user != null && user.getEpms() != null) {
             user.setEpms(MD5Util.decode4Base64(user.getEpms()));
