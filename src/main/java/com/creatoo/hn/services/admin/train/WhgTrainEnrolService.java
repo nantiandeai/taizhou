@@ -114,8 +114,10 @@ public class WhgTrainEnrolService {
 
 
         for(int j=0; j<list.size(); j++){
-            String phone = list.get(j).getContactphone();
-            String name = list.get(j).getRealname();
+            WhgTraEnrol whgTraEnrol = list.get(j);
+            String phone = whgTraEnrol.getContactphone();
+            String name = whgTraEnrol.getRealname();
+            String traid = whgTraEnrol.getTraid();
             Map<String,String> _map = new HashMap<>();
             _map.put("name",name);
             _map.put("title",title);
@@ -139,7 +141,7 @@ public class WhgTrainEnrolService {
             if(tostate == 2){
                 tempCode = "TRA_CANCEL";
             }
-            this.smsService.t_sendSMS(phone,tempCode,_map);
+            this.smsService.t_sendSMS(phone,tempCode,_map, traid);
         }
 
 
@@ -235,7 +237,7 @@ public class WhgTrainEnrolService {
             _map.put("starttime",sdf.format(tra.getStarttime()));
             _map.put("endtime",sdf.format(tra.getEndtime()));
             String tempCode = "TRA_VIEW_PASS";
-            this.smsService.t_sendSMS(updateList.get(i).getContactphone(),tempCode,_map);
+            this.smsService.t_sendSMS(updateList.get(i).getContactphone(),tempCode,_map,list.get(0).getTraid());
         }
         return res;
     }

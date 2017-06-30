@@ -90,11 +90,41 @@ public class AdminAction {
      */
     @RequestMapping("/admin_home")
 	public ModelAndView adminHome() {
-		ModelAndView view = new ModelAndView("admin/admin_home");
-
+		//ModelAndView view = new ModelAndView("admin/admin_home");
+		ModelAndView view = new ModelAndView("admin/rep/view_index");
 		try {
+			//统计PV|UV|IP
+			view.addObject("tongji_comm", adminService.tongji_PV_UV_IP());
 
-			view.addObject("inCount", adminService.t_srchList());
+			//统计当月新增用户数
+			Date now = new Date();
+			String month = new java.text.SimpleDateFormat("yyyy-MM").format(now);
+			String month_title = new java.text.SimpleDateFormat("yyyy年MM月").format(now);
+			view.addObject("tongji_add_user_month", adminService.tongji_add_user_month(month));
+			view.addObject("tongji_add_user_month_title", month_title);
+
+			//统计本年新增用户数
+			String year = new java.text.SimpleDateFormat("yyyy").format(now);
+			view.addObject("tongji_add_user_year", adminService.tongji_add_user_year(year));
+			view.addObject("tongji_add_user_year_title", year+"年");
+
+			//统计活跃用户
+			view.addObject("tongji_active_user", adminService.tongji_active_user());
+
+			//统计年度用户粘度
+			view.addObject("tongji_active_user_year", adminService.tongji_active_user_year(year));
+			view.addObject("tongji_active_user_year_title", year+"年");
+
+
+			//统计年度用户参加活动
+			view.addObject("tongji_user_act", adminService.tongji_user_act(year));
+			view.addObject("tongji_user_act_title", year+"年");
+
+			//统计年度用户参加培训
+			view.addObject("tongji_user_tra", adminService.tongji_user_tra(year));
+			view.addObject("tongji_user_act_title", year+"年");
+
+			//view.addObject("inCount", adminService.t_srchList());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}

@@ -10,6 +10,7 @@ import com.creatoo.hn.model.WhgSysUser;
 import com.creatoo.hn.services.admin.system.UserService;
 import com.creatoo.hn.services.admin.system.WhgSystemCultService;
 import com.creatoo.hn.services.comm.CommService;
+import com.creatoo.hn.services.comm.SMSService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 会员账号管理
@@ -38,6 +41,9 @@ public class WhgUserInfoAction {
      */
     @Autowired
     public CommService commService;
+
+    @Autowired
+    private SMSService smsService;
 
     /**
      * 会员服务类
@@ -98,6 +104,21 @@ public class WhgUserInfoAction {
         ResponseBean res = new ResponseBean();
         try {
             userService.t_edit(user, (WhgSysUser) request.getSession().getAttribute("user"));
+            try{
+                WhUser myuser = this.userService.t_srchOne(user.getId());
+                if(myuser.getIsrealname() != null && myuser.getPhone() != null){
+                    Map<String, String> data = new HashMap<String, String>();
+                    data.put("name",myuser.getNickname());
+                    if(user.getIsrealname() == 1){
+                        smsService.t_sendSMS(myuser.getPhone(), "REL_CHECK_PASS", data, user.getId());
+                    }
+                    if(user.getIsrealname() == 2){
+                        smsService.t_sendSMS(myuser.getPhone(), "REL_CHECK_FAIL", data, user.getId());
+                    }
+                }
+            }catch (Exception e){
+                log.error(e.getMessage(),e);
+            }
         }catch (Exception e){
             res.setSuccess(ResponseBean.FAIL);
             res.setErrormsg(e.getMessage());

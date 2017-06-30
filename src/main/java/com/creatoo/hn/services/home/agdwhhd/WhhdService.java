@@ -1261,7 +1261,8 @@ public class WhhdService {
 				num = seatNum;
 			}
 			smsData.put("number", String.valueOf(num));
-			smsService.t_sendSMS(actOrder.getOrderphoneno(), "ACT_DUE", smsData);
+			//smsService.t_sendSMS(actOrder.getOrderphoneno(), "ACT_DUE", smsData);
+			smsService.t_sendSMS(actOrder.getOrderphoneno(), "ACT_DUE", smsData, actId);
 			//短信发送成功后更改订单短信状态
 			actOrder.setOrdersmsstate(2);
 			actOrder.setOrdersmstime(new Date());

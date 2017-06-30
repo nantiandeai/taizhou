@@ -357,7 +357,12 @@ public class CgfwService {
             data.put("userName", order.getOrdercontact());
             data.put("title", room.getTitle());
             data.put("orderNum", order.getOrderid());
-            this.smsService.t_sendSMS(order.getOrdercontactphone(), "VEN_ORDER_ADD", data);
+            //this.smsService.t_sendSMS(order.getOrdercontactphone(), "VEN_ORDER_ADD", data);
+            if (room.getHasfees()!=null && room.getHasfees().intValue() == 1) {
+                this.smsService.t_sendSMS(order.getOrdercontactphone(), "VEN_ORDER_ADD_CHARGE", data, room.getId());
+            } else {
+                this.smsService.t_sendSMS(order.getOrdercontactphone(), "VEN_ORDER_ADD", data, room.getId());
+            }
         } catch (Exception e) {
             log.error("roomOrderAdd sendSMS error", e);
         }

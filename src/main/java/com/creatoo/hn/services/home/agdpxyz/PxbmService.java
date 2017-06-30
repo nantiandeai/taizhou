@@ -177,7 +177,8 @@ public class PxbmService {
             _map.put("starttime",DateFormatUtils.format(train.getStarttime(),"yyyy-MM-dd HH:mm:ss"));
             _map.put("endtime",DateFormatUtils.format(train.getStarttime(),"yyyy-MM-dd HH:mm:ss"));
             String tempCode = "TRA_VIEW_PASS";
-            this.smsService.t_sendSMS(enrol.getContactphone(),tempCode,_map);
+            //this.smsService.t_sendSMS(enrol.getContactphone(),tempCode,_map);
+            this.smsService.t_sendSMS(enrol.getContactphone(),tempCode,_map, enrol.getTraid());
         }
         return result;
     }
