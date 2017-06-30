@@ -39,7 +39,7 @@ public class PxbmService {
     public WhgTraMapper whTrainMapper;
 
     @Autowired
-    public WhgTraEnrolMapper WhgTraEnrolMapper;
+    public WhgTraEnrolMapper whgTraEnrolMapper;
 
     /**
      * 培训课程DAO
@@ -66,6 +66,7 @@ public class PxbmService {
     private WhgTraMapper whgTraMapper;
 
     private final  String SUCCESS="0";//成功
+
     /**
      * 检查培训报名
      * @param trainId
@@ -116,7 +117,7 @@ public class PxbmService {
         Example example  = new Example(WhgTraEnrol.class);
         Example.Criteria c = example.createCriteria();
         c.andEqualTo("traid", train.getId());
-        int count = WhgTraEnrolMapper.selectCountByExample(example);
+        int count = whgTraEnrolMapper.selectCountByExample(example);
         if(count >= train.getMaxnumber()){
             return Boolean.FALSE;
         }
@@ -135,7 +136,7 @@ public class PxbmService {
         c.andEqualTo("traid",trainId);
         c.andEqualTo("userid",userId);
         c.andIn("state", Arrays.asList(1,4,6));
-        int count =  WhgTraEnrolMapper.selectCountByExample(example);
+        int count =  whgTraEnrolMapper.selectCountByExample(example);
         return count == 0 ? Boolean.TRUE:Boolean.FALSE;
     }
 
@@ -168,7 +169,7 @@ public class PxbmService {
         enrol.setStatemdfuser(userId);
         enrol.setUserid(userId);
         enrol.setCrttime(now);
-        int result = WhgTraEnrolMapper.insertSelective(enrol);
+        int result = whgTraEnrolMapper.insertSelective(enrol);
         //发送短信
         if(result > 0 && state == EnumBMState.BM_CG.getValue()){
             Map<String,String> _map = new HashMap<>();
@@ -234,6 +235,43 @@ public class PxbmService {
         return rtnCode;
     }
 
+    public Boolean isLogin(String userId){
+        if(null == userId){
+            return false;
+        }
+        WhUser whUser = new WhUser();
+        whUser.setId(userId);
+        WhUser whUser1 = userMapper.selectOne(whUser);
+        if(null == whUser1){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 添加培训报名记录
+     * @param whgTraEnrol
+     * @return 0:成功,1:异常,2:重复提交
+     */
+    public int addTraSign(WhgTraEnrol whgTraEnrol){
+        try {
+            WhgTraEnrol temp = whgTraEnrolMapper.selectOne(whgTraEnrol);
+            if(null != temp){
+                return 2;
+            }
+            whgTraEnrol.setId(commService.getKey("whg_tra_enrol"));
+            whgTraEnrol.setOrderid(whgTraEnrol.getId());
+            whgTraEnrol.setState(1);
+            whgTraEnrolMapper.insert(whgTraEnrol);
+            return 0;
+        }catch (Exception e){
+            log.error(e.toString());
+            return 1;
+        }
+
+
+    }
+
     /**
      * 根据报名订单号查询所有课程
      * @param orderId 培训报名列表
@@ -246,7 +284,7 @@ public class PxbmService {
         //查询报名记录得到培训ID
         WhgTraEnrol record = new WhgTraEnrol();
         record.setOrderid(orderId);
-        record = this.WhgTraEnrolMapper.selectOne(record);//.selectByExample(example);
+        record = this.whgTraEnrolMapper.selectOne(record);//.selectByExample(example);
 
         //根据报名ID取已签到信息
         Example example2 = new Example(WhgTraEnrolCourse.class);
@@ -393,7 +431,7 @@ public class PxbmService {
             Example example = new Example(WhgTraEnrol.class);
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("traid",traId);
-            List<WhgTraEnrol> whgTraEnrolList = WhgTraEnrolMapper.selectByExample(example);
+            List<WhgTraEnrol> whgTraEnrolList = whgTraEnrolMapper.selectByExample(example);
             if(null == whgTraEnrolList){
                 return null;
             }
@@ -500,7 +538,7 @@ public class PxbmService {
             Integer canSign = this.canSign(userId,whgTra);
             WhgTraEnrol whgTraEnrol = new WhgTraEnrol();
             whgTraEnrol.setTraid(whgTra.getId());
-            Integer signCount = WhgTraEnrolMapper.selectCount(whgTraEnrol);
+            Integer signCount = whgTraEnrolMapper.selectCount(whgTraEnrol);
             JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(whgTra));
             jsonObject.put("canSign",canSign);
             jsonObject.put("signCount",signCount);
