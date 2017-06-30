@@ -543,10 +543,12 @@ public class PxbmService {
      */
     public PageInfo getCourseByTraId(Integer page,Integer rows,String traId){
         PageHelper.startPage(page,rows);
-        WhgTraCourse whgTraCourse = new WhgTraCourse();
-        whgTraCourse.setTraid(traId);
+        Example example = new Example(WhgTraCourse.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("traid",traId);
+        example.setOrderByClause("starttime");
         try {
-            List<WhgTraCourse> whgTraCourseList = whgTraCourseMapper.select(whgTraCourse);
+            List<WhgTraCourse> whgTraCourseList = whgTraCourseMapper.selectByExample(example);
             return new PageInfo(whgTraCourseList);
         }catch (Exception e){
             log.error(e.toString());
