@@ -94,6 +94,9 @@ public class ApiUserService {
     @Autowired
     private WhCommentMapper whcommMapper;
 
+    @Autowired
+    private WhgTraMapper whgTraMapper;
+
     /**
      * 绑定手机
      * @param id 微信账号ID whg_usr_xeixin.id
@@ -465,7 +468,7 @@ public class ApiUserService {
             List<WhCollection> list=whCollectionMapper.selectByExample(example);
             List<Map> resList = new ArrayList<Map>();
             for(WhCollection whCollection : list){
-                if("2".equals(cmreftyp)){
+                if("2".equals(cmreftyp)){//场馆
                     WhgVen whgVen = new WhgVen();
                     whgVen.setId(whCollection.getCmrefid());
                     whgVen = whgVenMapper.selectOne(whgVen);
@@ -479,7 +482,7 @@ public class ApiUserService {
                         map.put("venueAddress",whgVen.getAddress());
                         resList.add(map);
                     }
-                }else if("3".equals(cmreftyp)){
+                }else if("3".equals(cmreftyp)){//场馆活动室
                     WhgVenRoom whgVenRoom = new WhgVenRoom();
                     whgVenRoom.setId(whCollection.getCmrefid());
                     whgVenRoom = whgVenRoomMapper.selectOne(whgVenRoom);
@@ -496,7 +499,21 @@ public class ApiUserService {
                         map.put("sizepeople",whgVenRoom.getSizepeople());
                         resList.add(map);
                     }
-                }else {
+                } else if ("5".equals(cmreftyp)) {//5.培训
+                    WhgTra whgTra = new WhgTra();
+                    whgTra.setId(whCollection.getCmrefid());
+                    whgTra = whgTraMapper.selectOne(whgTra);
+                    if (null != whgTra) {
+                        Map map = new HashMap();
+                        map.put("id", whgTra.getId());
+                        map.put("cmdate", whCollection.getCmdate());
+                        map.put("cmurl", whCollection.getCmurl());
+                        map.put("imgurl", whgTra.getTrainimg());
+                        map.put("traName", whgTra.getTitle());
+                        map.put("typeName", getTypeName(whgTra.getEtype()));
+                        resList.add(map);
+                    }
+                }else {//活动
                     WhgActActivity whgActActivity = new WhgActActivity();
                     whgActActivity.setId(whCollection.getCmrefid());
                     whgActActivity = whgActActivityMapper.selectOne(whgActActivity);

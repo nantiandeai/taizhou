@@ -3,7 +3,9 @@ package com.creatoo.hn.actions.api.comm;
 import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.utils.ReqParamsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +31,8 @@ public class APICommAction {
      * @param res 响应对象
      * @return 分页搜索数据
      */
-    @RequestMapping("/globalsrchcontent")
+    @CrossOrigin
+    @RequestMapping(value = "/globalsrchcontent",method = RequestMethod.POST)
     public Object globalsrchcontent(HttpServletRequest req, HttpServletResponse res){
         //获取请求参数
         Map<String, Object> param = ReqParamsUtil.parseRequest(req);
