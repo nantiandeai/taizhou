@@ -108,20 +108,18 @@ public class CommentService {
 		int rows = Integer.parseInt((String)param.get("rows"));
 		String userid = (String) param.get("rmuid");
 		String rmreftyp = (String) param.get("rmreftyp");
-		//String rmuid= (String) session.getAttribute(WhConstance.SESS_USER_ID_KEY);
-		//带条件的分页查询
 		//根据用户id获取所有评论
 		PageHelper.startPage(page, rows);
 		List<HashMap> commList = this.whcommMapper.searchMyComment(userid,rmreftyp);
 		System.out.println("commList============"+commList);
 		// 取分页信息
-		PageInfo<HashMap> pinfo = new PageInfo<HashMap>(commList);
+		PageInfo<HashMap> pinfo = new PageInfo<>(commList);
 		commList = pinfo.getList();
 		
 		//将评论id 装数组
 		java.util.ArrayList<String> ids = null;
 		if(commList != null && commList.size()>0){
-			ids = new java.util.ArrayList<String>();
+			ids = new java.util.ArrayList<>();
 			for(HashMap m :commList){
 				ids.add((String)m.get("rmid"));
 			}
@@ -145,6 +143,7 @@ public class CommentService {
 		commMapAll.put("commRetryMap", commRetryMap);
 		return commMapAll;
 	}
+
 	/**
 	 * 删除评论
 	 */

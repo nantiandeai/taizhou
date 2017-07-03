@@ -1428,11 +1428,13 @@ public class APIUserAction {
             String myUserId = getParam(request,"userId");
             String cmreftyp = null;
             if("1".equals(type)){
-                cmreftyp = "4";
+                cmreftyp = "4";  //活动
             }else if("2".equals(type)){
-                cmreftyp = "2";
+                cmreftyp = "2";  //场馆
+            }else if("5".equals(type)){
+                cmreftyp = "5";  //培训
             }else {
-                cmreftyp = "3";
+                cmreftyp = "3";  //场馆活动室
             }
             //获取收藏数
             scNum = this.colleService.shouCanShu(cmreftyp, itemId);
