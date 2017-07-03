@@ -304,15 +304,11 @@ public class UserCenterService {
 	 */
 	public PageInfo getUserTraOrder(Integer page,Integer rows,String userId,String sdate){
 		PageHelper.startPage(page,rows);
-		Example example = new Example(WhgTraEnrol.class);
-		Example.Criteria criteria = example.createCriteria();
-		criteria.andEqualTo("userid",userId);
-		List<String> traList = getTraList(sdate);
-		if(null != traList){
-			criteria.andIn("traid",traList);
-		}
 		try {
-			List<WhgTraEnrol> whgTraEnrolList = whgTraEnrolMapper.selectByExample(example);
+			Map map = new HashMap();
+			map.put("sdate",sdate);
+			map.put("userid",userId);
+			List whgTraEnrolList = whgTraEnrolMapper.getTraEnrolListByUserId(map);
 			return new PageInfo(whgTraEnrolList);
 		}catch (Exception e){
 			logger.error(e.toString());
@@ -321,26 +317,26 @@ public class UserCenterService {
 	}
 
 	/**
-	 * 按照条件获取培训
-	 * @param sdate
+	 * 修改培训订单状态
+	 * @param traEnrolId
+	 * @param state
 	 * @return
 	 */
-	private List<String> getTraList(String sdate){
-		Example example = new Example(WhgTra.class);
-		Example.Criteria criteria = example.createCriteria();
-		if("1".equals(sdate)){
-			criteria.andGreaterThanOrEqualTo("starttime",new Date());
-		}else if("2".equals(sdate)){
-			criteria.andLessThanOrEqualTo("endtime",new Date());
-		}else {
-			return null;
+	public int updateTraEnrolState(String traEnrolId,Integer state){
+		try {
+			WhgTraEnrol whgTraEnrol = new WhgTraEnrol();
+			whgTraEnrol.setId(traEnrolId);
+			whgTraEnrol = whgTraEnrolMapper.selectOne(whgTraEnrol);
+			if(null == whgTraEnrol){
+				return 1;
+			}
+			whgTraEnrol.setState(state);
+			whgTraEnrolMapper.updateByPrimaryKey(whgTraEnrol);
+			return 0;
+		}catch (Exception e){
+			logger.error(e.toString());
+			return 1;
 		}
-		List<String > res = new ArrayList<String>();
-		List<WhgTra> whgTraList = whgTraMapper.selectByExample(example);
-		for(WhgTra whgTra : whgTraList){
-			res.add(whgTra.getId());
-		}
-		return res;
 	}
 }
 

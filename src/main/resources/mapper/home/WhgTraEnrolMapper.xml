@@ -2,16 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.creatoo.hn.mapper.WhgTraEnrolMapper">
   <select id="getTraEnrolListByUserId" resultType="hashmap" parameterType="hashmap">
-    select t.*,t1.title,t1.address,t1.starttime,t1.id 'trainid' from whg_tra_enrol t LEFT JOIN whg_tra t1 on t.traid = t1.id
-    <if test="type == 1">
-      where t1.endtime &gt;= NOW()
-    </if>
-    <if test="type == 0">
-      where t1.endtime &lt;= NOW()
-    </if>
-    <if test="userid != null and userid != ''">
-      and t.userid = #{userid}
-    </if>
+    SELECT
+      t.*,
+      t1.title,
+      t1.address,
+      t1.starttime,
+      t1.id 'trainid'
+    FROM whg_tra_enrol t ,whg_tra t1
+    <where>
+      t.traid = t1.id
+      <if test="sdate != null and sdate == 1">
+        AND t1.starttime <![CDATA[>=]]> NOW()
+      </if>
+      <if test="sdate != null and sdate == 2">
+        AND t1.endtime <![CDATA[<=]]> NOW()
+      </if>
+      <if test="userid != null and userid != ''">
+        AND t.userid = #{userid}
+      </if>
+    </where>
     order by  t.crttime desc
   </select>
 </mapper>
