@@ -15,7 +15,7 @@ WhgUploadMoreImg = (function () {
             needCut: true,                                          //是否裁剪图片
             cutWidth: 750,                                          //裁剪图片的宽度
             cutHeight: 500,                                         //裁剪图片的高度
-            maxFileSize: '4mb',                                    //最大只能上传4mb的文件
+            maxFileSize: '2mb',                                    //最大只能上传4mb的文件
             imgServerAddr: WhgComm.getImgServerAddr(),             //
             multiFile: true                                       //是否能一次上传多个文件
         }, options);

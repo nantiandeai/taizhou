@@ -97,7 +97,7 @@
             <div class="whgff-row-input-fileview" id="whg_img_pload_view"></div>
             <div class="whgff-row-input-filefile" >
                 <i><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" id="fileUploadBtn2">选择图片</a></i>
-                <i style="color: #999;font-size: 12px;font-style: normal;">图片格式为jpg、png、gif，大小为2MB以内</i>
+                <i style="color: #999;font-size: 12px;font-style: normal;">图片格式为jpg、png、gif，大小为2MB以内,最多可上传五张图片</i>
             </div>
         </div>
     </div>
