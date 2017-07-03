@@ -2078,12 +2078,24 @@ public class APIUserAction {
     public ResponseBean getMyTraEnrol(HttpServletRequest request){
         ResponseBean responseBean = new ResponseBean();
         String userId = getParam(request,"userId",null);
-        String sdate = getParam(request,"sdate",null);
+        String page = getParam(request,"index","1");
+        String rows = getParam(request,"size","10");
+        String sdate = getParam(request,"sdate","1");
         if(null == userId){
             responseBean.setSuccess(ResponseBean.FAIL);
             responseBean.setErrormsg("用户ID不能为空");
+            return responseBean;
         }
-
+        PageInfo pageInfo = userCenterService.getUserTraOrder(Integer.valueOf(page),Integer.valueOf(rows),userId,sdate);
+        if(null == pageInfo){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("获取用户培训订单失败");
+            return responseBean;
+        }
+        responseBean.setRows((List)pageInfo.getList());
+        responseBean.setPage(pageInfo.getPageNum());
+        responseBean.setPageSize(pageInfo.getPageSize());
+        responseBean.setTotal(pageInfo.getTotal());
         return responseBean;
     }
 }

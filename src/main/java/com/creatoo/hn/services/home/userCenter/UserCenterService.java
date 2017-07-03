@@ -1,26 +1,16 @@
 package com.creatoo.hn.services.home.userCenter;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import com.creatoo.hn.mapper.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.creatoo.hn.model.WhCode;
-import com.creatoo.hn.model.WhUser;
-import com.creatoo.hn.model.WhUserAlerts;
-import com.creatoo.hn.model.WhgActActivity;
-import com.creatoo.hn.model.WhgActOrder;
-import com.creatoo.hn.model.WhgActTicket;
+import com.creatoo.hn.model.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.Criteria;
+
+import java.util.*;
 
 /**
  * 个人用户中心业务类
@@ -30,6 +20,9 @@ import tk.mybatis.mapper.entity.Example.Criteria;
  */
 @Service
 public class UserCenterService {
+
+	private static Logger logger = Logger.getLogger(UserCenterService.class);
+
 	@Autowired
 	private WhUserMapper userMapper;
 	
@@ -49,6 +42,12 @@ public class UserCenterService {
 	private WhgActOrderMapper whgActOrderMapper;
 	@Autowired
 	private WhgVenRoomOrderMapper whgVenRoomOrderMapper;
+
+	@Autowired
+	private WhgTraEnrolMapper whgTraEnrolMapper;
+
+	@Autowired
+	private WhgTraMapper whgTraMapper;
 
 	/**
 	 * 判断用户名和密码
@@ -293,6 +292,55 @@ public class UserCenterService {
 	public void upActOrder(WhgActOrder actOrder){
 		whgActOrderMapper.updateByPrimaryKey(actOrder);
 		
+	}
+
+	/**
+	 * 查询培训报名
+	 * @param page
+	 * @param rows
+	 * @param userId
+	 * @param sdate
+	 * @return
+	 */
+	public PageInfo getUserTraOrder(Integer page,Integer rows,String userId,String sdate){
+		PageHelper.startPage(page,rows);
+		Example example = new Example(WhgTraEnrol.class);
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("userid",userId);
+		List<String> traList = getTraList(sdate);
+		if(null != traList){
+			criteria.andIn("traid",traList);
+		}
+		try {
+			List<WhgTraEnrol> whgTraEnrolList = whgTraEnrolMapper.selectByExample(example);
+			return new PageInfo(whgTraEnrolList);
+		}catch (Exception e){
+			logger.error(e.toString());
+			return null;
+		}
+	}
+
+	/**
+	 * 按照条件获取培训
+	 * @param sdate
+	 * @return
+	 */
+	private List<String> getTraList(String sdate){
+		Example example = new Example(WhgTra.class);
+		Example.Criteria criteria = example.createCriteria();
+		if("1".equals(sdate)){
+			criteria.andGreaterThanOrEqualTo("starttime",new Date());
+		}else if("2".equals(sdate)){
+			criteria.andLessThanOrEqualTo("endtime",new Date());
+		}else {
+			return null;
+		}
+		List<String > res = new ArrayList<String>();
+		List<WhgTra> whgTraList = whgTraMapper.selectByExample(example);
+		for(WhgTra whgTra : whgTraList){
+			res.add(whgTra.getId());
+		}
+		return res;
 	}
 }
 
