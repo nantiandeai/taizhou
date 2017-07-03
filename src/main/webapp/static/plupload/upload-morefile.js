@@ -43,7 +43,7 @@ WhgUploadMoreFile = (function () {
             var html = "";
             for (var i in filePaths) {
                 var fileName = filePaths[i].substr(filePaths[i].lastIndexOf("/")+1);
-                html += '<div class="singleFile"><a href="#">'+fileName+'</a><span class="cancelFileBtn" fileurl = "'+filePaths[i]+'" >取消</span></div>';
+                html += '<div class="singleFile"><a href="#">'+fileName+'</a><span class="cancelFileBtn" fileurl = "'+filePaths[i]+'" style="padding-left: 8px; color: #d43f3a; cursor:pointer">取消</span></div>';
             }
             $("#"+thisObj._options.previewFileId).append(html);
         }
@@ -57,12 +57,12 @@ WhgUploadMoreFile = (function () {
 
         $("input[type=radio][name=type]").change(function () {
             thisObj.clear();
-            var fileType = ["","img","video","file"][$(this).val()];
+            var fileType = ["","img","video","file","video"][$(this).val()];
             thisObj._options.uploadFileType = fileType;
             thisObj._init();
-            console.log(fileType);
-            console.log($(this).val());
-            console.log(thisObj);
+            // console.log(fileType);
+            // console.log($(this).val());
+            // console.log(thisObj);
         });
     }
 
@@ -74,12 +74,16 @@ WhgUploadMoreFile = (function () {
         //this对象
         var thisObj = this;
         var mime_type = {};
+        var maxSize;
         if (thisObj._options.uploadFileType == "img") {
-            mime_type = { title : "Image files", extensions : "jpg,gif,png" }
+            mime_type = { title : "Image files", extensions : "jpg,gif,png" };
+            maxSize = '2mb';
         } else if (thisObj._options.uploadFileType == "video") {
-            mime_type = { title : "Video files", extensions : "mp3,mp4,flv,avi" }
+            mime_type = { title : "Video files", extensions : "mp3,mp4,flv,avi" };
+            maxSize = '100mb';
         } else {
             mime_type = { title : "File files", extensions : "doc,docx,xls,zip,xlsx,pdf" };
+            maxSize = '10mb';
         }
 // debugger
         //使用plupload构造文件上传
@@ -93,7 +97,8 @@ WhgUploadMoreFile = (function () {
             filters: {
                 mime_types : [mime_type],
                 // mime_types : [{ title : "files", extensions : "mp3,mp4,flv,jpg,gif,png,bmp,doc,docx,xls,zip,xlsx" }],
-                max_file_size : this._options.maxFileSize, //最大只能上传10mb的文件
+                // max_file_size : this._options.maxFileSize, //最大只能上传10mb的文件
+                max_file_size : maxSize, //最大只能上传
                 prevent_duplicates : false //不允许选取重复文件
             },
             init: {
@@ -229,7 +234,7 @@ WhgUploadMoreFile = (function () {
         for(var i=0; i<files.length; i++){
             var file = files[i];
             // $('<span id="span_'+file.id+'">'+file.name+' 完成<b id="'+file.id+'"></b>%</span>').appendTo($('#'+this._options.uploadBtnId).parent('i'));
-            var html = '<div class="singleFile"><a href="#">'+file.name+'</a> <span id="'+file.id+'"></span>% <span class="cancelFileBtn" fileurl = "'+thisObj._uploadSuccFileURL+'" >取消</span></div>';
+            var html = '<div class="singleFile"><a href="#">'+file.name+'</a> <span id="'+file.id+'"></span>% <span class="cancelFileBtn" fileurl = "'+thisObj._uploadSuccFileURL+'" style="padding-left: 8px; color: #d43f3a; cursor:pointer">取消</span></div>';
             $("#"+this._options.uploadBtnId).parents(".whgff-row-input-filefile").prev().append(html);
             break;
         }

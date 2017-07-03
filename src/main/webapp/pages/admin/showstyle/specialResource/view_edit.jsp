@@ -71,7 +71,7 @@
         </div>
         <div class="whgff-row-input">
             <div class="radio radio-primary whg-js-data" name="type" id="type" value="${source.type}"
-                 js-data='[{"id":"1","text":"图片"},{"id":"2","text":"视频"},{"id":"3","text":"文档"}]'>
+                 js-data='[{"id":"1","text":"图片"},{"id":"2","text":"视频"},{"id":"3","text":"文档"},{"id":"4","text":"音频"}]'>
             </div>
         </div>
     </div>
@@ -84,7 +84,7 @@
             <div class="whgff-row-input-fileview" id="whg_file_pload_view"></div>
             <div class="whgff-row-input-filefile" >
                 <i><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" id="fileUploadBtn2">上传</a></i>
-                <%--<i style="color: #999;font-size: 12px;font-style: normal;">图片格式为jpg、png、gif，大小为2MB以内</i>--%>
+                <i style="color: #999;font-size: 13px;font-style: normal;">图片格式为jpg、png、gif,大小为2MB以内;视频/音频格式为mp3,mp4,flv,avi,大小为100MB以内;文档格式为doc,docx,xls,zip,xlsx,pdf,大小为10MB以内;</i>
             </div>
         </div>
     </div>
@@ -130,11 +130,12 @@
             onSubmit : function(param) {
                 var _valid = $(this).form('enableValidation').form('validate')
                 if(_valid) {
+//                    debugger
                     //图片必填
                     if($('#cult_picture1').val() == ""){
                         _valid = false;
                         $.messager.alert('提示', '请选择封面图片');
-                    }else if($('#whg_img_upload').val() == ""){
+                    }else if($('#whg_file_upload').val() == ""){
                         _valid = false;
                         $.messager.alert('提示', '请上传资源');
                     }else if(!isUEvalid) {
