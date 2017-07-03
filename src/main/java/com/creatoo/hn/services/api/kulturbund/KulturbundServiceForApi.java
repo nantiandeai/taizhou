@@ -18,9 +18,9 @@ import java.util.List;
  * Created by caiyong on 2017/7/3.
  */
 @Service
-public class KulturbundService {
+public class KulturbundServiceForApi {
 
-    private static Logger logger = Logger.getLogger(KulturbundService.class);
+    private static Logger logger = Logger.getLogger(KulturbundServiceForApi.class);
 
     @Autowired
     private WhgCultureUnitMapper whgCultureUnitMapper;
