@@ -660,4 +660,18 @@ public class PxbmService {
             return null;
         }
     }
+
+    /**
+     * 获取用户已报名的培训订单
+     * @param page
+     * @param rows
+     * @param userId
+     * @param sdate
+     * @return
+     */
+    public PageInfo getTraEnrolByUserId(Integer page,Integer rows,String userId,String sdate){
+        PageHelper.startPage(page,rows);
+
+        return new PageInfo();
+    }
 }

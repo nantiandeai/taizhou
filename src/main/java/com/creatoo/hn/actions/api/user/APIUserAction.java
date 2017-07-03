@@ -13,6 +13,7 @@ import com.creatoo.hn.services.api.user.ApiUserService;
 import com.creatoo.hn.services.comm.CommPropertiesService;
 import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.services.comm.SMSService;
+import com.creatoo.hn.services.home.agdpxyz.PxbmService;
 import com.creatoo.hn.services.home.agdwhhd.WhhdService;
 import com.creatoo.hn.services.home.user.RegistService;
 import com.creatoo.hn.services.home.userCenter.*;
@@ -96,6 +97,9 @@ public class APIUserAction {
 
     @Autowired
     private WhgYunweiTagService whgYunweiTagService;
+
+    @Autowired
+    private PxbmService pxbmService;
     /**
      * 发送手机验证码
      * @param request
@@ -2073,7 +2077,12 @@ public class APIUserAction {
     @RequestMapping(value = "/getMyTraEnrol",method = RequestMethod.POST)
     public ResponseBean getMyTraEnrol(HttpServletRequest request){
         ResponseBean responseBean = new ResponseBean();
-        String userId = getParam(request,"userId");
+        String userId = getParam(request,"userId",null);
+        String sdate = getParam(request,"sdate",null);
+        if(null == userId){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("用户ID不能为空");
+        }
 
         return responseBean;
     }
