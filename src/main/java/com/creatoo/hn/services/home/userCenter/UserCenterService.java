@@ -1,26 +1,16 @@
 package com.creatoo.hn.services.home.userCenter;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import com.creatoo.hn.mapper.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.creatoo.hn.model.WhCode;
-import com.creatoo.hn.model.WhUser;
-import com.creatoo.hn.model.WhUserAlerts;
-import com.creatoo.hn.model.WhgActActivity;
-import com.creatoo.hn.model.WhgActOrder;
-import com.creatoo.hn.model.WhgActTicket;
+import com.creatoo.hn.model.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.Criteria;
+
+import java.util.*;
 
 /**
  * 个人用户中心业务类
@@ -30,6 +20,9 @@ import tk.mybatis.mapper.entity.Example.Criteria;
  */
 @Service
 public class UserCenterService {
+
+	private static Logger logger = Logger.getLogger(UserCenterService.class);
+
 	@Autowired
 	private WhUserMapper userMapper;
 	
@@ -49,6 +42,12 @@ public class UserCenterService {
 	private WhgActOrderMapper whgActOrderMapper;
 	@Autowired
 	private WhgVenRoomOrderMapper whgVenRoomOrderMapper;
+
+	@Autowired
+	private WhgTraEnrolMapper whgTraEnrolMapper;
+
+	@Autowired
+	private WhgTraMapper whgTraMapper;
 
 	/**
 	 * 判断用户名和密码
@@ -293,6 +292,51 @@ public class UserCenterService {
 	public void upActOrder(WhgActOrder actOrder){
 		whgActOrderMapper.updateByPrimaryKey(actOrder);
 		
+	}
+
+	/**
+	 * 查询培训报名
+	 * @param page
+	 * @param rows
+	 * @param userId
+	 * @param sdate
+	 * @return
+	 */
+	public PageInfo getUserTraOrder(Integer page,Integer rows,String userId,String sdate){
+		PageHelper.startPage(page,rows);
+		try {
+			Map map = new HashMap();
+			map.put("sdate",sdate);
+			map.put("userid",userId);
+			List whgTraEnrolList = whgTraEnrolMapper.getTraEnrolListByUserId(map);
+			return new PageInfo(whgTraEnrolList);
+		}catch (Exception e){
+			logger.error(e.toString());
+			return null;
+		}
+	}
+
+	/**
+	 * 修改培训订单状态
+	 * @param traEnrolId
+	 * @param state
+	 * @return
+	 */
+	public int updateTraEnrolState(String traEnrolId,Integer state){
+		try {
+			WhgTraEnrol whgTraEnrol = new WhgTraEnrol();
+			whgTraEnrol.setId(traEnrolId);
+			whgTraEnrol = whgTraEnrolMapper.selectOne(whgTraEnrol);
+			if(null == whgTraEnrol){
+				return 1;
+			}
+			whgTraEnrol.setState(state);
+			whgTraEnrolMapper.updateByPrimaryKey(whgTraEnrol);
+			return 0;
+		}catch (Exception e){
+			logger.error(e.toString());
+			return 1;
+		}
 	}
 }
 

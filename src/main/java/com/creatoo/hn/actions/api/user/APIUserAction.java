@@ -2073,17 +2073,58 @@ public class APIUserAction {
         return res;
     }
 
+    /**
+     * 获取用户培训订单
+     * @param request
+     * @return
+     */
     @CrossOrigin
     @RequestMapping(value = "/getMyTraEnrol",method = RequestMethod.POST)
     public ResponseBean getMyTraEnrol(HttpServletRequest request){
         ResponseBean responseBean = new ResponseBean();
         String userId = getParam(request,"userId",null);
-        String sdate = getParam(request,"sdate",null);
+        String page = getParam(request,"index","1");
+        String rows = getParam(request,"size","10");
+        String sdate = getParam(request,"sdate","1");
         if(null == userId){
             responseBean.setSuccess(ResponseBean.FAIL);
             responseBean.setErrormsg("用户ID不能为空");
+            return responseBean;
         }
+        PageInfo pageInfo = userCenterService.getUserTraOrder(Integer.valueOf(page),Integer.valueOf(rows),userId,sdate);
+        if(null == pageInfo){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("获取用户培训订单失败");
+            return responseBean;
+        }
+        responseBean.setRows((List)pageInfo.getList());
+        responseBean.setPage(pageInfo.getPageNum());
+        responseBean.setPageSize(pageInfo.getPageSize());
+        responseBean.setTotal(pageInfo.getTotal());
+        return responseBean;
+    }
 
+    /**
+     * 取消用户培训订单
+     * @param request
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/cancelTraEnrol",method = RequestMethod.POST)
+    public ResponseBean cancelTraEnrol(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        String userId = getParam(request,"userId",null);
+        String orderId = getParam(request,"orderId",null);
+        if(null == userId || null == orderId){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("参数不足");
+            return responseBean;
+        }
+        if(0 != userCenterService.updateTraEnrolState(orderId,2) ){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("取消培训订单失败");
+            return responseBean;
+        }
         return responseBean;
     }
 }

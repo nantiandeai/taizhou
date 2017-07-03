@@ -43,6 +43,12 @@ public class APICommAction {
             if(param.containsKey("srchkey")){
                 param.put("srchkey", "%"+param.get("srchkey")+"%");
             }
+            if(param.containsKey("index")){
+                param.put("page", param.get("index"));
+            }
+            if(param.containsKey("size")){
+                param.put("rows", param.get("size"));
+            }
             rtnMap = this.commservice.globalsrchcontent(param);
         } catch (Exception e) {
             rtnMap.put("total", 0);
