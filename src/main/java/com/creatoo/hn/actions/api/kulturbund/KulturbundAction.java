@@ -4,7 +4,7 @@ import com.creatoo.hn.ext.bean.ResponseBean;
 import com.creatoo.hn.model.WhgCultureAct;
 import com.creatoo.hn.model.WhgCultureUnit;
 import com.creatoo.hn.model.WhgCultureZx;
-import com.creatoo.hn.services.api.kulturbund.KulturbundService;
+import com.creatoo.hn.services.api.kulturbund.KulturbundServiceForApi;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,15 +28,15 @@ public class KulturbundAction {
     private static Logger logger = Logger.getLogger(KulturbundAction.class);
 
     @Autowired
-    private KulturbundService kulturbundService;
+    private KulturbundServiceForApi kulturbundServiceForApi;
 
     @CrossOrigin
     @RequestMapping(value = "/indexData",method = RequestMethod.POST)
     public ResponseBean indexData(HttpServletRequest request){
         ResponseBean responseBean = new ResponseBean();
-        List<WhgCultureUnit> whgCultureUnitList = kulturbundService.getCultureUnit();
-        List<WhgCultureAct> whgCultureActList = kulturbundService.getCultureAct(1,6);
-        List<WhgCultureZx> whgCultureZxList = kulturbundService.getCultureZx(1,15);
+        List<WhgCultureUnit> whgCultureUnitList = kulturbundServiceForApi.getCultureUnit();
+        List<WhgCultureAct> whgCultureActList = kulturbundServiceForApi.getCultureAct(1,6);
+        List<WhgCultureZx> whgCultureZxList = kulturbundServiceForApi.getCultureZx(1,15);
         Map map = new HashMap();
         if(null != whgCultureUnitList){
             map.put("whgCultureUnitList",whgCultureUnitList);
