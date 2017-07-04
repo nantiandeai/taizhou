@@ -1045,6 +1045,9 @@ public class WhhdService {
 	}
 
 	private Boolean isAfter(Date date1,Date date2){
+		if(null == date1 || null == date2){
+			return true;
+		}
 		LocalDate localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		LocalDate localDate2 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		if(localDate1.isAfter(localDate2)){
