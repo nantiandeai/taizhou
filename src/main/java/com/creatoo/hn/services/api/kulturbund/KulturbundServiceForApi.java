@@ -7,6 +7,7 @@ import com.creatoo.hn.model.WhgCultureAct;
 import com.creatoo.hn.model.WhgCultureUnit;
 import com.creatoo.hn.model.WhgCultureZx;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class KulturbundServiceForApi {
         }
     }
 
-    public List<WhgCultureAct> getCultureAct(Integer page,Integer rows){
+    public PageInfo getCultureAct(Integer page, Integer rows){
         PageHelper.startPage(page,rows);
         Example example = new Example(WhgCultureAct.class);
         Example.Criteria criteria = example.createCriteria();
@@ -52,14 +53,14 @@ public class KulturbundServiceForApi {
         example.setOrderByClause("culactcreattime desc");
         try {
             List<WhgCultureAct> whgCultureActList = whgCultureActMapper.selectByExample(example);
-            return whgCultureActList;
+            return new PageInfo(whgCultureActList);
         }catch (Exception e){
           logger.error(e.toString());
           return null;
         }
     }
 
-    public List<WhgCultureZx> getCultureZx(Integer page,Integer rows){
+    public PageInfo getCultureZx(Integer page,Integer rows){
         PageHelper.startPage(page,rows);
         Example example = new Example(WhgCultureZx.class);
         Example.Criteria criteria = example.createCriteria();
@@ -67,7 +68,7 @@ public class KulturbundServiceForApi {
         example.setOrderByClause("culzxcreattime desc");
         try {
             List<WhgCultureZx> whgCultureZxList = whgCultureZxMapper.selectByExample(example);
-            return whgCultureZxList;
+            return new PageInfo(whgCultureZxList);
         }catch (Exception e){
             logger.error(e.toString());
             return null;
