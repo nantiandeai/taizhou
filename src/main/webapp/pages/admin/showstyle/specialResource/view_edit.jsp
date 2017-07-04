@@ -76,7 +76,6 @@
         </div>
     </div>
 
-
     <div class="whgff-row">
         <div class="whgff-row-label"><i>*</i>上传资源：</div>
         <div class="whgff-row-input">

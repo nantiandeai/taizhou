@@ -120,6 +120,7 @@ WhgUploadMoreFile = (function () {
                     d.innerHTML = file.percent;
                 },
                 FileUploaded: function(up, file, info) {
+                    debugger
                     if (info.status == 200){
                         //上传后的处理
                         var response = eval('('+info.response+')');
