@@ -160,7 +160,7 @@ public class WhgTrainAction {
      * 修改培训
      * @return
      */
-    @RequestMapping("/edit")
+    @RequestMapping("/editEx")
     @WhgOPT(optType = EnumOptType.TRA, optDesc = {"修改培训"})
     public ResponseBean edit(WhgTra tra, HttpSession session, HttpServletRequest request){
         ResponseBean res = new ResponseBean();
@@ -207,6 +207,68 @@ public class WhgTrainAction {
             log.error(res.getErrormsg(), e);
         }
         return res;
+    }
+
+    @RequestMapping("/edit")
+    @WhgOPT(optType = EnumOptType.TRA, optDesc = {"修改培训"})
+    public ResponseBean edit(HttpSession session, HttpServletRequest request){
+        ResponseBean res = new ResponseBean();
+        WhgTra tra = getEntity(request);
+        if (tra.getId() == null){
+            res.setSuccess(ResponseBean.FAIL);
+            res.setErrormsg("培训主键信息丢失");
+            return res;
+        }
+        try {
+            WhgSysUser sysUser = (WhgSysUser) session.getAttribute("user");
+            if("".equals(request.getParameter("age1")) && "".equals(request.getParameter("age2"))){
+                tra.setAge("");
+            }
+            if(tra.getEbrand() == null ){
+                tra.setEbrand("");
+            }
+            if(tra.getTeacherid() == null ){
+                tra.setTeacherid("");
+            }
+            if(tra.getEkey() == null ){
+                tra.setEkey("");
+            }
+            if(tra.getEtag() == null ){
+                tra.setEtag("");
+            }
+            if(tra.getVenue() == null ){
+                tra.setVenue("");
+            }
+            if(tra.getVenroom() == null ){
+                tra.setVenroom("");
+            }
+            res = this.whgTrainService.t_edit(tra, sysUser, request);
+            if("1".equals(res.getSuccess())){
+                branchService.clearBranchRel(tra.getId(),EnumTypeClazz.TYPE_TRAIN.getValue());
+                //设置活动所属单位
+                String[] branch = request.getParameterValues("branch");
+                for(String branchId : branch){
+                    branchService.setBranchRel(tra.getId(), EnumTypeClazz.TYPE_TRAIN.getValue(),branchId);
+                }
+            }
+        }catch (Exception e){
+            res.setSuccess(ResponseBean.FAIL);
+            res.setErrormsg("培训信息保存失败");
+            log.error(res.getErrormsg(), e);
+        }
+        return res;
+    }
+
+    private WhgTra getEntity(HttpServletRequest request){
+        WhgTra whgTra = new WhgTra();
+        whgTra.setId(getParam(request,"id",null));
+        whgTra.setTitle(getParam(request,"title",null));
+        whgTra.setTrainimg(getParam(request,"trainimg",null));
+        whgTra.setVenue(getParam(request,"venue",null));
+        whgTra.setVenroom(getParam(request,"venroom",null));
+        whgTra.setEbrand(getParam(request,"ebrand",null));
+        whgTra.setPhone(getParam(request,"phone",null));
+        return whgTra;
     }
 
     /**
@@ -294,4 +356,18 @@ public class WhgTrainAction {
         return res;
     }
 
+    /**
+     * 获取参数
+     * @param request
+     * @param paramName
+     * @param defaultValue
+     * @return
+     */
+    private String getParam(HttpServletRequest request,String paramName,String defaultValue){
+        String value = request.getParameter(paramName);
+        if(null == value || value.trim().isEmpty()){
+            return defaultValue;
+        }
+        return value;
+    }
 }

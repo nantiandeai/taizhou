@@ -211,6 +211,13 @@
     </div>
 
     <div class="whgff-row">
+        <div class="whgff-row-label">报名条件：</div>
+        <div class="whgff-row-input">
+            <input class="easyui-textbox" id="userconditions" name="userconditions" value="${whgTra.userconditions}" style="width:500px; height:60px" data-options="multiline:true,prompt:'请填写报名条件'">
+        </div>
+    </div>
+
+    <div class="whgff-row">
         <div class="whgff-row-label"><label style="color: red">*</label>区域：</div>
         <div class="whgff-row-input">
             <div class="radio radio-primary whg-js-data" name="area" value="${whgTra.area}"
