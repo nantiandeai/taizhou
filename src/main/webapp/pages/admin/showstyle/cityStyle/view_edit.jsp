@@ -31,10 +31,10 @@
 <form id="whgff" class="whgff" method="post">
     <c:choose>
         <c:when test="${not empty targetShow}">
-            <h2>查看特色资源</h2>
+            <h2>查看市民上传</h2>
         </c:when>
         <c:otherwise>
-            <h2>编辑特色资源</h2>
+            <h2>审核市民上传</h2>
         </c:otherwise>
     </c:choose>
     <input type="hidden" name="id" id="id" value="${id}"/>
@@ -45,19 +45,7 @@
     </div>
 
     <div class="whgff-row">
-        <div class="whgff-row-label"><i>*</i>上传封面：</div>
-        <div class="whgff-row-input">
-            <input type="hidden" id="cult_picture1" name="picture" value="${source.picture}">
-            <div class="whgff-row-input-imgview" id="previewImg1"></div>
-            <div class="whgff-row-input-imgfile">
-                <i><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" id="imgUploadBtn1">选择图片</a></i>
-                <i>图片格式为jpg、png、gif，建议图片尺寸 750*500，大小为2MB以内</i>
-            </div>
-        </div>
-    </div>
-
-    <div class="whgff-row">
-        <div class="whgff-row-label"><label style="color: red">*</label>所属单位：</div>
+        <div class="whgff-row-label"><label style="color: red">*</label>区域：</div>
         <div class="whgff-row-input">
             <input class="easyui-combobox" name="branch" id="branch"  panelHeight="auto" limitToList="true" style="width:500px; height:32px"
                    data-options="required:false, editable:false,multiple:false, mode:'remote',
@@ -89,10 +77,17 @@
         </div>
     </div>
 
+    <%--<div class="whgff-row">--%>
+        <%--<div class="whgff-row-label"><i>*</i>资源描述：</div>--%>
+        <%--<div class="whgff-row-input">--%>
+            <%--<script id="catalog" type="text/plain" style="width:700px; height:250px;"></script>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+
     <div class="whgff-row">
         <div class="whgff-row-label"><i>*</i>资源描述：</div>
         <div class="whgff-row-input">
-            <script id="catalog" type="text/plain" style="width:700px; height:250px;"></script>
+            <input class="easyui-textbox" name="introduction" id="introduction" value="${source.introduction}" style="width:550px; height:100px" data-options="required:true, multiline:true, validType:['length[1,500]', 'isText']">
         </div>
     </div>
 </form>

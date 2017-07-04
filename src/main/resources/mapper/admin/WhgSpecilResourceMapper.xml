@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.creatoo.hn.mapper.WhgSpecilResourceMapper">
 
-<!-- 活动后台管理列表 查询 -->
+<!-- 特色资源管理后台列表 查询 -->
     <select id="searchName" resultType="WhgSpecilResourceSarch">
         select
         t.*,
         (SELECT b.name FROM wh_branch b WHERE t.branch = b.id) AS branchName
         from whg_specil_resource t
-        WHERE 1=1
+        WHERE 1=1 and t.intype = 1
         <if test="name != null and name != ''">
             AND t.name like "%"#{name}"%"
         </if>
@@ -44,4 +44,72 @@
         </choose>
     </select>
 
+    <!-- 个人中心我的上传 查询 -->
+    <select id="searchPersonStyle" resultType="WhgSpecilResource">
+        SELECT *
+        FROM whg_specil_resource t
+        LEFT JOIN wh_user u
+        ON t.userid = u.id
+        WHERE 1 = 1
+        AND t.intype = 2
+        AND t.isdel = 0
+        <if test="userId != null">
+            AND t.userid = #{userId}
+        </if>
+        ORDER BY t.statemdfdate DESC
+    </select>
+
+    <!-- 前端页面市民风采列表 查询 -->
+    <select id="selectPersonStyleList" resultType="hashmap">
+        SELECT
+        waa.*,
+        (SELECT
+        COUNT(wc.cmid)
+        FROM wh_collection wc
+        WHERE wc.cmrefid = waa.id
+        AND wc.cmopttyp = 2) AS dianzan,
+        (SELECT
+        COUNT(wc.cmid)
+        FROM wh_collection wc
+        WHERE wc.cmrefid = waa.id
+        AND wc.cmopttyp = 0) AS shoucang
+        FROM whg_specil_resource waa
+        WHERE 1 = 1
+        AND waa.state = 6
+        AND waa.intype = 2
+        AND waa.isdel = 0
+        <if test="type != null">
+            AND waa.type = #{type}
+        </if>
+        <if test="areaId != null">
+            AND waa.areaid = #{areaId}
+        </if>
+        ORDER BY waa.statemdfdate DESC
+    </select>
+
+
+    <!-- 前端特色资源列表 查询 -->
+    <select id="showStyleList" resultType="hashmap">
+        SELECT
+        waa.*,
+        (SELECT
+        COUNT(wc.cmid)
+        FROM wh_collection wc
+        WHERE wc.cmrefid = waa.id
+        AND wc.cmopttyp = 2) AS dianzan,
+        (SELECT
+        COUNT(wc.cmid)
+        FROM wh_collection wc
+        WHERE wc.cmrefid = waa.id
+        AND wc.cmopttyp = 0) AS shoucang
+        FROM whg_specil_resource waa
+        WHERE 1 = 1
+        AND waa.state = 6
+        AND waa.intype = 1
+        AND waa.isdel = 0
+        <if test="type != null">
+            AND waa.type = #{type}
+        </if>
+        ORDER BY waa.crtdate DESC
+    </select>
 </mapper>

@@ -66,27 +66,29 @@ public class CommUploadService {
                     return uploadFileBean;
                 }
             	//裁剪时的宽高
-                int _cutWidth = Integer.parseInt(cutWidth);
-                int _cutHeight = Integer.parseInt(cutHeight);
-                if(needCut && (bimg.getWidth() < _cutWidth || bimg.getHeight() < _cutHeight)){
-                    uploadFileBean.setSuccess(UploadFileBean.FAIL);
-                    uploadFileBean.setErrormsg("图片尺寸必须大于等于"+_cutWidth+"*"+_cutHeight);
-                    return uploadFileBean;
-                }else if(!needCut){
-                    if( _cutWidth != 750 && _cutHeight != 500 ){
-                        if( bimg.getWidth() != _cutWidth || bimg.getHeight() != _cutHeight ){
+                if (cutHeight != null && cutWidth!=null) {
+                    int _cutWidth = Integer.parseInt(cutWidth);
+                    int _cutHeight = Integer.parseInt(cutHeight);
+                    if (needCut && (bimg.getWidth() < _cutWidth || bimg.getHeight() < _cutHeight)) {
+                        uploadFileBean.setSuccess(UploadFileBean.FAIL);
+                        uploadFileBean.setErrormsg("图片尺寸必须大于等于" + _cutWidth + "*" + _cutHeight);
+                        return uploadFileBean;
+                    } else if (!needCut) {
+                        if (_cutWidth != 750 && _cutHeight != 500) {
+                            if (bimg.getWidth() != _cutWidth || bimg.getHeight() != _cutHeight) {
+                                uploadFileBean.setSuccess(UploadFileBean.FAIL);
+                                uploadFileBean.setErrormsg("图片尺寸必须等于" + _cutWidth + "*" + _cutHeight);
+                                return uploadFileBean;
+                            }
+                        } else if (_cutWidth != 750 && bimg.getWidth() != _cutWidth) {
                             uploadFileBean.setSuccess(UploadFileBean.FAIL);
-                            uploadFileBean.setErrormsg("图片尺寸必须等于"+_cutWidth+"*"+_cutHeight);
+                            uploadFileBean.setErrormsg("图片宽度必须等于" + _cutWidth + "px");
+                            return uploadFileBean;
+                        } else if (_cutHeight != 500 && bimg.getHeight() != _cutHeight) {
+                            uploadFileBean.setSuccess(UploadFileBean.FAIL);
+                            uploadFileBean.setErrormsg("图片高度必须等于" + _cutHeight + "px");
                             return uploadFileBean;
                         }
-                    }else if (_cutWidth != 750 && bimg.getWidth() != _cutWidth){
-                        uploadFileBean.setSuccess(UploadFileBean.FAIL);
-                        uploadFileBean.setErrormsg("图片宽度必须等于"+_cutWidth+"px");
-                        return uploadFileBean;
-                    }else if (_cutHeight != 500 && bimg.getHeight() != _cutHeight){
-                        uploadFileBean.setSuccess(UploadFileBean.FAIL);
-                        uploadFileBean.setErrormsg("图片高度必须等于"+_cutHeight+"px");
-                        return uploadFileBean;
                     }
                 }
             }
