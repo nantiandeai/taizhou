@@ -54,15 +54,15 @@
         </div>
     </div>
     <div class="whgff-row">
-        <div class="whgff-row-label"><i>*</i>单位简介：</div>
+        <div class="whgff-row-label">单位简介：</div>
         <div class="whgff-row-input">
             <input class="easyui-textbox" name="unitdesc"
-                   style="width: 500px; height: 100px" data-options="required:true,multiline:true,validType:['length[1,512]']" value="${whgCultureUnit.unitdesc}"/>
+                   style="width: 500px; height: 100px" data-options="required:false,multiline:true,validType:['length[1,512]']" value="${whgCultureUnit.unitdesc}"/>
         </div>
     </div>
     <div class="whgff-row">
         <div class="whgff-row-label">
-            <label style="color: red">*</label>上传封面：
+            上传封面：
         </div>
         <div class="whgff-row-input">
             <input type="hidden" id="act_imgurl1" name="unitcover" data-options="required:true" value="${whgCultureUnit.unitcover}">
@@ -103,13 +103,17 @@
         onSubmit : function(param) {
             var _valid = $(this).form('enableValidation').form('validate');
             if(_valid){
-                var act_imgurl1 = $("#act_imgurl1").val();
-                if(null == act_imgurl1 || "" == act_imgurl1){
+                /**
+                 var act_imgurl1 = $("#act_imgurl1").val();
+                 if(null == act_imgurl1 || "" == act_imgurl1){
                     $.messager.alert("错误", '封面图片不能为空！', 'error');
                     _valid = false;
                     $('#whgwin-edit-btn-save').off('click').one('click',submitFun);
                     return _valid;
                 }
+                 * @type {*}
+                 */
+
                 $.messager.progress();
             }else{
                 //失败时再注册提交事件
