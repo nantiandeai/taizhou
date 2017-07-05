@@ -23,7 +23,6 @@
         <th data-options="field:'_opt', width:450, formatter:WhgComm.FMTOpt,fixed:true, optDivId:'whgdg-opt'">操作</th>
     </tr>
     </thead>
-
 </table>
 
 <!-- 表格操作工具栏 -->
