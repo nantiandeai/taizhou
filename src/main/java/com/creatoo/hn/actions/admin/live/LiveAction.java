@@ -50,8 +50,8 @@ public class LiveAction {
      * @param type
      * @return
      */
-    @RequestMapping("/search4p/{type}")
-    public ResponseBean search4p(HttpServletRequest request,@PathVariable("type")String type){
+    @RequestMapping("/search4p")
+    public ResponseBean search4p(HttpServletRequest request){
         ResponseBean responseBean = new ResponseBean();
         Map map = new HashMap();
         String page = getParam(request,"page","1");
