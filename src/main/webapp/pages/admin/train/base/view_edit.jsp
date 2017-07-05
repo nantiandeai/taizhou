@@ -728,7 +728,7 @@
         }
 
         //定义表单提交
-        var url = "${basePath}/admin/train/edit";
+        var url = "${basePath}/admin/train/editEx";
         frm.form({
             url: url,
             novalidate: true,

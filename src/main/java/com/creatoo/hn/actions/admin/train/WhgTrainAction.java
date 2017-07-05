@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -160,7 +161,7 @@ public class WhgTrainAction {
      * 修改培训
      * @return
      */
-    @RequestMapping("/editEx")
+    @RequestMapping("/edit")
     @WhgOPT(optType = EnumOptType.TRA, optDesc = {"修改培训"})
     public ResponseBean edit(WhgTra tra, HttpSession session, HttpServletRequest request){
         ResponseBean res = new ResponseBean();
@@ -209,7 +210,7 @@ public class WhgTrainAction {
         return res;
     }
 
-    @RequestMapping("/edit")
+    @RequestMapping("/editEx")
     @WhgOPT(optType = EnumOptType.TRA, optDesc = {"修改培训"})
     public ResponseBean edit(HttpSession session, HttpServletRequest request){
         ResponseBean res = new ResponseBean();
@@ -260,6 +261,9 @@ public class WhgTrainAction {
     }
 
     private WhgTra getEntity(HttpServletRequest request){
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("HH:mm");
         WhgTra whgTra = new WhgTra();
         whgTra.setId(getParam(request,"id",null));
         whgTra.setTitle(getParam(request,"title",null));
@@ -268,6 +272,61 @@ public class WhgTrainAction {
         whgTra.setVenroom(getParam(request,"venroom",null));
         whgTra.setEbrand(getParam(request,"ebrand",null));
         whgTra.setPhone(getParam(request,"phone",null));
+        whgTra.setArea(getParam(request,"area",null));
+        whgTra.setArttype(getParam(request,"arttype",null));
+        whgTra.setEtag(getParam(request,"etag",null));
+        whgTra.setEkey(getParam(request,"ekey",null));
+        whgTra.setAddress(getParam(request,"address",null));
+        whgTra.setLongitude(getParam(request,"longitude",null));
+        whgTra.setLatitude(getParam(request,"latitude",null));
+        whgTra.setTeacherid(getParam(request,"teacherid",null));
+        whgTra.setMaxnumber(Integer.valueOf(getParam(request,"maxnumber","0")));
+        whgTra.setBasicenrollnumber(Integer.valueOf(getParam(request,"basicenrollnumber","0")));
+        whgTra.setIsshowmaxnumber(Integer.valueOf(getParam(request,"isshowmaxnumber","1")));
+        whgTra.setEtype(getParam(request,"etype",null));
+        whgTra.setIsmoney(Integer.valueOf(getParam(request,"ismoney","0")));
+        whgTra.setAge(getParam(request,"age",null));
+        whgTra.setIsrealname(Integer.valueOf(getParam(request,"isrealname","0")));
+        whgTra.setIsterm(Integer.valueOf(getParam(request,"isterm","0")));
+        whgTra.setIsbasictra(Integer.valueOf(getParam(request,"isbasictra","0")));
+        whgTra.setIsbasicclass(Integer.valueOf(getParam(request,"isbasicclass","0")));
+        whgTra.setEnrollodds(Integer.valueOf(getParam(request,"enrollodds","100")));
+        whgTra.setIsmultisite(Integer.valueOf(getParam(request,"ismultisite","0")));
+        try {
+            whgTra.setEnrollendtime(simpleDateFormat1.parse(getParam(request,"enrollstarttime",null)));
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        try {
+            whgTra.setEnrollendtime(simpleDateFormat1.parse(getParam(request,"enrollendtime",null)));
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        try {
+            whgTra.setStarttime(simpleDateFormat2.parse(getParam(request,"starttime",null)));
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        try {
+            whgTra.setEndtime(simpleDateFormat2.parse(getParam(request,"endtime",null)));
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        whgTra.setFixedweek(getParam(request,"fixedweek",null));
+        try {
+            whgTra.setFixedstarttime(simpleDateFormat3.parse(getParam(request,"fixedstarttime",null)));
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        try {
+            whgTra.setFixedendtime(simpleDateFormat3.parse(getParam(request,"fixedendtime",null)));
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        whgTra.setCoursedesc(getParam(request,"coursedesc",null));
+        whgTra.setOutline(getParam(request,"outline",null));
+        whgTra.setTeacherdesc(getParam(request,"teacherdesc",null));
+        whgTra.setUserconditions(getParam(request,"userconditions",null));
         return whgTra;
     }
 
