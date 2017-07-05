@@ -64,7 +64,7 @@ public class WhgLive {
     /**
      * 删除状态：1、已删除；2、未删除
      */
-    private String isdel;
+    private Integer isdel;
 
     /**
      * 获取主键PK
@@ -269,7 +269,7 @@ public class WhgLive {
      *
      * @return isdel - 删除状态：1、已删除；2、未删除
      */
-    public String getIsdel() {
+    public Integer getIsdel() {
         return isdel;
     }
 
@@ -278,7 +278,7 @@ public class WhgLive {
      *
      * @param isdel 删除状态：1、已删除；2、未删除
      */
-    public void setIsdel(String isdel) {
+    public void setIsdel(Integer isdel) {
         this.isdel = isdel;
     }
 }
