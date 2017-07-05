@@ -100,6 +100,7 @@ public class LiveAction {
                 modelAndView.addObject("whgLive",whgLive);
             }
         }
+        modelAndView.setViewName("admin/live/view_edit");
         return modelAndView;
     }
 
