@@ -29,13 +29,6 @@
 
 <!-- 表格操作工具栏 -->
 <div id="whgdg-tb" style="display: none;">
-    <c:choose>
-        <c:when test="${type eq 'edit'}">
-            <div id="tb">
-                <shiro:hasPermission name="${resourceid}:add"><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" onclick="add()">添加</a></shiro:hasPermission>
-            </div>
-        </c:when>
-    </c:choose>
     <div class="whgdg-tb-srch" style="padding-top: 8px">
         <input class="easyui-textbox" style="width: 200px;" name="name" data-options="prompt:'请输入名称', validType:'length[1,32]'" />
         <%--<select class="easyui-combobox" name="state" prompt="请选择状态" panelHeight="auto" limitToList="true"--%>
@@ -66,43 +59,6 @@
         if(4 == hallstate){
             return "审核不通过";
         }
-    }
-    function _publish(idx) {
-        var row = $("#whgdg").datagrid("getRows")[idx];
-        return row.state == 2 || row.state == 4;
-    }
-    function _publishoff(idx) {
-        var row = $("#whgdg").datagrid("getRows")[idx];
-        return row.state == 6;
-    }
-    function _del(idx) {
-        var row = $("#whgdg").datagrid("getRows")[idx];
-        return row.state == 1 || row.state == 9 || row.state == 2 || row.state == 4 || row.state == 5;
-    }
-    function _checkon(idx) {
-        var row = $("#whgdg").datagrid("getRows")[idx];
-        return row.state == 9;
-    }
-    function _checkgo(idx) {
-        var row = $("#whgdg").datagrid("getRows")[idx];
-        return row.state == 1 || row.state == 5;
-    }
-    function _checkoff(idx) {
-        var row = $("#whgdg").datagrid("getRows")[idx];
-        return row.state == 9 || row.state == 2;
-    }
-    function _undel(idx) {
-        var row = $("#whgdg").datagrid("getRows")[idx];
-        return row.isdel == 1;
-    }
-    function _edit(idx) {
-        var row = $("#whgdg").datagrid("getRows")[idx];
-        return row.state == 1 || row.state == 9 || row.state == 2 || row.state == 4 || row.state == 5;
-    }
-
-    function validKC(idx){
-        var row = $("#whgdg").datagrid("getRows")[idx];
-        return row.state == 2 || row.state == 9 || row.state == 1 || row.state == 4;
     }
 
     /**

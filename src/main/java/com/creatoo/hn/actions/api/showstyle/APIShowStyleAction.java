@@ -185,7 +185,7 @@ public class APIShowStyleAction {
 	/**
 	 * index 当前页
 	 * size 每页条数
-	 * 查询秀我风采列表
+	 * 查询个人中心市民风采我的上传
 	 *
 	 * @param request .
 	 * @return 对象
@@ -291,6 +291,27 @@ public class APIShowStyleAction {
 			//上传处理
 			UploadFileBean uploadFileBean = commUploadService.uploadFile(mulFile, uploadFileType, "true".equals(needCut), cutWidth, cutHeight);
 			res.setData(uploadFileBean);
+		}catch (Exception e){
+			log.error(e.getMessage(), e);
+			res.setSuccess(ResponseBean.FAIL);
+			res.setErrormsg(e.getMessage());
+		}
+		return res;
+	}
+
+	/**
+	 * 删除已上传的文件
+	 * @param request
+	 * @return
+	 */
+	@CrossOrigin
+	@RequestMapping(value = "/delUpload",method = RequestMethod.POST)
+	public ResponseBean delUpload(HttpServletRequest request){
+		ResponseBean res = new ResponseBean();
+		try{
+			//已上传的文件URL
+			String uploadURL = request.getParameter("url");
+			commUploadService.delUploadFile(uploadURL);
 		}catch (Exception e){
 			log.error(e.getMessage(), e);
 			res.setSuccess(ResponseBean.FAIL);

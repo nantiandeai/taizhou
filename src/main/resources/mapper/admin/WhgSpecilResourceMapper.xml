@@ -44,6 +44,21 @@
         </choose>
     </select>
 
+    <!-- 市民上传后台列表 查询 -->
+    <select id="selectCityUpload" resultType="WhgSpecilResource">
+        select
+        t.*
+        from whg_specil_resource t
+        WHERE 1=1 and t.intype = 2
+        <if test="name != null and name != ''">
+            AND t.name like "%"#{name}"%"
+        </if>
+        <if test="state != null">
+            AND t.state = #{state}
+        </if>
+
+    </select>
+
     <!-- 个人中心我的上传 查询 -->
     <select id="searchPersonStyle" resultType="WhgSpecilResource">
         SELECT *

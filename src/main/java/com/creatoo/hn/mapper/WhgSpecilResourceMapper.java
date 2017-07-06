@@ -20,7 +20,7 @@ public interface WhgSpecilResourceMapper extends Mapper<WhgSpecilResource> {
      * @param userId 用户id
      * @return
      */
-    List<WhgSpecilResource> searchPersonStyle(String userId);
+    List<WhgSpecilResource> searchPersonStyle(@Param("userId")String userId);
 
     /**
      * 市民风采列表查询
