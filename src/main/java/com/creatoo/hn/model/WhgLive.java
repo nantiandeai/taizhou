@@ -67,6 +67,21 @@ public class WhgLive {
     private Integer isdel;
 
     /**
+     * 开始时间
+     */
+    private Date starttime;
+
+    /**
+     * 结束时间
+     */
+    private Date endtime;
+
+    /**
+     * 直播描述
+     */
+    private String livedesc;
+
+    /**
      * 获取主键PK
      *
      * @return id - 主键PK
@@ -280,5 +295,59 @@ public class WhgLive {
      */
     public void setIsdel(Integer isdel) {
         this.isdel = isdel;
+    }
+
+    /**
+     * 获取开始时间
+     *
+     * @return starttime - 开始时间
+     */
+    public Date getStarttime() {
+        return starttime;
+    }
+
+    /**
+     * 设置开始时间
+     *
+     * @param starttime 开始时间
+     */
+    public void setStarttime(Date starttime) {
+        this.starttime = starttime;
+    }
+
+    /**
+     * 获取结束时间
+     *
+     * @return endtime - 结束时间
+     */
+    public Date getEndtime() {
+        return endtime;
+    }
+
+    /**
+     * 设置结束时间
+     *
+     * @param endtime 结束时间
+     */
+    public void setEndtime(Date endtime) {
+        this.endtime = endtime;
+    }
+
+    /**
+     * 获取直播描述
+     *
+     * @return livedesc - 直播描述
+     */
+    public String getLivedesc() {
+        return livedesc;
+    }
+
+    /**
+     * 设置直播描述
+     *
+     * @param livedesc 直播描述
+     */
+    public void setLivedesc(String livedesc) {
+        this.livedesc = livedesc;
     }
 }

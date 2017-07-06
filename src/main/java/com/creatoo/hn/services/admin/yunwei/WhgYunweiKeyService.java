@@ -7,6 +7,7 @@ import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.utils.ReqParamsUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -27,6 +28,8 @@ public class WhgYunweiKeyService {
      */
     @Autowired
     private WhgYwiKeyMapper whgYwiKeyMapper;
+
+    private static Logger logger = Logger.getLogger(WhgYunweiKeyService.class);
 
     /**
      * CommService
@@ -93,6 +96,16 @@ public class WhgYunweiKeyService {
             throw new Exception("添加数据失败！");
         }
 
+    }
+
+    public List<WhgYwiKey> selectByParam(WhgYwiKey whgYwiKey){
+        try {
+            List<WhgYwiKey> whgYwiKeyList = whgYwiKeyMapper.select(whgYwiKey);
+            return whgYwiKeyList;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return null;
+        }
     }
 
     /**
