@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,6 +110,19 @@ public class LiveAction {
         return modelAndView;
     }
 
+    @RequestMapping("/getFlowaddr")
+    public ResponseBean getFlowaddr(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        String flowAddr = "rtmp://video-center.alivecdn.com/tzswhg/Stream1?vhost=live.dgswhg.com";
+        List list = new ArrayList();
+        Map map = new HashMap();
+        map.put("id","rtmp://video-center.alivecdn.com/tzswhg/Stream1?vhost=live.dgswhg.com");
+        map.put("name","rtmp://video-center.alivecdn.com/tzswhg/Stream1?vhost=live.dgswhg.com");
+        list.add(map);
+        responseBean.setRows(list);
+        return responseBean;
+    }
+
     /**
      * 处理编辑提交
      * @param request
@@ -117,6 +132,7 @@ public class LiveAction {
     @RequestMapping("/doEdit/{type}")
     public ResponseBean doEdit(HttpServletRequest request,@PathVariable("type")String type){
         ResponseBean responseBean = new ResponseBean();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         WhgLive whgLive = new WhgLive();
         whgLive.setLivetitle(getParam(request,"livetitle",null));
         whgLive.setDomain(getParam(request,"domain",null));
@@ -125,6 +141,14 @@ public class LiveAction {
         whgLive.setIslbt(Integer.valueOf(getParam(request,"islbt","2")));
         whgLive.setIsrecommend(Integer.valueOf(getParam(request,"isrecommend","2")));
         whgLive.setFlowaddr(getParam(request,"flowaddr",null));
+        whgLive.setLivedesc(getParam(request,"livedesc",null));
+        try {
+            whgLive.setStarttime(simpleDateFormat.parse(getParam(request,"starttime",null)));
+            whgLive.setEndtime(simpleDateFormat.parse(getParam(request,"endtime",null)));
+        }catch (Exception e){
+            logger.error(e.toString());
+        }
+
         if("add".equals(type)){
             if(null == liveService.addOne(whgLive,(WhgSysUser)request.getSession().getAttribute("user"))){
                 responseBean.setSuccess(ResponseBean.FAIL);

@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -83,8 +84,19 @@ public class WhgYunweiKeyAction {
      * @return
      */
     @RequestMapping("/srchList")
-    public ResponseBean srchList(){
-        return new ResponseBean();
+    public ResponseBean srchList(HttpServletRequest request){
+        ResponseBean responseBean = new ResponseBean();
+        String type = request.getParameter("type");
+        if(null == type || type.trim().isEmpty()){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("参数不足");
+            return responseBean;
+        }
+        WhgYwiKey whgYwiKey = new WhgYwiKey();
+        whgYwiKey.setType(type);
+        List<WhgYwiKey> whgYwiKeyList = whgYunweiKeyService.selectByParam(whgYwiKey);
+        responseBean.setRows(whgYwiKeyList);
+        return responseBean;
     }
 
     /**
