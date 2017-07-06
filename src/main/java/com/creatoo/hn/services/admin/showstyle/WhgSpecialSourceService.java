@@ -149,6 +149,34 @@ public class WhgSpecialSourceService {
     }
 
     /**
+     * 市民上传分页查询分类列表信息
+     *
+     * @param request。
+     */
+    @SuppressWarnings("all")
+    public PageInfo<WhgSpecilResource> selectCityUpload(HttpServletRequest request, WhgSpecilResource historical) throws Exception {
+        Map<String, Object> paramMap = ReqParamsUtil.parseRequest(request);
+        //分页信息
+        int page = Integer.parseInt((String) paramMap.get("page"));
+        int rows = Integer.parseInt((String) paramMap.get("rows"));
+        Map param = new HashMap();
+
+        //名称条件
+        if (historical != null && historical.getName() != null) {
+            param.put("name", historical.getName());
+        }
+
+        if (historical != null && historical.getState() != null) {
+            param.put("state", historical.getState());
+        }
+
+        //分页查询
+        PageHelper.startPage(page, rows);
+        List<WhgSpecilResource> list = this.whgSpecilResourceMapper.selectCityUpload(param);
+        return new PageInfo<>(list);
+    }
+
+    /**
      * 查询单条记录
      *
      * @param id id
@@ -170,7 +198,11 @@ public class WhgSpecialSourceService {
         source.setIsrecommend(0);
         source.setIsdel(EnumDelState.STATE_DEL_NO.getValue());
         source.setStatemdfdate(new Date());
-        source.setStatemdfuser(user.getId());
+        if(user !=null){
+            source.setStatemdfuser(user.getId());
+        }else {
+            source.setStatemdfuser(source.getUserid());
+        }
         source.setState(EnumBizState.STATE_CAN_EDIT.getValue());
         int result = this.whgSpecilResourceMapper.insertSelective(source);
         if (result != 1) {
@@ -198,7 +230,7 @@ public class WhgSpecialSourceService {
     }
 
     /**
-     * 删除
+     * 删除特色资源
      *
      * @param id
      */
@@ -216,6 +248,7 @@ public class WhgSpecialSourceService {
             this.whgSpecilResourceMapper.updateByPrimaryKeySelective(specilResource);
         }
     }
+
 
     /**
      * 还原

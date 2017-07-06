@@ -85,7 +85,7 @@ public class WhgSpecialSourceAction {
         ModelAndView view = new ModelAndView();
         try {
             view.addObject("type", type);
-            if ("edit".equalsIgnoreCase(type)) {
+            if ("edit".equalsIgnoreCase(type)||"view".equalsIgnoreCase(type)) {
                 String id = request.getParameter("id");
                 String targetShow = request.getParameter("targetShow");
                 if (id != null) {
@@ -116,6 +116,27 @@ public class WhgSpecialSourceAction {
         List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_RESOURCE.getValue());
         try {
             PageInfo<WhgSpecilResourceSarch> pageInfo = whgSpecialSourceService.t_srchList4p(request, resource,relList);
+            res.setRows(pageInfo.getList());
+            res.setTotal(pageInfo.getTotal());
+        } catch (Exception e) {
+            res.setSuccess(ResponseBean.FAIL);
+            res.setErrormsg(e.getMessage());
+            log.error(e.getMessage(), e);
+        }
+        return res;
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param request
+     * @return res
+     */
+    @RequestMapping(value = "/selectCityUpload")
+    public ResponseBean selectCityUpload(HttpServletRequest request, WhgSpecilResource resource) {
+        ResponseBean res = new ResponseBean();
+        try {
+            PageInfo<WhgSpecilResource> pageInfo = whgSpecialSourceService.selectCityUpload(request, resource);
             res.setRows(pageInfo.getList());
             res.setTotal(pageInfo.getTotal());
         } catch (Exception e) {

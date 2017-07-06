@@ -13,7 +13,7 @@
 <body>
 <!-- 表格 -->
 <table id="whgdg" title="市民上传管理" class="easyui-datagrid" style="display: none"
-       data-options="fit:true, striped:true, rownumbers:true, fitColumns:true, singleSelect:false, checkOnSelect:true, selectOnCheck:true, pagination:true, toolbar:'#whgdg-tb', url:'${basePath}/admin/specialResource/srchList4p?type=${type}'">
+       data-options="fit:true, striped:true, rownumbers:true, fitColumns:true, singleSelect:false, checkOnSelect:true, selectOnCheck:true, pagination:true, toolbar:'#whgdg-tb', url:'${basePath}/admin/specialResource/selectCityUpload'">
     <thead>
     <tr>
         <th data-options="field:'name',width:80">标题</th>
@@ -41,7 +41,7 @@
 
 <!-- 操作按钮 -->
 <div id="whgdg-opt" style="display: none;">
-    <shiro:hasPermission name="${resourceid}:view"><a href="javascript:void(0)" class="easyui-linkbutton" plain="true" method="edit">查看</a></shiro:hasPermission>
+    <shiro:hasPermission name="${resourceid}:view"><a href="javascript:void(0)" class="easyui-linkbutton" plain="true" method="view">查看</a></shiro:hasPermission>
     <shiro:hasPermission name="${resourceid}:checkgo"><a href="javascript:void(0)" class="easyui-linkbutton" method="edit">审核</a></shiro:hasPermission>
     <shiro:hasPermission name="${resourceid}:del"> <a href="javascript:void(0)" class="easyui-linkbutton"  method="del">删除</a></shiro:hasPermission>
 
@@ -62,14 +62,7 @@
     }
 
     /**
-     * 添加
-     */
-    function add(){
-        WhgComm.editDialog('${basePath}/admin/specialResource/view/add');
-    }
-
-    /**
-     * 编辑
+     * 审核
      * @param idx
      */
     function edit(idx){
@@ -83,9 +76,8 @@
      */
     function view(idx){
         var row = $("#whgdg").datagrid("getRows")[idx];
-        WhgComm.editDialog('${basePath}/admin/specialResource/view/add?targetShow=1&id='+row.id);
+        WhgComm.editDialog('${basePath}/admin/specialResource/cityStyleView/view?targetShow=1&id='+row.id);
     }
-
 
     /**
      * 删除
@@ -132,7 +124,7 @@
     }
 
     /**
-     * 发布 [2,4]->6
+     * 审核 [2,4]->6
      * @param idx
      */
     function publish(idx){

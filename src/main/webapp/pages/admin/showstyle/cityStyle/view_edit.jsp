@@ -35,21 +35,21 @@
         </c:otherwise>
     </c:choose>
     <input type="hidden" name="id" id="id" value="${id}"/>
-    <input type="hidden" name="intype" value="1">
+    <input type="hidden" name="intype" value="2">
     <div class="whgff-row">
         <div class="whgff-row-label"><label style="color: red">*</label>标题：</div>
-        <div class="whgff-row-input"><input class="easyui-textbox" name="name" value="${source.name}" style="width:500px; height:32px" data-options="required:true, validType:'length[1,30]'"></div>
+        <div class="whgff-row-input"><input class="easyui-textbox" name="name" value="${source.name}" style="width:500px; height:32px" data-options="required:true, readonly:true, validType:'length[1,30]'"></div>
     </div>
 
     <div class="whgff-row">
         <div class="whgff-row-label"><label style="color: red">*</label>来源：</div>
-        <div class="whgff-row-input"><input class="easyui-textbox" name="income" value="${source.income}" style="width:500px; height:32px" data-options="required:true, validType:'length[1,30]'"></div>
+        <div class="whgff-row-input"><input class="easyui-textbox" name="income" value="${source.income}" style="width:500px; height:32px" data-options="required:true, readonly:true, validType:'length[1,30]'"></div>
     </div>
 
     <div class="whgff-row">
         <div class="whgff-row-label"><i>*</i>区域：</div>
         <div class="whgff-row-input">
-            <input class="easyui-combobox" name="area" style="width:300px; height:32px" value="${cult.area}"  data-options="prompt:'请选择所属区域', value:'${source.areaid}',required:true, valueField:'id', textField:'text', data:WhgComm.getAreaType()">
+            <input class="easyui-combobox" name="area" style="width:300px; height:32px" value="${cult.area}"  data-options="prompt:'请选择所属区域', value:'${source.areaid}',required:true, readonly:true,valueField:'id', textField:'text', data:WhgComm.getAreaType()">
         </div>
     </div>
 
@@ -57,7 +57,7 @@
         <div class="whgff-row-label">
             <label style="color: red">*</label>资源类型：
         </div>
-        <div class="whgff-row-input">
+        <div class="whgff-row-input radio-disabled">
             <div class="radio radio-primary whg-js-data" name="type" id="type" value="${source.type}"
                  js-data='[{"id":"1","text":"图片"},{"id":"2","text":"视频"},{"id":"3","text":"文档"},{"id":"4","text":"音频"}]'>
             </div>
@@ -65,30 +65,40 @@
     </div>
 
     <div class="whgff-row">
-        <div class="whgff-row-label"><i>*</i>上传资源：</div>
+        <div class="whgff-row-label"><i>*</i>资源：</div>
         <div class="whgff-row-input">
             <input type="hidden" id="whg_file_upload" name="address" value="${source.address}">
             <div class="whgff-row-input-fileview" id="whg_file_pload_view"></div>
             <div class="whgff-row-input-filefile" >
-                <i><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" id="fileUploadBtn2">上传</a></i>
-                <i style="color: #999;font-size: 13px;font-style: normal;">图片格式为jpg、png、gif,大小为2MB以内;视频/音频格式为mp3,mp4,flv,avi,大小为100MB以内;文档格式为doc,docx,xls,zip,xlsx,pdf,大小为10MB以内;</i>
+                <%--<i><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" id="fileUploadBtn2">上传</a></i>--%>
+                <%--<i style="color: #999;font-size: 13px;font-style: normal;">图片格式为jpg、png、gif,大小为2MB以内;视频/音频格式为mp3,mp4,flv,avi,大小为100MB以内;文档格式为doc,docx,xls,zip,xlsx,pdf,大小为10MB以内;</i>--%>
             </div>
         </div>
     </div>
 
-    <%--<div class="whgff-row">--%>
-        <%--<div class="whgff-row-label"><i>*</i>资源描述：</div>--%>
-        <%--<div class="whgff-row-input">--%>
-            <%--<script id="catalog" type="text/plain" style="width:700px; height:250px;"></script>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-
     <div class="whgff-row">
         <div class="whgff-row-label"><i>*</i>资源描述：</div>
         <div class="whgff-row-input">
-            <input class="easyui-textbox" name="introduction" id="introduction" value="${source.introduction}" style="width:550px; height:100px" data-options="required:true, multiline:true, validType:['length[1,500]', 'isText']">
+            <input class="easyui-textbox" name="introduction" id="introduction" value="${source.introduction}" style="width:550px; height:100px" data-options="required:true, readonly:true, multiline:true, validType:['length[1,500]', 'isText']">
         </div>
     </div>
+
+    <c:choose>
+        <c:when test="${not empty targetShow}">
+
+        </c:when>
+        <c:otherwise>
+            <div class="whgff-row">
+                <div class="whgff-row-label">审核意见：</div>
+                <div class="whgff-row-input">
+                    <div class="radio radio-primary whg-js-data" value="6" name="state"
+                         js-data='[{"id":"6","text":"通过"},{"id":"4","text":"不通过"}]'>
+                    </div>
+                </div>
+            </div>
+        </c:otherwise>
+    </c:choose>
+
 </form>
 
 <div id="whgwin-add-btn" class="whgff-but" style="width: 400px; margin:20px 0px 50px 350px">
@@ -100,7 +110,6 @@
 
 <!-- script -->
 <script type="text/javascript">
-
     $(function () {
 
         WhgUploadMoreFile.init({basePath: '${basePath}', uploadBtnId: 'fileUploadBtn2', hiddenFieldId: 'whg_file_upload',previewFileId:'whg_file_pload_view'});
@@ -110,25 +119,6 @@
             url: "${basePath}/admin/specialResource/edit",
             onSubmit : function(param) {
                 var _valid = $(this).form('enableValidation').form('validate')
-                if(_valid) {
-//                    debugger
-                    //图片必填
-                    if($('#cult_picture1').val() == ""){
-                        _valid = false;
-                        $.messager.alert('提示', '请选择封面图片');
-                    }else if($('#whg_file_upload').val() == ""){
-                        _valid = false;
-                        $.messager.alert('提示', '请上传资源');
-                    }else if(!isUEvalid) {
-                        var isUEvalid = validateUE();
-                        if (isUEvalid) {
-                            param.introduction = ue_catalog.getContent();
-                            $.messager.progress();
-                        } else {
-                            _valid = false;
-                        }
-                    }
-                }
                 if (!_valid){
                     $.messager.progress('close');
                     $('#whgwin-add-btn-save').off('click').one('click', function () { $('#whgff').submit(); });
@@ -151,15 +141,6 @@
         $('#whgwin-add-btn-save').off('click').one('click', function () { $('#whgff').submit(); });
     });
 
-    function validateUE(){
-        if (!ue_catalog.hasContents()) {
-            $.messager.alert("错误", '资源描述不能为空', 'error');
-            return false;
-        }
-        return true;
-    }
-
-
     //查看时的处理
     $(function () {
         var targetShow = '${targetShow}';
@@ -170,11 +151,13 @@
             $('.easyui-textbox').textbox('readonly');
             $('.easyui-combobox').combobox('readonly');
 
-            $("#whgff").find("input[type='checkbox'], input[type='radio']").on('click', function(){return false});
+//            $("#whgff").find("input[type='radio']").on('click', function(){return false});
+            $(".radio-disabled input[type=radio]").attr("disabled",true);
             //不显示提交 button
             $('#whgwin-add-btn-save').hide();
             return;
         }
+        $(".radio-disabled input[type=radio]").attr("disabled",true);
     });
 </script>
 <!-- script END -->

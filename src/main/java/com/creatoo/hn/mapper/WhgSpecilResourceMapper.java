@@ -10,10 +10,17 @@ import java.util.Map;
 
 public interface WhgSpecilResourceMapper extends Mapper<WhgSpecilResource> {
     /**
-     * 特色资源管理页面关联查询
+     * 后端特色资源管理页面关联查询
      * @return
      */
     List<WhgSpecilResourceSarch> searchName(Map map);
+
+    /**
+     * 后端市民风采列表查询
+     * @param map
+     * @return
+     */
+    List<WhgSpecilResource> selectCityUpload(Map map);
 
     /**
      * 个人中心我的上传查询
@@ -23,12 +30,12 @@ public interface WhgSpecilResourceMapper extends Mapper<WhgSpecilResource> {
     List<WhgSpecilResource> searchPersonStyle(@Param("userId")String userId);
 
     /**
-     * 市民风采列表查询
+     * 前端市民风采列表查询
      */
     List<Map> selectPersonStyleList(@Param("type")String type,@Param("areaId")String areaId );
 
     /**
-     * 特色资源列表查询
+     * 前端特色资源列表查询
      * @param type 类型1.图片 2.视频 3.文档 4.音频
      * @return
      */

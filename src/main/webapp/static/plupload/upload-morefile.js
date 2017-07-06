@@ -49,9 +49,16 @@ WhgUploadMoreFile = (function () {
         }
         $("#"+thisObj._options.previewFileId).on("click", ".cancelFileBtn", function () {
             var thisEle = $(this);
+            var toremove = '';
             var fileUrl = thisEle.attr("fileurl");
             thisObj._removeUploadSuccFile(fileUrl,function () {
                 thisEle.parent().remove();
+                for (var i in thisObj._uploader.files) {
+                    if (thisObj._uploader.files[i].id === fileUrl) {
+                        toremove = i;
+                    }
+                }
+                thisObj._uploader.files.splice(toremove, 1);
             });
         });
 
@@ -103,14 +110,11 @@ WhgUploadMoreFile = (function () {
             },
             init: {
                 FilesAdded: function(up, files) {
-                    //在上传新文件时如果已经上传了文件，先删除
-                    // if( thisObj._uploadSuccFileURL ){
-                    //     thisObj._removeUploadSuccFile(function () {
-                    //         thisObj._addFile(up, files);
-                    //     });
-                    // }else{
+                    if(up.files.length>2) {
+                        $.messager.alert('提示', '最多只能传5个资源！', 'warning');
+                    } else {
                         thisObj._addFile(up, files);
-                    // }
+                    }
                 },
                 BeforeUpload: function(up, file) {
                     thisObj._beforeUpload(file);
