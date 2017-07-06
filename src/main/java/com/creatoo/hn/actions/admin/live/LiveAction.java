@@ -59,6 +59,10 @@ public class LiveAction {
         String livetitle = getParam(request,"livetitle",null);
         String livestate = getParam(request,"livestate",null);
         String isdel = getParam(request,"isdel",null);
+        String type = getParam(request,"type",null);
+        if(null != type){
+            map.put("type",type);
+        }
         if(null != livetitle){
             map.put("livetitle",livetitle);
         }

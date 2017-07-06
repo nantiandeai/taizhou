@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,17 @@ public class LiveService {
             }
             if(map.containsKey("livestate")){
                 criteria.andEqualTo("livestate",Integer.valueOf((String)map.get("livestate")));
+            }
+            if(map.containsKey("type")){
+                if("edit".equals((String)map.get("type"))){
+                    criteria.andIn("livestate", Arrays.asList(0));
+                }else if("check".equals((String)map.get("type"))){
+                    criteria.andIn("livestate", Arrays.asList(1));
+                }else if("publish".equals((String)map.get("type"))){
+                    criteria.andIn("livestate", Arrays.asList(2,3));
+                }else if("cycle".equals((String)map.get("type"))){
+                    criteria.andEqualTo("isdel",1);
+                }
             }
             if(map.containsKey("isdel")){
                 criteria.andEqualTo("isdel",Integer.valueOf((String)map.get("isdel")));
