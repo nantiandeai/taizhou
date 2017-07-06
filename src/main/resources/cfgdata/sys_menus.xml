@@ -268,6 +268,15 @@
             <menu id="M_REP_L002" type="1" state="1" text="短信和资讯统计"  href="/admin/rep/view/sms" opts="view"/>
         </menu>
 
+        <menu id="M_LIVE" type="0" state="1" text="云直播" iconcls="p-11">
+            <menu id="M_LIVE_L001" type="0" state="1" text="云直播管理">
+                <menu id="M_LIVE_L001_1" type="1" state="1" text="云直播编辑列表"  href="/admin/live/list/edit" opts="view,add,edit,checkgo,del"/>
+                <menu id="M_LIVE_L001_2" type="1" state="1" text="云直播审核列表"  href="/admin/live/list/check" opts="view,checkon,checkoff,del"/>
+                <menu id="M_LIVE_L001_3" type="1" state="1" text="云直播发布列表"  href="/admin/live/list/publish" opts="view,publish,publishoff,del"/>
+                <menu id="M_LIVE_L001_4" type="1" state="1" text="回收站"  href="/admin/live/list/cycle" opts="view,del,undel"/>
+            </menu>
+        </menu>
+
     </menus>
 
 </configs>

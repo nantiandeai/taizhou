@@ -1,7 +1,5 @@
 package com.creatoo.hn.model;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
@@ -17,7 +15,6 @@ public class WhgTra {
     /**
      * 创建时间
      */
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date crtdate;
 
     /**
@@ -33,18 +30,12 @@ public class WhgTra {
     /**
      * 状态变更时间
      */
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date statemdfdate;
 
     /**
      * 状态变更用户ID
      */
     private String statemdfuser;
-
-    /**
-     * 联系电话
-     */
-    private String phone;
 
     /**
      * 删除状态(0-未删除；1-已删除)
@@ -55,16 +46,6 @@ public class WhgTra {
      * 艺术分类
      */
     private String arttype;
-
-    /**
-     * 老师ID
-     */
-    private String teacherid;
-
-    /**
-     * 老师名字
-     */
-    private String teachername;
 
     /**
      * 分类
@@ -124,13 +105,11 @@ public class WhgTra {
     /**
      * 培训开始时间
      */
-    @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date starttime;
 
     /**
      * 培训结束时间
      */
-    @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date endtime;
 
     /**
@@ -146,13 +125,11 @@ public class WhgTra {
     /**
      * 报名开始时间
      */
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date enrollstarttime;
 
     /**
      * 报名结束时间
      */
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date enrollendtime;
 
     /**
@@ -179,18 +156,6 @@ public class WhgTra {
      * 是否显示最大报名人数
      */
     private Integer isshowmaxnumber;
-
-    /**
-     * 固定场开始时段
-     */
-    @DateTimeFormat(pattern="HH:mm")
-    private Date fixedstarttime;
-
-    /**
-     * 固定场结束时段
-     */
-    @DateTimeFormat(pattern="HH:mm")
-    private Date fixedendtime;
 
     /**
      * 审核不通过/上架不通过原因
@@ -228,9 +193,29 @@ public class WhgTra {
     private Integer recommend;
 
     /**
-     * 培训课程描述
+     * 固定场时段开始时间
      */
-    private String coursedesc;
+    private Date fixedstarttime;
+
+    /**
+     * 固定场时段结束时间
+     */
+    private Date fixedendtime;
+
+    /**
+     * 培训联系电话
+     */
+    private String phone;
+
+    /**
+     * 培训老师ID
+     */
+    private String teacherid;
+
+    /**
+     * 培训老师名称
+     */
+    private String teachername;
 
     /**
      * 适合年龄
@@ -238,7 +223,12 @@ public class WhgTra {
     private String age;
 
     /**
-     * 是否普通培训
+     * 是否收费
+     */
+    private Integer ismoney;
+
+    /**
+     * 是否普通培训（0、普通培训 1、文化超市）
      */
     private Integer isbasictra;
 
@@ -248,9 +238,9 @@ public class WhgTra {
     private Integer enrollodds;
 
     /**
-     * 是否收费
+     * 培训课程描述
      */
-    private Integer ismoney;
+    private String coursedesc;
 
     /**
      * 培训大纲
@@ -262,6 +252,10 @@ public class WhgTra {
      */
     private String teacherdesc;
 
+    /**
+     * 报名条件
+     */
+    private String userconditions;
 
     /**
      * 获取培训ID
@@ -930,6 +924,168 @@ public class WhgTra {
     }
 
     /**
+     * 获取固定场时段开始时间
+     *
+     * @return fixedstarttime - 固定场时段开始时间
+     */
+    public Date getFixedstarttime() {
+        return fixedstarttime;
+    }
+
+    /**
+     * 设置固定场时段开始时间
+     *
+     * @param fixedstarttime 固定场时段开始时间
+     */
+    public void setFixedstarttime(Date fixedstarttime) {
+        this.fixedstarttime = fixedstarttime;
+    }
+
+    /**
+     * 获取固定场时段结束时间
+     *
+     * @return fixedendtime - 固定场时段结束时间
+     */
+    public Date getFixedendtime() {
+        return fixedendtime;
+    }
+
+    /**
+     * 设置固定场时段结束时间
+     *
+     * @param fixedendtime 固定场时段结束时间
+     */
+    public void setFixedendtime(Date fixedendtime) {
+        this.fixedendtime = fixedendtime;
+    }
+
+    /**
+     * 获取培训联系电话
+     *
+     * @return phone - 培训联系电话
+     */
+    public String getPhone() {
+        return phone;
+    }
+
+    /**
+     * 设置培训联系电话
+     *
+     * @param phone 培训联系电话
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    /**
+     * 获取培训老师ID
+     *
+     * @return teacherid - 培训老师ID
+     */
+    public String getTeacherid() {
+        return teacherid;
+    }
+
+    /**
+     * 设置培训老师ID
+     *
+     * @param teacherid 培训老师ID
+     */
+    public void setTeacherid(String teacherid) {
+        this.teacherid = teacherid;
+    }
+
+    /**
+     * 获取培训老师名称
+     *
+     * @return teachername - 培训老师名称
+     */
+    public String getTeachername() {
+        return teachername;
+    }
+
+    /**
+     * 设置培训老师名称
+     *
+     * @param teachername 培训老师名称
+     */
+    public void setTeachername(String teachername) {
+        this.teachername = teachername;
+    }
+
+    /**
+     * 获取适合年龄
+     *
+     * @return age - 适合年龄
+     */
+    public String getAge() {
+        return age;
+    }
+
+    /**
+     * 设置适合年龄
+     *
+     * @param age 适合年龄
+     */
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    /**
+     * 获取是否收费
+     *
+     * @return ismoney - 是否收费
+     */
+    public Integer getIsmoney() {
+        return ismoney;
+    }
+
+    /**
+     * 设置是否收费
+     *
+     * @param ismoney 是否收费
+     */
+    public void setIsmoney(Integer ismoney) {
+        this.ismoney = ismoney;
+    }
+
+    /**
+     * 获取是否普通培训（0、普通培训 1、文化超市）
+     *
+     * @return isbasictra - 是否普通培训（0、普通培训 1、文化超市）
+     */
+    public Integer getIsbasictra() {
+        return isbasictra;
+    }
+
+    /**
+     * 设置是否普通培训（0、普通培训 1、文化超市）
+     *
+     * @param isbasictra 是否普通培训（0、普通培训 1、文化超市）
+     */
+    public void setIsbasictra(Integer isbasictra) {
+        this.isbasictra = isbasictra;
+    }
+
+    /**
+     * 获取录取几率
+     *
+     * @return enrollodds - 录取几率
+     */
+    public Integer getEnrollodds() {
+        return enrollodds;
+    }
+
+    /**
+     * 设置录取几率
+     *
+     * @param enrollodds 录取几率
+     */
+    public void setEnrollodds(Integer enrollodds) {
+        this.enrollodds = enrollodds;
+    }
+
+    /**
      * 获取培训课程描述
      *
      * @return coursedesc - 培训课程描述
@@ -983,75 +1139,21 @@ public class WhgTra {
         this.teacherdesc = teacherdesc;
     }
 
-    public Date getFixedstarttime() {
-        return fixedstarttime;
+    /**
+     * 获取报名条件
+     *
+     * @return userconditions - 报名条件
+     */
+    public String getUserconditions() {
+        return userconditions;
     }
 
-    public void setFixedstarttime(Date fixedstarttime) {
-        this.fixedstarttime = fixedstarttime;
-    }
-
-    public Date getFixedendtime() {
-        return fixedendtime;
-    }
-
-    public void setFixedendtime(Date fixedendtime) {
-        this.fixedendtime = fixedendtime;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getTeacherid() {
-        return teacherid;
-    }
-
-    public void setTeacherid(String teacherid) {
-        this.teacherid = teacherid;
-    }
-
-    public String getTeachername() {
-        return teachername;
-    }
-
-    public void setTeachername(String teachername) {
-        this.teachername = teachername;
-    }
-
-    public String getAge() {
-        return age;
-    }
-
-    public void setAge(String age) {
-        this.age = age;
-    }
-
-    public Integer getIsmoney() {
-        return ismoney;
-    }
-
-    public void setIsmoney(Integer ismoney) {
-        this.ismoney = ismoney;
-    }
-
-    public Integer getIsbasictra() {
-        return isbasictra;
-    }
-
-    public void setIsbasictra(Integer isbasictra) {
-        this.isbasictra = isbasictra;
-    }
-
-    public Integer getEnrollodds() {
-        return enrollodds;
-    }
-
-    public void setEnrollodds(Integer enrollodds) {
-        this.enrollodds = enrollodds;
+    /**
+     * 设置报名条件
+     *
+     * @param userconditions 报名条件
+     */
+    public void setUserconditions(String userconditions) {
+        this.userconditions = userconditions;
     }
 }

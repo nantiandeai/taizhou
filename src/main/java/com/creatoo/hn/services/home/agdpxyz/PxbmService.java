@@ -409,7 +409,7 @@ public class PxbmService {
             return 100;
         }
         if(1 == whgTra.getIsrealname()){
-            if(1 != userTemp.getIsrealname()){
+            if(null == userTemp.getIsrealname() || 1 != userTemp.getIsrealname()){
                 return 101;
             }
         }

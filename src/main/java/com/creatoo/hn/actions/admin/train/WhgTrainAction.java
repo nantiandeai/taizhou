@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -209,6 +210,126 @@ public class WhgTrainAction {
         return res;
     }
 
+    @RequestMapping("/editEx")
+    @WhgOPT(optType = EnumOptType.TRA, optDesc = {"修改培训"})
+    public ResponseBean edit(HttpSession session, HttpServletRequest request){
+        ResponseBean res = new ResponseBean();
+        WhgTra tra = getEntity(request);
+        if (tra.getId() == null){
+            res.setSuccess(ResponseBean.FAIL);
+            res.setErrormsg("培训主键信息丢失");
+            return res;
+        }
+        try {
+            WhgSysUser sysUser = (WhgSysUser) session.getAttribute("user");
+            if("".equals(request.getParameter("age1")) && "".equals(request.getParameter("age2"))){
+                tra.setAge("");
+            }
+            if(tra.getEbrand() == null ){
+                tra.setEbrand("");
+            }
+            if(tra.getTeacherid() == null ){
+                tra.setTeacherid("");
+            }
+            if(tra.getEkey() == null ){
+                tra.setEkey("");
+            }
+            if(tra.getEtag() == null ){
+                tra.setEtag("");
+            }
+            if(tra.getVenue() == null ){
+                tra.setVenue("");
+            }
+            if(tra.getVenroom() == null ){
+                tra.setVenroom("");
+            }
+            res = this.whgTrainService.t_edit(tra, sysUser, request);
+            if("1".equals(res.getSuccess())){
+                branchService.clearBranchRel(tra.getId(),EnumTypeClazz.TYPE_TRAIN.getValue());
+                //设置活动所属单位
+                String[] branch = request.getParameterValues("branch");
+                for(String branchId : branch){
+                    branchService.setBranchRel(tra.getId(), EnumTypeClazz.TYPE_TRAIN.getValue(),branchId);
+                }
+            }
+        }catch (Exception e){
+            res.setSuccess(ResponseBean.FAIL);
+            res.setErrormsg("培训信息保存失败");
+            log.error(res.getErrormsg(), e);
+        }
+        return res;
+    }
+
+    private WhgTra getEntity(HttpServletRequest request){
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("HH:mm");
+        WhgTra whgTra = new WhgTra();
+        whgTra.setId(getParam(request,"id",null));
+        whgTra.setTitle(getParam(request,"title",null));
+        whgTra.setTrainimg(getParam(request,"trainimg",null));
+        whgTra.setVenue(getParam(request,"venue",null));
+        whgTra.setVenroom(getParam(request,"venroom",null));
+        whgTra.setEbrand(getParam(request,"ebrand",null));
+        whgTra.setPhone(getParam(request,"phone",null));
+        whgTra.setArea(getParam(request,"area",null));
+        whgTra.setArttype(getParam(request,"arttype",null));
+        whgTra.setEtag(getParam(request,"etag",null));
+        whgTra.setEkey(getParam(request,"ekey",null));
+        whgTra.setAddress(getParam(request,"address",null));
+        whgTra.setLongitude(getParam(request,"longitude",null));
+        whgTra.setLatitude(getParam(request,"latitude",null));
+        whgTra.setTeacherid(getParam(request,"teacherid",null));
+        whgTra.setMaxnumber(Integer.valueOf(getParam(request,"maxnumber","0")));
+        whgTra.setBasicenrollnumber(Integer.valueOf(getParam(request,"basicenrollnumber","0")));
+        whgTra.setIsshowmaxnumber(Integer.valueOf(getParam(request,"isshowmaxnumber","1")));
+        whgTra.setEtype(getParam(request,"etype",null));
+        whgTra.setIsmoney(Integer.valueOf(getParam(request,"ismoney","0")));
+        whgTra.setAge(getParam(request,"age",null));
+        whgTra.setIsrealname(Integer.valueOf(getParam(request,"isrealname","0")));
+        whgTra.setIsterm(Integer.valueOf(getParam(request,"isterm","0")));
+        whgTra.setIsbasictra(Integer.valueOf(getParam(request,"isbasictra","0")));
+        whgTra.setIsbasicclass(Integer.valueOf(getParam(request,"isbasicclass","0")));
+        whgTra.setEnrollodds(Integer.valueOf(getParam(request,"enrollodds","100")));
+        whgTra.setIsmultisite(Integer.valueOf(getParam(request,"ismultisite","0")));
+        try {
+            whgTra.setEnrollendtime(simpleDateFormat1.parse(getParam(request,"enrollstarttime",null)));
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        try {
+            whgTra.setEnrollendtime(simpleDateFormat1.parse(getParam(request,"enrollendtime",null)));
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        try {
+            whgTra.setStarttime(simpleDateFormat2.parse(getParam(request,"starttime",null)));
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        try {
+            whgTra.setEndtime(simpleDateFormat2.parse(getParam(request,"endtime",null)));
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        whgTra.setFixedweek(getParam(request,"fixedweek",null));
+        try {
+            whgTra.setFixedstarttime(simpleDateFormat3.parse(getParam(request,"fixedstarttime",null)));
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        try {
+            whgTra.setFixedendtime(simpleDateFormat3.parse(getParam(request,"fixedendtime",null)));
+        }catch (Exception e){
+            log.error(e.toString());
+        }
+        whgTra.setCoursedesc(getParam(request,"coursedesc",null));
+        whgTra.setOutline(getParam(request,"outline",null));
+        whgTra.setTeacherdesc(getParam(request,"teacherdesc",null));
+        whgTra.setUserconditions(getParam(request,"userconditions",null));
+        return whgTra;
+    }
+
     /**
      * 删除培训
      * @return
@@ -294,4 +415,18 @@ public class WhgTrainAction {
         return res;
     }
 
+    /**
+     * 获取参数
+     * @param request
+     * @param paramName
+     * @param defaultValue
+     * @return
+     */
+    private String getParam(HttpServletRequest request,String paramName,String defaultValue){
+        String value = request.getParameter(paramName);
+        if(null == value || value.trim().isEmpty()){
+            return defaultValue;
+        }
+        return value;
+    }
 }

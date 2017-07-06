@@ -216,6 +216,12 @@
         </div>
     </div>
     <div class="whgff-row">
+        <div class="whgff-row-label">报名条件：</div>
+        <div class="whgff-row-input">
+            <input class="easyui-textbox" id="userconditions" name="userconditions" value="${whgTra.userconditions}" style="width:500px; height:60px" data-options="multiline:true,prompt:'请填写报名条件'">
+        </div>
+    </div>
+    <div class="whgff-row">
         <div class="whgff-row-label"><label style="color: red">*</label>区域：</div>
         <div class="whgff-row-input">
             <div class="radio radio-primary whg-js-data" name="area" value="${whgTra.area}"
@@ -223,10 +229,6 @@
             </div>
         </div>
     </div>
-
-
-
-
 
     <div class="whgff-row">
         <div class="whgff-row-label"><label style="color: red">*</label>艺术分类：</div>
@@ -726,7 +728,7 @@
         }
 
         //定义表单提交
-        var url = "${basePath}/admin/train/edit";
+        var url = "${basePath}/admin/train/editEx";
         frm.form({
             url: url,
             novalidate: true,
@@ -806,6 +808,7 @@
             }
         });
         buts.find("a.whgff-but-submit").off('click').one('click', function () {
+            debugger;
             frm.submit();
         });
 
