@@ -13,9 +13,6 @@
     <link rel="stylesheet" href="${basePath}/static/admin/Font-Awesome/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="${basePath}/static/admin/css/build.css"/>
 
-    <script type="text/javascript" charset="utf-8" src="${basePath}/static/ueditor/ueditor.config.js"></script>
-    <script type="text/javascript" charset="utf-8" src="${basePath}/static/ueditor/ueditor.all.min.js"></script>
-    <script type="text/javascript" charset="utf-8" src="${basePath}/static/ueditor/lang/zh-cn/zh-cn.js"></script>
     <%@include file="/pages/comm/admin/header.jsp"%>
     <script type="text/javascript" src="${basePath }/static/common/js/whg.sys.base.data.js"></script>
     <script src="${basePath}/static/admin/js/whgtoolmodule.js"></script>
@@ -31,10 +28,10 @@
 <form id="whgff" class="whgff" method="post">
     <c:choose>
         <c:when test="${not empty targetShow}">
-            <h2>查看特色资源</h2>
+            <h2>查看市民上传</h2>
         </c:when>
         <c:otherwise>
-            <h2>编辑特色资源</h2>
+            <h2>审核市民上传</h2>
         </c:otherwise>
     </c:choose>
     <input type="hidden" name="id" id="id" value="${id}"/>
@@ -45,24 +42,14 @@
     </div>
 
     <div class="whgff-row">
-        <div class="whgff-row-label"><i>*</i>上传封面：</div>
-        <div class="whgff-row-input">
-            <input type="hidden" id="cult_picture1" name="picture" value="${source.picture}">
-            <div class="whgff-row-input-imgview" id="previewImg1"></div>
-            <div class="whgff-row-input-imgfile">
-                <i><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" id="imgUploadBtn1">选择图片</a></i>
-                <i>图片格式为jpg、png、gif，建议图片尺寸 750*500，大小为2MB以内</i>
-            </div>
-        </div>
+        <div class="whgff-row-label"><label style="color: red">*</label>来源：</div>
+        <div class="whgff-row-input"><input class="easyui-textbox" name="income" value="${source.income}" style="width:500px; height:32px" data-options="required:true, validType:'length[1,30]'"></div>
     </div>
 
     <div class="whgff-row">
-        <div class="whgff-row-label"><label style="color: red">*</label>所属单位：</div>
+        <div class="whgff-row-label"><i>*</i>区域：</div>
         <div class="whgff-row-input">
-            <input class="easyui-combobox" name="branch" id="branch"  panelHeight="auto" limitToList="true" style="width:500px; height:32px"
-                   data-options="required:false, editable:false,multiple:false, mode:'remote',
-                   valueField:'id', textField:'name'
-                   "/>
+            <input class="easyui-combobox" name="area" style="width:300px; height:32px" value="${cult.area}"  data-options="prompt:'请选择所属区域', value:'${source.areaid}',required:true, valueField:'id', textField:'text', data:WhgComm.getAreaType()">
         </div>
     </div>
 
@@ -89,10 +76,17 @@
         </div>
     </div>
 
+    <%--<div class="whgff-row">--%>
+        <%--<div class="whgff-row-label"><i>*</i>资源描述：</div>--%>
+        <%--<div class="whgff-row-input">--%>
+            <%--<script id="catalog" type="text/plain" style="width:700px; height:250px;"></script>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+
     <div class="whgff-row">
         <div class="whgff-row-label"><i>*</i>资源描述：</div>
         <div class="whgff-row-input">
-            <script id="catalog" type="text/plain" style="width:700px; height:250px;"></script>
+            <input class="easyui-textbox" name="introduction" id="introduction" value="${source.introduction}" style="width:550px; height:100px" data-options="required:true, multiline:true, validType:['length[1,500]', 'isText']">
         </div>
     </div>
 </form>
@@ -106,22 +100,9 @@
 
 <!-- script -->
 <script type="text/javascript">
-    var ueConfig = {
-        scaleEnabled: false,
-        autoFloatEnabled: false,
-        readonly: !!'${targetShow}'//富文本编辑器设为只读
-    };
-    var ue_catalog = UE.getEditor('catalog', ueConfig);
-    ue_catalog.ready(function () {
-        ue_catalog.setContent('${source.introduction}')
-    });
 
     $(function () {
-        setBranch();//所属单位
 
-        WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn1', hiddenFieldId: 'cult_picture1', previewImgId: 'previewImg1'});
-
-        <%--WhgUploadMoreFile.init({basePath: '${basePath}', uploadBtnId: 'fileUploadBtn2', hiddenFieldId: 'whg_img_upload',previewImgId:'whg_img_pload_view',needCut:false});--%>
         WhgUploadMoreFile.init({basePath: '${basePath}', uploadBtnId: 'fileUploadBtn2', hiddenFieldId: 'whg_file_upload',previewFileId:'whg_file_pload_view'});
 
         $('#whgff').form({
@@ -178,24 +159,6 @@
         return true;
     }
 
-    //所属单位
-    function setBranch() {
-        $.getJSON("${basePath}/admin/branch/branchListUser",function (data) {
-
-            if("1" != data.success){
-                $.messager.alert("错误", data.errormsg, 'error');
-                return;
-            }
-            var rows = data.rows;
-//            debugger
-            $("#branch").combobox("loadData",rows);
-            var branchId = "${whBranchRel.branchid}";
-            if(0 < rows.length){
-                branchId = branchId != ""?branchId:rows[0].id;
-                $("#branch").combobox("setValue",branchId);
-            }
-        });
-    }
 
     //查看时的处理
     $(function () {

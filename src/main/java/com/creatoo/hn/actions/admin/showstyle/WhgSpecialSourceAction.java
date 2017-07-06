@@ -79,6 +79,30 @@ public class WhgSpecialSourceAction {
         return view;
     }
 
+
+    @RequestMapping("/cityStyleView/{type}")
+    public ModelAndView cityStyleView(HttpServletRequest request, @PathVariable("type") String type) {
+        ModelAndView view = new ModelAndView();
+        try {
+            view.addObject("type", type);
+            if ("edit".equalsIgnoreCase(type)) {
+                String id = request.getParameter("id");
+                String targetShow = request.getParameter("targetShow");
+                if (id != null) {
+                    view.addObject("id", id);
+                    view.addObject("targetShow", targetShow);
+                    view.addObject("source", whgSpecialSourceService.t_srchOne(id));
+                    view.setViewName("admin/showstyle/cityStyle/view_edit");
+                }
+            } else {
+                view.setViewName("admin/showstyle/cityStyle/view_list");
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return view;
+    }
+
     /**
      * 分页查询
      *

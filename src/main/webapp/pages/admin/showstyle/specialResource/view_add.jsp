@@ -30,6 +30,7 @@
 
 <form id="whgff" class="whgff" method="post">
     <h2>添加特色资源</h2>
+    <input type="hidden" name="intype" value="1">
     <div class="whgff-row">
         <div class="whgff-row-label"><label style="color: red">*</label>标题：</div>
         <div class="whgff-row-input"><input class="easyui-textbox" name="name" style="width:500px; height:32px" data-options="required:true, validType:'length[1,30]'"></div>

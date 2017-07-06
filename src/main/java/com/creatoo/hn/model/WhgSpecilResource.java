@@ -70,6 +70,22 @@ public class WhgSpecilResource {
      * 资源描述
      */
     private String introduction;
+    /**
+     * 来源
+     */
+    private String income;
+    /**
+     * 1.特色资源 2.个人风采
+     */
+    private Integer intype;
+    /**
+     * 市民风采对应的用户id
+     */
+    private String userid;
+    /**
+     * 市民风采对应的区域id
+     */
+    private String areaid;
 
     /**
      * 获取主键
@@ -303,5 +319,37 @@ public class WhgSpecilResource {
      */
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
+    }
+
+    public String getIncome() {
+        return income;
+    }
+
+    public void setIncome(String income) {
+        this.income = income;
+    }
+
+    public Integer getIntype() {
+        return intype;
+    }
+
+    public void setIntype(Integer intype) {
+        this.intype = intype;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public String getAreaid() {
+        return areaid;
+    }
+
+    public void setAreaid(String areaid) {
+        this.areaid = areaid;
     }
 }
