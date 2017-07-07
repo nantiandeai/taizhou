@@ -56,6 +56,17 @@
                 </div>
             </div>
         </div>
+
+        <div class="whgff-row">
+            <div class="whgff-row-label"><label style="color: red">*</label>所属单位：</div>
+            <div class="whgff-row-input">
+                <input class="easyui-combobox" name="branch" id="branch" panelHeight="auto" limitToList="true" style="width:500px; height:32px"
+                       data-options="required:false, editable:false,multiple:false, mode:'remote',
+                   valueField:'id', textField:'name'
+                   "/>
+            </div>
+        </div>
+
         <div class="whgff-row">
             <div class="whgff-row-label">
                 <label style="color: red">*</label>上传封面：
@@ -290,6 +301,25 @@
         __WhgUploadImg2 = WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn2', hiddenFieldId: 'act_imgurl2', previewImgId: 'previewImg2',needCut:false});
         setFlowaddr();
         showSelectIslbt();
+        setBranch();
     });
+
+    function setBranch() {
+        $.getJSON("${basePath}/admin/branch/branchListUser",function (data) {
+
+            if("1" != data.success){
+                $.messager.alert("错误", data.errormsg, 'error');
+                return;
+            }
+            var rows = data.rows;
+            $("#branch").combobox("loadData",rows);
+            var branchId = "${whBranchRel.branchid}";
+            if(0 < rows.length){
+                branchId = branchId != ""?branchId:rows[0].id;
+                $("#branch").combobox("setValue",branchId);
+            }
+        });
+    }
+
 </script>
 </html>
