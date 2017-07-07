@@ -1,8 +1,11 @@
 package com.creatoo.hn.actions.admin.live;
 
 import com.creatoo.hn.ext.bean.ResponseBean;
+import com.creatoo.hn.ext.emun.EnumTypeClazz;
+import com.creatoo.hn.model.WhBranchRel;
 import com.creatoo.hn.model.WhgLive;
 import com.creatoo.hn.model.WhgSysUser;
+import com.creatoo.hn.services.admin.branch.BranchService;
 import com.creatoo.hn.services.admin.live.LiveService;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -31,6 +34,9 @@ public class LiveAction {
 
     @Autowired
     private LiveService liveService;
+
+    @Autowired
+    private BranchService branchService;
 
     /**
      * 列表页
@@ -62,6 +68,7 @@ public class LiveAction {
         String livestate = getParam(request,"livestate",null);
         String isdel = getParam(request,"isdel",null);
         String type = getParam(request,"type",null);
+        String state = getParam(request,"state",null);
         if(null != type){
             map.put("type",type);
         }
@@ -73,6 +80,14 @@ public class LiveAction {
         }
         if(null != isdel){
             map.put("isdel",isdel);
+        }
+        if(null != state){
+            map.put("livestate",state);
+        }
+        WhgSysUser whgSysUser = (WhgSysUser) request.getSession().getAttribute("user");
+        List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_LIVE.getValue());
+        if(null != relList && relList.size()>0){
+            map.put("relList",relList);
         }
         PageInfo pageInfo = liveService.getLiveList(page,rows,map);
         if(null == pageInfo){
@@ -104,6 +119,10 @@ public class LiveAction {
             whgLive = liveService.getOne(whgLive);
             if(null != whgLive){
                 modelAndView.addObject("whgLive",whgLive);
+            }
+            WhBranchRel whBranchRel = branchService.getBranchRel(id,EnumTypeClazz.TYPE_LIVE.getValue());
+            if(null != whBranchRel){
+                modelAndView.addObject("whBranchRel",whBranchRel);
             }
         }
         modelAndView.setViewName("admin/live/view_edit");
@@ -141,19 +160,24 @@ public class LiveAction {
         whgLive.setIslbt(Integer.valueOf(getParam(request,"islbt","2")));
         whgLive.setIsrecommend(Integer.valueOf(getParam(request,"isrecommend","2")));
         whgLive.setFlowaddr(getParam(request,"flowaddr",null));
-        whgLive.setLivedesc(getParam(request,"livedesc",null));
+        whgLive.setLivedesc(getParam(request,"remark",null));
+        whgLive.setLivetype(getParam(request,"livetype",null));
         try {
             whgLive.setStarttime(simpleDateFormat.parse(getParam(request,"starttime",null)));
             whgLive.setEndtime(simpleDateFormat.parse(getParam(request,"endtime",null)));
         }catch (Exception e){
             logger.error(e.toString());
         }
-
         if("add".equals(type)){
-            if(null == liveService.addOne(whgLive,(WhgSysUser)request.getSession().getAttribute("user"))){
+            WhgLive res = liveService.addOne(whgLive,(WhgSysUser)request.getSession().getAttribute("user"));
+            if(null == res){
                 responseBean.setSuccess(ResponseBean.FAIL);
                 responseBean.setErrormsg("添加云直播失败");
                 return responseBean;
+            }
+            String[] branch = request.getParameterValues("branch");
+            for(String branchId : branch){
+                branchService.setBranchRel(res.getId(), EnumTypeClazz.TYPE_LIVE.getValue(),branchId);
             }
         }else if("edit".equals(type)){
             String id = getParam(request,"id",null);
@@ -167,6 +191,12 @@ public class LiveAction {
                 responseBean.setSuccess(ResponseBean.FAIL);
                 responseBean.setErrormsg("修改云直播失败");
                 return responseBean;
+            }
+            branchService.clearBranchRel(id,EnumTypeClazz.TYPE_LIVE.getValue());
+            //设置活动所属单位
+            String[] branch = request.getParameterValues("branch");
+            for(String branchId : branch){
+                branchService.setBranchRel(id, EnumTypeClazz.TYPE_LIVE.getValue(),branchId);
             }
         }else {
             responseBean.setSuccess(ResponseBean.FAIL);

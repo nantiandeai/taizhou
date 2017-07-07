@@ -77,6 +77,11 @@ public class WhgLive {
     private Date endtime;
 
     /**
+     * 直播分类
+     */
+    private String livetype;
+
+    /**
      * 直播描述
      */
     private String livedesc;
@@ -331,6 +336,24 @@ public class WhgLive {
      */
     public void setEndtime(Date endtime) {
         this.endtime = endtime;
+    }
+
+    /**
+     * 获取直播分类
+     *
+     * @return livetype - 直播分类
+     */
+    public String getLivetype() {
+        return livetype;
+    }
+
+    /**
+     * 设置直播分类
+     *
+     * @param livetype 直播分类
+     */
+    public void setLivetype(String livetype) {
+        this.livetype = livetype;
     }
 
     /**

@@ -1,23 +1,21 @@
 package com.creatoo.hn.services.admin.yunwei;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.creatoo.hn.mapper.WhgYwiTypeMapper;
 import com.creatoo.hn.model.WhgYwiType;
 import com.creatoo.hn.services.comm.CommService;
 import com.creatoo.hn.utils.ReqParamsUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 系统运营分类seivice
@@ -39,6 +37,9 @@ public class WhgYunweiTypeService {
      */
     @Autowired
     private CommService commService;
+
+    @Autowired
+    private static Logger logger = Logger.getLogger(WhgYunweiTypeService.class);
 
     /**
      * 分页查询分类列表信息
@@ -99,6 +100,16 @@ public class WhgYunweiTypeService {
             throw new Exception("添加数据失败！");
         }
 
+    }
+
+    public List<WhgYwiType> selectByParam(WhgYwiType whgYwiType){
+        try {
+            List<WhgYwiType> whgYwiTypeList = whgYwiTypeMapper.select(whgYwiType);
+            return whgYwiTypeList;
+        }catch (Exception e){
+            logger.error(e.toString());
+            return null;
+        }
     }
 
     /**

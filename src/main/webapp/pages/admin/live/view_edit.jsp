@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <% request.setAttribute("basePath", request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath());%>
 <% request.setAttribute("resourceid", request.getParameter("rsid")); %>
-<% String path = request.getContextPath();%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,11 +51,31 @@
         <div class="whgff-row">
             <div class="whgff-row-label"><label style="color: red">*</label>选择领域 ：</div>
             <div class="whgff-row-input">
-                <div class="checkbox checkbox-primary whg-js-data" name="domain" value="${whgLive.domain}"
+                <div class="radio radio-primary whg-js-data" name="domain" value="${whgLive.domain}"
                      js-data="getDomain" >
                 </div>
             </div>
         </div>
+
+        <div class="whgff-row">
+            <div class="whgff-row-label"><label style="color: red">*</label>选择直播分类 ：</div>
+            <div class="whgff-row-input">
+                <div class="radio radio-primary whg-js-data" name="livetype" value="${whgLive.livetype}"
+                     js-data="getLiveType" >
+                </div>
+            </div>
+        </div>
+
+        <div class="whgff-row">
+            <div class="whgff-row-label"><label style="color: red">*</label>所属单位：</div>
+            <div class="whgff-row-input">
+                <input class="easyui-combobox" name="branch" id="branch" panelHeight="auto" limitToList="true" style="width:500px; height:32px"
+                       data-options="required:false, editable:false,multiple:false, mode:'remote',
+                   valueField:'id', textField:'name'
+                   "/>
+            </div>
+        </div>
+
         <div class="whgff-row">
             <div class="whgff-row-label">
                 <label style="color: red">*</label>上传封面：
@@ -103,8 +124,8 @@
         <div class="whgff-row">
             <div class="whgff-row-label"><i>*</i>直播时间：</div>
             <div class="whgff-row-input">
-                <input type="text" class="easyui-datetimebox"style="width: 240px; height: 32px;" id="starttime" name="starttime"  value="<fmt:formatDate value='${whgLive.starttime}' pattern='yyyy-MM-dd HH:mm:ss'></fmt:formatDate>" data-options="editable:false,required:true,prompt:'请选择'" /> ~
-                <input type="text" class="easyui-datetimebox"style="width: 240px; height: 32px;" id="endtime" name="endtime"  value="<fmt:formatDate value='${whgLive.endtime}' pattern='yyyy-MM-dd HH:mm:ss'></fmt:formatDate>" data-options="editable:false,required:true,prompt:'请选择',validType:'bmEndTime[\'starttime\']'" />
+                <input type="text" class="easyui-datetimebox starttime"style="width: 240px; height: 32px;" id="starttime" name="starttime"  value="<fmt:formatDate value='${whgLive.starttime}' pattern='yyyy-MM-dd HH:mm:ss' />" data-options="validType:'traEndTime[0,\'endtime\']'" /> ~
+                <input type="text" class="easyui-datetimebox endtime"style="width: 240px; height: 32px;" id="endtime" name="endtime"  value="<fmt:formatDate value='${whgLive.endtime}' pattern='yyyy-MM-dd HH:mm:ss' />" data-options="validType:'traEndTime[1,\'endtime\']'" />
             </div>
         </div>
 
@@ -132,6 +153,30 @@
         });
         var res = [];
         $.getJSON("${basePath}/admin/yunwei/key/srchList?type=11",function (data) {
+            if("1" != data.success){
+                $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                return;
+            }
+            var rows = data.rows;
+            $.each(rows,function (index,value) {
+                var item = {};
+                item.id = value.id;
+                item.text = value.name;
+                res.push(item);
+            });
+        });
+        $.ajaxSetup({
+            async: true
+        });
+        return res;
+    }
+    
+    function getLiveType() {
+        $.ajaxSetup({
+            async: false
+        });
+        var res = [];
+        $.getJSON("${basePath}/admin/yunwei/type/srchList?type=21",function (data) {
             if("1" != data.success){
                 $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
                 return;
@@ -190,7 +235,7 @@
 
     function checkCover() {
         debugger;
-        var act_imgurl1 = __WhgUploadImg1._uploadSuccFileURL;
+        var act_imgurl1 = $("#act_imgurl1").val();
         if(null == act_imgurl1 || "" == act_imgurl1){
             $.messager.alert("错误", '封面图片不能为空！', 'error');
             return false;
@@ -199,7 +244,7 @@
     }
 
     function checkDomain() {
-        var selectValues = $('input:checkbox[name="domain"]:checked').val();
+        var selectValues = $('input:radio[name="domain"]:checked').val();
         if(null == selectValues || 0 == selectValues.length){
             $.messager.alert("错误", '至少要选择1个领域！', 'error');
             return false;
@@ -213,7 +258,7 @@
             return true;
         }
         if(1 == islbt){
-            var act_imgurl2 = __WhgUploadImg2._uploadSuccFileURL;
+            var act_imgurl2 = $("#act_imgurl2").val();
             if(null == act_imgurl2 || "" == act_imgurl2){
                 $.messager.alert("错误", '轮播图不能为空！', 'error');
                 return false;
@@ -285,9 +330,29 @@
             autoFloatEnabled: false
         };
         remark = UE.getEditor('remark', ueConfig);
-        __WhgUploadImg1 = WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn1', hiddenFieldId: 'cult_picture1', previewImgId: 'previewImg1'});
-        __WhgUploadImg2 = WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn2', hiddenFieldId: 'cult_picture2', previewImgId: 'previewImg2',needCut:false});
+        __WhgUploadImg1 = WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn1', hiddenFieldId: 'act_imgurl1', previewImgId: 'previewImg1'});
+        __WhgUploadImg2 = WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn2', hiddenFieldId: 'act_imgurl2', previewImgId: 'previewImg2',needCut:false});
         setFlowaddr();
+        showSelectIslbt();
+        setBranch();
     });
+
+    function setBranch() {
+        $.getJSON("${basePath}/admin/branch/branchListUser",function (data) {
+
+            if("1" != data.success){
+                $.messager.alert("错误", data.errormsg, 'error');
+                return;
+            }
+            var rows = data.rows;
+            $("#branch").combobox("loadData",rows);
+            var branchId = "${whBranchRel.branchid}";
+            if(0 < rows.length){
+                branchId = branchId != ""?branchId:rows[0].id;
+                $("#branch").combobox("setValue",branchId);
+            }
+        });
+    }
+
 </script>
 </html>
