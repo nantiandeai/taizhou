@@ -49,7 +49,7 @@
     <div class="whgff-row">
         <div class="whgff-row-label"><i>*</i>区域：</div>
         <div class="whgff-row-input">
-            <input class="easyui-combobox" name="area" style="width:300px; height:32px" value="${cult.area}"  data-options="prompt:'请选择所属区域', value:'${source.areaid}',required:true, readonly:true,valueField:'id', textField:'text', data:WhgComm.getAreaType()">
+            <input class="easyui-combobox" name="area" style="width:300px; height:32px"  data-options="prompt:'请选择所属区域', value:'${source.areaid}',required:true, readonly:true,valueField:'id', textField:'text', data:WhgComm.getAreaType()">
         </div>
     </div>
 

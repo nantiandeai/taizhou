@@ -12,7 +12,7 @@ WhgUploadMoreFile = (function () {
             hiddenFieldId: '',                                      //表单隐藏域ID
             // previewImgId: '',                           //预览图片元素的ID
             previewFileId: '',
-            uploadFileType: 'file',                                 // 图片类型。img|video|audio|file
+            uploadFileType: 'img',                                 // 图片类型。img|video|audio|file
             needCut: false,                                          //是否裁剪图片
             cutWidth: 0,                                          //裁剪图片的宽度
             cutHeight: 0,                                         //裁剪图片的高度
@@ -30,20 +30,13 @@ WhgUploadMoreFile = (function () {
         this._init();
         var thisObj = this;
 
-        //设置预览图片
-        /*if( $('#'+this._options.previewImgId).size() ==1 ){x
-            var initImgUrl = $('#'+this._options.hiddenFieldId).val();
-            if(initImgUrl != ''){
-                $('#'+thisObj._options.previewImgId).html('<img src="'+thisObj._options.imgServerAddr + initImgUrl+'" style="width: 100%; height: 100%;" />');
-            }
-        }*/
         //编辑预览
         if ($('#'+thisObj._options.hiddenFieldId).val()) {
             var filePaths = $('#'+thisObj._options.hiddenFieldId).val().split(",");
             var html = "";
             for (var i in filePaths) {
                 var fileName = filePaths[i].substr(filePaths[i].lastIndexOf("/")+1);
-                html += '<div class="singleFile"><a href="#">'+fileName+'</a><span class="cancelFileBtn" fileurl = "'+filePaths[i]+'" style="padding-left: 8px; color: #d43f3a; cursor:pointer">取消</span></div>';
+                html += '<div class="singleFile"><a href="#">'+fileName+'</a><span class="cancelFileBtn" fileurl = "'+filePaths[i]+'" style="padding-left: 8px; color: #d43f3a; cursor:pointer">取消1</span></div>';
             }
             $("#"+thisObj._options.previewFileId).append(html);
         }
@@ -51,14 +44,15 @@ WhgUploadMoreFile = (function () {
             var thisEle = $(this);
             var toremove = '';
             var fileUrl = thisEle.attr("fileurl");
+            // var fileId = thisEle.attr("fileId");
             thisObj._removeUploadSuccFile(fileUrl,function () {
                 thisEle.parent().remove();
-                for (var i in thisObj._uploader.files) {
-                    if (thisObj._uploader.files[i].id === fileUrl) {
-                        toremove = i;
-                    }
-                }
-                thisObj._uploader.files.splice(toremove, 1);
+                // for (var i in thisObj._uploader.files) {
+                //     if (thisObj._uploader.files[i].id === fileId) {
+                //         toremove = i;
+                //     }
+                // }
+                // thisObj._uploader.files.splice(toremove, 1);
             });
         });
 
@@ -67,9 +61,6 @@ WhgUploadMoreFile = (function () {
             var fileType = ["","img","video","file","video"][$(this).val()];
             thisObj._options.uploadFileType = fileType;
             thisObj._init();
-            // console.log(fileType);
-            // console.log($(this).val());
-            // console.log(thisObj);
         });
     }
 
@@ -86,13 +77,15 @@ WhgUploadMoreFile = (function () {
             mime_type = { title : "Image files", extensions : "jpg,gif,png" };
             maxSize = '2mb';
         } else if (thisObj._options.uploadFileType == "video") {
-            mime_type = { title : "Video files", extensions : "mp3,mp4,flv,avi" };
+            mime_type = { title : "Video files", extensions : "mp3,mp4" };
             maxSize = '100mb';
-        } else {
+        } else if (thisObj._options.uploadFileType == "file"){
             mime_type = { title : "File files", extensions : "doc,docx,xls,zip,xlsx,pdf" };
             maxSize = '10mb';
+        }else {
+
         }
-// debugger
+
         //使用plupload构造文件上传
         this._uploader = new plupload.Uploader({
             browse_button : this._options.uploadBtnId,
@@ -238,7 +231,6 @@ WhgUploadMoreFile = (function () {
 
         for(var i=0; i<files.length; i++){
             var file = files[i];
-            // $('<span id="span_'+file.id+'">'+file.name+' 完成<b id="'+file.id+'"></b>%</span>').appendTo($('#'+this._options.uploadBtnId).parent('i'));
             var html = '<div class="singleFile"><a href="#">'+file.name+'</a> <span id="'+file.id+'"></span>% <span class="cancelFileBtn" fileurl = "'+thisObj._uploadSuccFileURL+'" style="padding-left: 8px; color: #d43f3a; cursor:pointer">取消</span></div>';
             $("#"+this._options.uploadBtnId).parents(".whgff-row-input-filefile").prev().append(html);
             break;

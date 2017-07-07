@@ -105,11 +105,11 @@ public class CommUploadService {
             String uuid = UUID.randomUUID().toString().replaceAll("-", "");
             String newFileName;
 
-            if (".doc".equals(suffix)||".zip".equals(suffix)||".docx".equals(suffix)||".xls".equals(suffix)||".pdf".equals(suffix)||".xlsx".equals(suffix)){
+//            if (".doc".equals(suffix)||".zip".equals(suffix)||".docx".equals(suffix)||".xls".equals(suffix)||".pdf".equals(suffix)||".xlsx".equals(suffix)){
                 newFileName = oldFileName;
-            }else{
-                newFileName = uuid+suffix;
-            }
+//            }else{
+//                newFileName = uuid+suffix;
+//            }
 
             // img/2017/201701/a.jpg  video/2017/201701/  audio/2017/201701/  file/2017/201701/
             Date now = new Date();
