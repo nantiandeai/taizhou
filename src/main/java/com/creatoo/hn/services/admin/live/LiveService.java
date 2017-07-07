@@ -111,6 +111,9 @@ public class LiveService {
             tmp.setIslbt(whgLive.getIslbt());
             tmp.setIsrecommend(whgLive.getIsrecommend());
             tmp.setFlowaddr(whgLive.getFlowaddr());
+            tmp.setStarttime(whgLive.getStarttime());
+            tmp.setEndtime(whgLive.getEndtime());
+            tmp.setLivedesc(whgLive.getLivedesc());
             whgLiveMapper.updateByPrimaryKey(tmp);
             return whgLive;
         }catch (Exception e){

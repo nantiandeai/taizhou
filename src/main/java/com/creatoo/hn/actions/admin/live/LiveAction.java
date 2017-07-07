@@ -62,6 +62,7 @@ public class LiveAction {
         String livestate = getParam(request,"livestate",null);
         String isdel = getParam(request,"isdel",null);
         String type = getParam(request,"type",null);
+        String state = getParam(request,"state",null);
         if(null != type){
             map.put("type",type);
         }
@@ -73,6 +74,9 @@ public class LiveAction {
         }
         if(null != isdel){
             map.put("isdel",isdel);
+        }
+        if(null != state){
+            map.put("livestate",state);
         }
         PageInfo pageInfo = liveService.getLiveList(page,rows,map);
         if(null == pageInfo){
@@ -141,7 +145,7 @@ public class LiveAction {
         whgLive.setIslbt(Integer.valueOf(getParam(request,"islbt","2")));
         whgLive.setIsrecommend(Integer.valueOf(getParam(request,"isrecommend","2")));
         whgLive.setFlowaddr(getParam(request,"flowaddr",null));
-        whgLive.setLivedesc(getParam(request,"livedesc",null));
+        whgLive.setLivedesc(getParam(request,"remark",null));
         try {
             whgLive.setStarttime(simpleDateFormat.parse(getParam(request,"starttime",null)));
             whgLive.setEndtime(simpleDateFormat.parse(getParam(request,"endtime",null)));

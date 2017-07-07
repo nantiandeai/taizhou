@@ -61,11 +61,28 @@
 
     <!-- 操作按钮 -->
     <div id="whgdg-opt" style="display: none;">
-        <shiro:hasPermission name="${resourceid}:view"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="unitstate" validVal="1,2" method="view">查看</a></shiro:hasPermission>
-        <shiro:hasPermission name="${resourceid}:edit"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="unitstate" validVal="2" method="edit">编辑</a></shiro:hasPermission>
-        <shiro:hasPermission name="${resourceid}:on"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="unitstate" validVal="2" method="doOn">启用</a></shiro:hasPermission>
-        <shiro:hasPermission name="${resourceid}:off"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="unitstate" validVal="1" method="doOff">停用</a></shiro:hasPermission>
-        <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="unitstate" validVal="2" method="del">删除</a></shiro:hasPermission>
+        <shiro:hasPermission name="${resourceid}:view"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="livestate" validVal="0,1,2,3" method="view">查看</a></shiro:hasPermission>
+        <c:choose>
+            <c:when test="${listType eq 'edit'}">
+                <shiro:hasPermission name="${resourceid}:edit"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="livestate" validVal="0" method="edit">编辑</a></shiro:hasPermission>
+                <shiro:hasPermission name="${resourceid}:checkgo"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="livestate" validVal="0" method="checkgo">送审</a></shiro:hasPermission>
+                <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="livestate" validVal="0,1,2" method="del">删除</a></shiro:hasPermission>
+            </c:when>
+            <c:when test="${listType eq 'check'}">
+                <shiro:hasPermission name="${resourceid}:checkon"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="livestate" validVal="1" method="checkon">审核通过</a></shiro:hasPermission>
+                <shiro:hasPermission name="${resourceid}:checkoff"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="livestate" validVal="1" method="checkoff">审核不通过</a></shiro:hasPermission>
+                <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="livestate" validVal="0,1,2" method="del">删除</a></shiro:hasPermission>
+            </c:when>
+            <c:when test="${listType eq 'publish'}">
+                <shiro:hasPermission name="${resourceid}:publish"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="livestate" validVal="2" method="publish">发布</a></shiro:hasPermission>
+                <shiro:hasPermission name="${resourceid}:publishoff"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="livestate" validVal="3" method="publishoff">取消发布</a></shiro:hasPermission>
+                <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="livestate" validVal="0,1,2" method="del">删除</a></shiro:hasPermission>
+            </c:when>
+            <c:when test="${listType eq 'cycle'}">
+                <shiro:hasPermission name="${resourceid}:del"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="livestate" validVal="0,1,2,3" method="doDelForver">删除</a></shiro:hasPermission>
+                <shiro:hasPermission name="${resourceid}:undel"><a href="javascript:void(0)" class="easyui-linkbutton" validKey="livestate" validVal="0,1,2,3" method="undel">还原</a></shiro:hasPermission>
+            </c:when>
+        </c:choose>
     </div>
     <!-- 操作按钮-END -->
 </body>
@@ -111,6 +128,16 @@
     
     function add() {
         WhgComm.editDialog("${basePath}/admin/live/edit/add");
+    }
+
+    function view(idx) {
+        var curRow = $('#whgdg').datagrid('getRows')[idx];
+        WhgComm.editDialog('${basePath}/admin/live/edit/view?id='+curRow.id);
+    }
+
+    function edit(idx) {
+        var curRow = $('#whgdg').datagrid('getRows')[idx];
+        WhgComm.editDialog('${basePath}/admin/live/edit/edit?id='+curRow.id);
     }
 
 </script>
