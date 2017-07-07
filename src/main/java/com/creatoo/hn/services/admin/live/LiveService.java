@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**云直播服务
  * Created by caiyong on 2017/7/5.
@@ -62,6 +59,9 @@ public class LiveService {
             if(map.containsKey("isdel")){
                 criteria.andEqualTo("isdel",Integer.valueOf((String)map.get("isdel")));
             }
+            if(map.containsKey("relList")){
+                criteria.andIn("id",asListForBranchRel((List<Map>)map.get("relList")));
+            }
             example.setOrderByClause("livecreattime desc");
             List<WhgLive> whgLiveList = whgLiveMapper.selectByExample(example);
             return new PageInfo(whgLiveList);
@@ -69,6 +69,14 @@ public class LiveService {
             logger.error(e.toString());
             return null;
         }
+    }
+
+    private List asListForBranchRel(List<Map> list){
+        List<String> res = new ArrayList<String>();
+        for(Map map : list){
+            res.add((String)map.get("relid"));
+        }
+        return res;
     }
 
     /**

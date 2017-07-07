@@ -84,6 +84,11 @@ public class LiveAction {
         if(null != state){
             map.put("livestate",state);
         }
+        WhgSysUser whgSysUser = (WhgSysUser) request.getSession().getAttribute("user");
+        List<Map> relList = branchService.getBranchRelList(whgSysUser.getId(),EnumTypeClazz.TYPE_LIVE.getValue());
+        if(null != relList && relList.size()>0){
+            map.put("relList",relList);
+        }
         PageInfo pageInfo = liveService.getLiveList(page,rows,map);
         if(null == pageInfo){
             responseBean.setSuccess(ResponseBean.FAIL);
