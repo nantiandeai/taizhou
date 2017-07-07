@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <% request.setAttribute("basePath", request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath());%>
 <% request.setAttribute("resourceid", request.getParameter("rsid")); %>
-<% String path = request.getContextPath();%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -103,8 +104,8 @@
         <div class="whgff-row">
             <div class="whgff-row-label"><i>*</i>直播时间：</div>
             <div class="whgff-row-input">
-                <input type="text" class="easyui-datetimebox"style="width: 240px; height: 32px;" id="starttime" name="starttime"  value="<fmt:formatDate value='${whgLive.starttime}' pattern='yyyy-MM-dd HH:mm:ss'></fmt:formatDate>" data-options="editable:false,required:true,prompt:'请选择'" /> ~
-                <input type="text" class="easyui-datetimebox"style="width: 240px; height: 32px;" id="endtime" name="endtime"  value="<fmt:formatDate value='${whgLive.endtime}' pattern='yyyy-MM-dd HH:mm:ss'></fmt:formatDate>" data-options="editable:false,required:true,prompt:'请选择',validType:'bmEndTime[\'starttime\']'" />
+                <input type="text" class="easyui-datetimebox starttime"style="width: 240px; height: 32px;" id="starttime" name="starttime"  value="<fmt:formatDate value='${whgLive.starttime}' pattern='yyyy-MM-dd HH:mm:ss' />" data-options="validType:'traEndTime[0,\'endtime\']'" /> ~
+                <input type="text" class="easyui-datetimebox endtime"style="width: 240px; height: 32px;" id="endtime" name="endtime"  value="<fmt:formatDate value='${whgLive.endtime}' pattern='yyyy-MM-dd HH:mm:ss' />" data-options="validType:'traEndTime[1,\'endtime\']'" />
             </div>
         </div>
 
@@ -240,6 +241,10 @@
                     _valid = false;
                     return _valid;
                 }
+                param.livecover =  __WhgUploadImg1._uploadSuccFileURL;
+                if(1 == getSelectIslbt()){
+                    param.livelbt = __WhgUploadImg2._uploadSuccFileURL;
+                }
                 $.messager.progress();
             }else{
                 //失败时再注册提交事件
@@ -288,6 +293,7 @@
         __WhgUploadImg1 = WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn1', hiddenFieldId: 'cult_picture1', previewImgId: 'previewImg1'});
         __WhgUploadImg2 = WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn2', hiddenFieldId: 'cult_picture2', previewImgId: 'previewImg2',needCut:false});
         setFlowaddr();
+        showSelectIslbt();
     });
 </script>
 </html>
