@@ -140,5 +140,129 @@
         WhgComm.editDialog('${basePath}/admin/live/edit/edit?id='+curRow.id);
     }
 
+    function checkgo(idx) {
+        $.messager.confirm("确认信息", "确定要送审吗？", function(r){
+            if(r){
+                var curRow = $('#whgdg').datagrid('getRows')[idx];
+                $.getJSON("${basePath}/admin/live/updateState/checkpending?id="+curRow.id,function (data) {
+                    if("1" != data.success){
+                        $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                        return;
+                    }
+                    $('#whgdg').datagrid('reload');
+                });
+            }
+        });
+
+    }
+
+    function checkon(idx) {
+        $.messager.confirm("确认信息", "确定送审通过吗？", function(r){
+            if(r){
+                var curRow = $('#whgdg').datagrid('getRows')[idx];
+                $.getJSON("${basePath}/admin/live/updateState/checked?id="+curRow.id,function (data) {
+                    if("1" != data.success){
+                        $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                        return;
+                    }
+                    $('#whgdg').datagrid('reload');
+                });
+            }
+        });
+
+    }
+    
+    function checkoff(idx) {
+        $.messager.confirm("确认信息", "确定送审不通过吗？", function(r){
+            if(r){
+                var curRow = $('#whgdg').datagrid('getRows')[idx];
+                $.getJSON("${basePath}/admin/live/updateState/initial?id="+curRow.id,function (data) {
+                    if("1" != data.success){
+                        $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                        return;
+                    }
+                    $('#whgdg').datagrid('reload');
+                });
+            }
+        });
+
+    }
+
+    function publish(idx) {
+        $.messager.confirm("确认信息", "确定发布吗？", function(r){
+            if(r){
+                var curRow = $('#whgdg').datagrid('getRows')[idx];
+                $.getJSON("${basePath}/admin/live/updateState/published?id="+curRow.id,function (data) {
+                    if("1" != data.success){
+                        $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                        return;
+                    }
+                    $('#whgdg').datagrid('reload');
+                });
+            }
+        });
+
+    }
+
+    function publishoff(idx) {
+        $.messager.confirm("确认信息", "确定取消发布吗？", function(r){
+            if(r){
+                var curRow = $('#whgdg').datagrid('getRows')[idx];
+                $.getJSON("${basePath}/admin/live/updateState/initial?id="+curRow.id,function (data) {
+                    if("1" != data.success){
+                        $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                        return;
+                    }
+                    $('#whgdg').datagrid('reload');
+                });
+            }
+        });
+    }
+
+    function del(idx) {
+        $.messager.confirm("确认信息", "确定删除吗？", function(r){
+            if(r){
+                var curRow = $('#whgdg').datagrid('getRows')[idx];
+                $.getJSON("${basePath}/admin/live/del/del?id="+curRow.id,function (data) {
+                    if("1" != data.success){
+                        $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                        return;
+                    }
+                    $('#whgdg').datagrid('reload');
+                });
+            }
+        });
+    }
+    
+    function undel(idx) {
+        $.messager.confirm("确认信息", "确定还原吗？", function(r){
+            if(r){
+                var curRow = $('#whgdg').datagrid('getRows')[idx];
+                $.getJSON("${basePath}/admin/live/del/undel?id="+curRow.id,function (data) {
+                    if("1" != data.success){
+                        $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                        return;
+                    }
+                    $('#whgdg').datagrid('reload');
+                });
+            }
+        });
+    }
+
+    function doDelForver(idx) {
+        $.messager.confirm("确认信息", "确定永久删除吗？", function(r){
+            if(r){
+                var curRow = $('#whgdg').datagrid('getRows')[idx];
+                $.getJSON("${basePath}/admin/live/del/delForever?id="+curRow.id,function (data) {
+                    if("1" != data.success){
+                        $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                        return;
+                    }
+                    $('#whgdg').datagrid('reload');
+                });
+            }
+        });
+    }
+    
 </script>
 </html>
