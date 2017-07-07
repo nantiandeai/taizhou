@@ -51,8 +51,17 @@
         <div class="whgff-row">
             <div class="whgff-row-label"><label style="color: red">*</label>选择领域 ：</div>
             <div class="whgff-row-input">
-                <div class="checkbox checkbox-primary whg-js-data" name="domain" value="${whgLive.domain}"
+                <div class="radio radio-primary whg-js-data" name="domain" value="${whgLive.domain}"
                      js-data="getDomain" >
+                </div>
+            </div>
+        </div>
+
+        <div class="whgff-row">
+            <div class="whgff-row-label"><label style="color: red">*</label>选择直播分类 ：</div>
+            <div class="whgff-row-input">
+                <div class="radio radio-primary whg-js-data" name="livetype" value="${whgLive.livetype}"
+                     js-data="getLiveType" >
                 </div>
             </div>
         </div>
@@ -162,6 +171,30 @@
         return res;
     }
     
+    function getLiveType() {
+        $.ajaxSetup({
+            async: false
+        });
+        var res = [];
+        $.getJSON("${basePath}/admin/yunwei/type/srchList?type=21",function (data) {
+            if("1" != data.success){
+                $.messager.alert('提示', '操作失败:'+data.errormsg+'!', 'error');
+                return;
+            }
+            var rows = data.rows;
+            $.each(rows,function (index,value) {
+                var item = {};
+                item.id = value.id;
+                item.text = value.name;
+                res.push(item);
+            });
+        });
+        $.ajaxSetup({
+            async: true
+        });
+        return res;
+    }
+    
     function getIslbtData() {
         var data = [];
         data.push({"id":"2","text":"否"});
@@ -211,7 +244,7 @@
     }
 
     function checkDomain() {
-        var selectValues = $('input:checkbox[name="domain"]:checked').val();
+        var selectValues = $('input:radio[name="domain"]:checked').val();
         if(null == selectValues || 0 == selectValues.length){
             $.messager.alert("错误", '至少要选择1个领域！', 'error');
             return false;

@@ -122,6 +122,7 @@ public class LiveService {
             tmp.setStarttime(whgLive.getStarttime());
             tmp.setEndtime(whgLive.getEndtime());
             tmp.setLivedesc(whgLive.getLivedesc());
+            tmp.setLivetype(whgLive.getLivetype());
             whgLiveMapper.updateByPrimaryKey(tmp);
             return whgLive;
         }catch (Exception e){

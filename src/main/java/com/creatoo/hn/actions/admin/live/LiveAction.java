@@ -161,6 +161,7 @@ public class LiveAction {
         whgLive.setIsrecommend(Integer.valueOf(getParam(request,"isrecommend","2")));
         whgLive.setFlowaddr(getParam(request,"flowaddr",null));
         whgLive.setLivedesc(getParam(request,"remark",null));
+        whgLive.setLivetype(getParam(request,"livetype",null));
         try {
             whgLive.setStarttime(simpleDateFormat.parse(getParam(request,"starttime",null)));
             whgLive.setEndtime(simpleDateFormat.parse(getParam(request,"endtime",null)));
