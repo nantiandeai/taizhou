@@ -191,7 +191,7 @@
 
     function checkCover() {
         debugger;
-        var act_imgurl1 = __WhgUploadImg1._uploadSuccFileURL;
+        var act_imgurl1 = $("#act_imgurl1").val();
         if(null == act_imgurl1 || "" == act_imgurl1){
             $.messager.alert("错误", '封面图片不能为空！', 'error');
             return false;
@@ -214,7 +214,7 @@
             return true;
         }
         if(1 == islbt){
-            var act_imgurl2 = __WhgUploadImg2._uploadSuccFileURL;
+            var act_imgurl2 = $("#act_imgurl2").val();
             if(null == act_imgurl2 || "" == act_imgurl2){
                 $.messager.alert("错误", '轮播图不能为空！', 'error');
                 return false;
@@ -240,10 +240,6 @@
                 if(!checkAll()){
                     _valid = false;
                     return _valid;
-                }
-                param.livecover =  __WhgUploadImg1._uploadSuccFileURL;
-                if(1 == getSelectIslbt()){
-                    param.livelbt = __WhgUploadImg2._uploadSuccFileURL;
                 }
                 $.messager.progress();
             }else{
@@ -290,8 +286,8 @@
             autoFloatEnabled: false
         };
         remark = UE.getEditor('remark', ueConfig);
-        __WhgUploadImg1 = WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn1', hiddenFieldId: 'cult_picture1', previewImgId: 'previewImg1'});
-        __WhgUploadImg2 = WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn2', hiddenFieldId: 'cult_picture2', previewImgId: 'previewImg2',needCut:false});
+        __WhgUploadImg1 = WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn1', hiddenFieldId: 'act_imgurl1', previewImgId: 'previewImg1'});
+        __WhgUploadImg2 = WhgUploadImg.init({basePath: '${basePath}', uploadBtnId: 'imgUploadBtn2', hiddenFieldId: 'act_imgurl2', previewImgId: 'previewImg2',needCut:false});
         setFlowaddr();
         showSelectIslbt();
     });
