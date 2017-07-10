@@ -432,7 +432,7 @@ public class RegistAction{
 		String success = "0";
 		String errMsg = "";
 		String nickname = "";
-		Map<String,Object>	map = new HashMap<String,Object>();
+		Map<String,Object>	map = new HashMap<>();
 		
 		try {
 			//获取页面参数
@@ -441,26 +441,32 @@ public class RegistAction{
 			String password = request.getParameter("password");
 			
 			String id = this.commService.getKey("whuser");
-
-			if(email != null && !"".equals(email)){
-				nickname = email.replaceAll("(.{2}).+(.{2}@.+)", "$1****$2");
-		        whuser.setEmail(email);
+			//判断手机是否注册
+			int IsPhone = this.regService.getPhone(phone);
+			if (IsPhone != 0 ) {
+				success = "1";
+				errMsg = "手机已注册";
+			} else {
+				if(email != null && !"".equals(email)){
+					nickname = email.replaceAll("(.{2}).+(.{2}@.+)", "$1****$2");
+					whuser.setEmail(email);
+				}
+				if(phone != null && !"".equals(phone)){
+					nickname = phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+					whuser.setPhone(phone);
+				}
+				if(password != null && !"".equals(password)){
+					whuser.setPassword(password);
+				}
+				whuser.setRegisttime(new Date());  //注册时间
+				whuser.setNickname(nickname);
+				whuser.setIsrealname(0);
+				whuser.setIsperfect(0);
+				whuser.setIsinner(0);
+				whuser.setId(id);
+				map.put("id", id);
+				this.regService.saveRegist(whuser);
 			}
-			if(phone != null && !"".equals(phone)){
-				nickname = phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
-				whuser.setPhone(phone);
-			}
-			if(password != null && !"".equals(password)){
-		        whuser.setPassword(password);
-			}
-			whuser.setRegisttime(new Date());  //注册时间
-			whuser.setNickname(nickname);
-			whuser.setIsrealname(0);
-			whuser.setIsperfect(0);
-			whuser.setIsinner(0);
-			whuser.setId(id);
-			map.put("id", id);
-			this.regService.saveRegist(whuser);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			success = "1";
