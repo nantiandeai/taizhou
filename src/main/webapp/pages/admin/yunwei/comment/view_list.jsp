@@ -31,6 +31,21 @@
         <c:when test="${type == 7}">
             <c:set var="pageTitle" value="场馆活动室评论管理"></c:set>
         </c:when>
+        <c:when test="${type == 8}">
+            <c:set var="pageTitle" value="文化遗产评论管理"></c:set>
+        </c:when>
+        <c:when test="${type == 9}">
+            <c:set var="pageTitle" value="重点文物评论管理"></c:set>
+        </c:when>
+        <c:when test="${type == 10}">
+            <c:set var="pageTitle" value="文化人才评论管理"></c:set>
+        </c:when>
+        <c:when test="${type == 11}">
+            <c:set var="pageTitle" value="特色资源评论管理"></c:set>
+        </c:when>
+        <c:when test="${type == 12}">
+            <c:set var="pageTitle" value="市民风采评论管理"></c:set>
+        </c:when>
         <c:otherwise>
             <c:set var="pageTitle" value="评论管理"></c:set>
         </c:otherwise>

@@ -28,8 +28,13 @@
         <c:when test="${classify == 6}">
             <c:set var="pageTitle" value="数字展馆藏品类别配置"></c:set>
         </c:when>
-        <c:otherwise>
+        <c:when test="${classify == 7}">
             <c:set var="pageTitle" value="数字展馆主题配置"></c:set>
+        </c:when>
+        <c:when test="${classify == 11}">
+            <c:set var="pageTitle" value="云直播领域配置"></c:set>
+        </c:when>
+        <c:otherwise>
         </c:otherwise>
     </c:choose>
     <title>${pageTitle}</title>

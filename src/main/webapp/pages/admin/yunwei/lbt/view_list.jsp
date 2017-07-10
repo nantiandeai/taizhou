@@ -25,11 +25,11 @@
         <c:when test="${clazz == 5}">
             <c:set var="pageTitle" value="PC培训首页轮播图配置"></c:set>
         </c:when>
-        <c:when test="${clazz == 6}">
-            <c:set var="pageTitle" value="PC志愿服务首页风采展示"></c:set>
+        <c:when test="${clazz == 12}">
+            <c:set var="pageTitle" value="文化超市首页大图配置"></c:set>
         </c:when>
-        <c:when test="${clazz == 7}">
-            <c:set var="pageTitle" value="PC非遗首页广告图配置"></c:set>
+        <c:when test="${clazz == 13}">
+            <c:set var="pageTitle" value="秀我风采首页大图配置"></c:set>
         </c:when>
         <c:when test="${clazz == 8}">
             <c:set var="pageTitle" value="PC志愿服务首页广告图配置"></c:set>
