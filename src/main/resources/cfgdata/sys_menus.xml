@@ -68,16 +68,16 @@
                 <menu type="1" state="1" href="/admin/yunwei/tag/view/list/1" id="M_YWI_TAG_ART" text="场馆标签配置"   opts="view, add, edit, del, publish, publishoff"/>
                 <menu type="1" state="1" href="/admin/yunwei/tag/view/list/2" id="M_YWI_TAG_VENUE" text="活动室标签配置"   opts="view, add, edit, del, publish, publishoff"/>
                 <menu type="1" state="1" href="/admin/yunwei/tag/view/list/3" id="M_YWI_TAG_ROOM" text="活动标签配置"  opts="view, add, edit, del, publish, publishoff"/>
-                <!--<menu type="1" state="1" href="/admin/yunwei/tag/view/list/4" id="M_YWI_TAG_ACTIVITY" text="培训标签配置"  opts="view, add, edit, del, publish, publishoff"/>
-                <menu type="1" state="1" href="/admin/yunwei/tag/view/list/5" id="M_YWI_TAG_TRAIN" text="资讯标签配置"  opts="view, add, edit, del, publish, publishoff"/>-->
+                <menu type="1" state="1" href="/admin/yunwei/tag/view/list/4" id="M_YWI_TAG_ACTIVITY" text="培训标签配置"  opts="view, add, edit, del, publish, publishoff"/>
+                <!--<menu type="1" state="1" href="/admin/yunwei/tag/view/list/5" id="M_YWI_TAG_TRAIN" text="资讯标签配置"  opts="view, add, edit, del, publish, publishoff"/>-->
             </menu>
 
             <menu id="M_YWI_KEY" type="0" state="1" text="关键字配置">
                 <menu type="1" state="1" href="/admin/yunwei/key/view/list/1" id="M_YWI_KEY_VENUE" text="场馆关键字配置" opts="view, add, edit, del, publish, publishoff"/>
                 <menu type="1" state="1" href="/admin/yunwei/key/view/list/2" id="M_YWI_KEY_ROOM" text="活动室关键字配置" opts="view, add, edit, del, publish, publishoff"/>
                 <menu type="1" state="1" href="/admin/yunwei/key/view/list/3" id="M_YWI_KEY_ACTIVITY" text="活动关键字配置" opts="view, add, edit, del, publish, publishoff"/>
-                <!--<menu type="1" state="1" href="/admin/yunwei/key/view/list/4" id="M_YWI_KEY_TRAIN" text="培训关键字配置" opts="view, add, edit, del, publish, publishoff"/>
-                <menu type="1" state="1" href="/admin/yunwei/key/view/list/5" id="M_YWI_KEY_ZX" text="资讯关键字配置" opts="view, add, edit, del, publish, publishoff"/>-->
+                <menu type="1" state="1" href="/admin/yunwei/key/view/list/4" id="M_YWI_KEY_TRAIN" text="培训关键字配置" opts="view, add, edit, del, publish, publishoff"/>
+                <!--<menu type="1" state="1" href="/admin/yunwei/key/view/list/5" id="M_YWI_KEY_ZX" text="资讯关键字配置" opts="view, add, edit, del, publish, publishoff"/>-->
                 <menu type="1" state="1" href="/admin/yunwei/key/view/list/6" id="M_YWI_KEY_SZZG_LB" text="数字展馆藏品类别配置" opts="view, add, edit, del, publish, publishoff"/>
                 <menu type="1" state="1" href="/admin/yunwei/key/view/list/7" id="M_YWI_KEY_SZZG_ZT" text="数字展馆主题配置" opts="view, add, edit, del, publish, publishoff"/>
                 <menu type="1" state="1" href="/admin/yunwei/key/view/list/11" id="M_YWI_KEY_SZZG_ZT" text="云直播领域配置" opts="view, add, edit, del, publish, publishoff"/>
@@ -150,7 +150,7 @@
                 <menu id="M_TRA_MGE_ADD" type="1" state="1" text="添加培训"  href="/admin/train/view/add" opts="view"/>
                 <menu id="M_TRA_MGE_EDIT" type="1" state="1" text="培训编辑列表"  href="/admin/train/view/edit" opts="view, edit, checkgo, del, kecheng"/>
                 <menu id="M_TRA_MGE_CHK" type="1" state="1" text="培训审核列表"  href="/admin/train/view/check" opts="view, edit, checkon, del, back, kecheng"/>
-                <menu id="M_TRA_MGE_PUB" type="1" state="1" text="培训发布列表"  href="/admin/train/view/publish" opts="view, edit, del, publish, publishoff, back, baoming,kecheng"/>
+                <menu id="M_TRA_MGE_PUB" type="1" state="1" text="培训发布列表"  href="/admin/train/view/publish" opts="view, edit, del, publish, publishoff, back, baoming,kecheng,recommend,recommendoff"/>
                 <menu id="M_TRA_MGE_REC" type="1" state="1" text="回收站"  href="/admin/train/view/del" opts="view, undel, del"/>
             </menu>
         </menu>

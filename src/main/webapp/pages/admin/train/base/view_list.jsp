@@ -348,7 +348,7 @@ function publishoff(idx){
     var row = $("#whgdg").datagrid("getRows")[idx];
     $.messager.confirm("确认信息", "确定要取消发布选中的项吗？", function(r){
         if (r){
-            __updStateSend(row.id, 6, 4);
+            __updStateSend(row.id, 6, 1);
         }
     })
 }
