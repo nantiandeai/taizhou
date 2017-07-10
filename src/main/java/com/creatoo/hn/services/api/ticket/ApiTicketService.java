@@ -40,6 +40,11 @@ public class ApiTicketService {
     @Autowired
     private WhgVenMapper whgVenMapper;
 
+    /**
+     * 根据活动订单的取票码获取活动订单
+     * @param ticketNo
+     * @return
+     */
     public WhgActOrder findActOrderByTicketNo(String ticketNo){
         try {
             Example example = new Example(WhgActOrder.class);
@@ -56,6 +61,11 @@ public class ApiTicketService {
         }
     }
 
+    /**
+     * 根据活动室订单的取票码获取活动室订单
+     * @param ticketNo
+     * @return
+     */
     public WhgVenRoomOrder findVenRoomOrderByTicketNo(String ticketNo){
         try {
             Example example = new Example(WhgVenRoomOrder.class);
@@ -72,6 +82,11 @@ public class ApiTicketService {
         }
     }
 
+    /**
+     * 获取活动信息
+     * @param map
+     * @return
+     */
     public WhgActActivity findActByParam(Map map){
         try {
             Example example = new Example(WhgActActivity.class);
@@ -90,6 +105,11 @@ public class ApiTicketService {
         }
     }
 
+    /**
+     * 获取活动场次信息
+     * @param map
+     * @return
+     */
     public WhgActTime findActTimeByParam(Map map){
         try {
             Example example = new Example(WhgActTime.class);
@@ -108,6 +128,11 @@ public class ApiTicketService {
         }
     }
 
+    /**
+     * 获取活动票务信息
+     * @param map
+     * @return
+     */
     public List<WhgActTicket> findActTicketByParam(Map map){
         try {
             Example example = new Example(WhgActTicket.class);
@@ -126,6 +151,11 @@ public class ApiTicketService {
         }
     }
 
+    /**
+     * 获取活动室信息
+     * @param map
+     * @return
+     */
     public WhgVenRoom findVenRoomByParam(Map map){
         try {
             Example example = new Example(WhgVenRoom.class);
@@ -144,6 +174,12 @@ public class ApiTicketService {
         }
     }
 
+    /**
+     * 修改活动订单状态
+     * @param orderId
+     * @param ticketStatus
+     * @return
+     */
     public Integer updateActOrderState(String orderId,Integer ticketStatus){
         try {
             WhgActOrder whgActOrder = new WhgActOrder();
@@ -161,6 +197,12 @@ public class ApiTicketService {
         }
     }
 
+    /**
+     * 修改活动室订单状态
+     * @param orderId
+     * @param state
+     * @return
+     */
     public Integer updateVenRoomOrderState(String orderId,Integer state){
         try {
             WhgVenRoomOrder whgVenRoomOrder = new WhgVenRoomOrder();

@@ -33,6 +33,11 @@ public class ApiTicketAction {
     @Autowired
     private ApiTicketService apiTicketService;
 
+    /**
+     * 获取票务信息
+     * @param request
+     * @return
+     */
     @CrossOrigin
     @RequestMapping(value = "/pickUp",method = RequestMethod.POST)
     public ResponseBean pickUp(HttpServletRequest request){
@@ -56,6 +61,11 @@ public class ApiTicketAction {
         return responseBean;
     }
 
+    /**
+     * 完成取票
+     * @param request
+     * @return
+     */
     @CrossOrigin
     @RequestMapping(value = "/completePickUp",method = RequestMethod.POST)
     public ResponseBean completePickUp(HttpServletRequest request){
@@ -78,6 +88,11 @@ public class ApiTicketAction {
         return responseBean;
     }
 
+    /**
+     * 活动订单检查
+     * @param whgActOrder
+     * @return
+     */
     private ResponseBean actOrderHandle(WhgActOrder whgActOrder){
         ResponseBean responseBean = new ResponseBean();
         Map map = new HashMap();
@@ -129,6 +144,7 @@ public class ApiTicketAction {
             responseBean.setErrormsg("订单已取消");
             return responseBean;
         }
+        whgActOrder.setPrinttime(new Date());
         Map res = new HashMap();
         res.put("act",whgActActivity);
         res.put("order",whgActOrder);
@@ -138,6 +154,11 @@ public class ApiTicketAction {
         return responseBean;
     }
 
+    /**
+     * 活动室订单检查
+     * @param whgVenRoomOrder
+     * @return
+     */
     private ResponseBean venRoomOrderHandle(WhgVenRoomOrder whgVenRoomOrder){
         ResponseBean responseBean = new ResponseBean();
         SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
