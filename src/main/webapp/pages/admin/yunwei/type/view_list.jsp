@@ -30,17 +30,17 @@
         <c:when test="${classify == 7}">
             <c:set var="pageTitle" value="活动室设备配置"></c:set>
         </c:when>
-        <c:when test="${classify == 8}">
-            <c:set var="pageTitle" value="名录项目类型配置"></c:set>
+        <c:when test="${classify == 16}">
+            <c:set var="pageTitle" value="文化遗产分类配置"></c:set>
         </c:when>
-        <c:when test="${classify == 9}">
-            <c:set var="pageTitle" value="名录项目批次配置"></c:set>
+        <c:when test="${classify == 17}">
+            <c:set var="pageTitle" value="重点文物分类配置"></c:set>
         </c:when>
-        <c:when test="${classify == 10}">
-            <c:set var="pageTitle" value="名录项目级别配置"></c:set>
+        <c:when test="${classify == 18}">
+            <c:set var="pageTitle" value="文化人才分类配置"></c:set>
         </c:when>
-        <c:when test="${classify == 11}">
-            <c:set var="pageTitle" value="老师专长配置"></c:set>
+        <c:when test="${classify == 21}">
+            <c:set var="pageTitle" value="云直播分类配置"></c:set>
         </c:when>
         <c:when test="${classify == 12}">
             <c:set var="pageTitle" value="志愿培训类型配置"></c:set>

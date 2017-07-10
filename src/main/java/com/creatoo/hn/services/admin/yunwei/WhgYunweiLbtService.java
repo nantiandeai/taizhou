@@ -148,21 +148,14 @@ public class WhgYunweiLbtService {
         String id = (String) paramMap.get("id");
         WhgYwiLbt whgYwiLbt = this.whgYwiLbtMapper.selectByPrimaryKey(id);
 
-//        Example example = new Example(WhgYwiLbt.class);
-//        Example.Criteria c = example.createCriteria();
-//        c.andNotEqualTo("id", wyl.getId());
-
-//        whgYwiLbt=this.whgYwiLbtMapper.selectCountByExample(example);
-
         if (whgYwiLbt != null) {
             whgYwiLbt.setName(wyl.getName());
             whgYwiLbt.setPicture(wyl.getPicture());
             whgYwiLbt.setUrl(wyl.getUrl());
 
-            whgYwiLbt.setState(EnumState.STATE_YES.getValue());
             whgYwiLbt.setStatemdfuser(user.getId());
         }
-        int result = this.whgYwiLbtMapper.updateByPrimaryKeySelective(whgYwiLbt);
+        int result = this.whgYwiLbtMapper.updateByPrimaryKeySelective(wyl);
         if (result != 1) {
             throw new Exception("添加数据失败！");
         }
