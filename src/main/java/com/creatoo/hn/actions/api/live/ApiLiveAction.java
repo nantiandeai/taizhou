@@ -63,12 +63,19 @@ public class ApiLiveAction {
         ResponseBean responseBean = new ResponseBean();
         String domain = getParamValue(request,"domain",null);
         String type = getParamValue(request,"type",null);
-        String tag = getParamValue(request,"tag",null);
+        String sort = getParamValue(request,"sort",null);
         String index = getParamValue(request,"index","1");
         String size = getParamValue(request,"size","16");
-
-
-
+        PageInfo pageInfo = liveServiceForApi.searchLiveList(index,size,domain,type,sort);
+        if(null == pageInfo){
+            responseBean.setSuccess(ResponseBean.FAIL);
+            responseBean.setErrormsg("获取直播列表失败");
+            return responseBean;
+        }
+        responseBean.setRows((List)pageInfo.getList());
+        responseBean.setPage(pageInfo.getPageNum());
+        responseBean.setPageSize(pageInfo.getPageSize());
+        responseBean.setTotal(pageInfo.getTotal());
         return responseBean;
     }
 
