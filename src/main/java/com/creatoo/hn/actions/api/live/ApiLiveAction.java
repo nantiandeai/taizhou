@@ -63,9 +63,12 @@ public class ApiLiveAction {
         ResponseBean responseBean = new ResponseBean();
         String domain = getParamValue(request,"domain",null);
         String type = getParamValue(request,"type",null);
-        String sort = getParamValue(request,"sort",null);
+        String tag = getParamValue(request,"tag",null);
         String index = getParamValue(request,"index","1");
         String size = getParamValue(request,"size","16");
+
+
+
         return responseBean;
     }
 
