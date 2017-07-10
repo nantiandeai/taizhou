@@ -45,6 +45,13 @@
     </div>
 
     <div class="whgff-row">
+        <div class="whgff-row-label"><i>*</i>区域：</div>
+        <div class="whgff-row-input">
+            <input class="easyui-combobox" name="areaid" style="width:300px; height:32px"  data-options="prompt:'请选择所属区域', value:'${source.areaid}',required:true, valueField:'id', textField:'text', data:WhgComm.getAreaType()">
+        </div>
+    </div>
+
+    <div class="whgff-row">
         <div class="whgff-row-label"><i>*</i>上传封面：</div>
         <div class="whgff-row-input">
             <input type="hidden" id="cult_picture1" name="picture" value="${source.picture}">
@@ -84,7 +91,7 @@
             <div class="whgff-row-input-fileview" id="whg_file_pload_view"></div>
             <div class="whgff-row-input-filefile" >
                 <i><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-save" id="fileUploadBtn2">上传</a></i>
-                <i style="color: #999;font-size: 13px;font-style: normal;">图片格式为jpg、png、gif,大小为2MB以内;视频/音频格式为mp3,mp4,flv,avi,大小为100MB以内;文档格式为doc,docx,xls,zip,xlsx,pdf,大小为10MB以内;</i>
+                <i style="color: #999;font-size: 13px;font-style: normal;">图片格式为jpg、png、gif,大小为2MB以内;视频/音频格式为mp3,mp4大小为100MB以内;文档格式为doc,docx,xls,zip,xlsx,pdf,大小为10MB以内;</i>
             </div>
         </div>
     </div>
